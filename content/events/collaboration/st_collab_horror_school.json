@@ -1,0 +1,249 @@
+{
+  "id": "st_collab_horror_school",
+  "title": "불 꺼진 폐교",
+  "category": "collaboration",
+  "description": "공포게임 동반 입장(collab_002) 변형 A. 관계도에 따라 출발 분위기가 갈리고, 탐색 판정 뒤 추격전이 이어진다.",
+  "meta": {
+    "theme": "game_content",
+    "setting": "abandoned_school_horror",
+    "conflict": "nervousness",
+    "resolution": "comeback_win",
+    "activity": "horror",
+    "tone": "tense"
+  },
+  "collab": {
+    "min": 2,
+    "max": 3
+  },
+  "timeSlot": "lateNight",
+  "conditions": {
+    "activityCategories": [
+      "horror"
+    ],
+    "cooldown": 3
+  },
+  "weight": 1,
+  "start": "trust",
+  "steps": {
+    "trust": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "partyMinRelationship": 40
+          },
+          "next": "together"
+        }
+      ],
+      "next": "apart"
+    },
+    "together": {
+      "type": "story",
+      "text": "{member}와 {partners}가 불 꺼진 폐교 게임을 켰다. 평소 믿는 사이라 그런지 '손 잡고 가자'는 말이 먼저 나왔다. 그래도 복도 끝의 발소리는 무섭다.",
+      "next": "route"
+    },
+    "apart": {
+      "type": "story",
+      "text": "{member}와 {partners}가 불 꺼진 폐교 게임을 켰다. 아직 서로 어색해서 무섭다는 말도 못 하고, 다들 괜찮은 척 목소리만 커진다.",
+      "effects": {
+        "hp": -2
+      },
+      "next": "route"
+    },
+    "route": {
+      "type": "choice",
+      "text": "교무실 열쇠를 찾아야 한다. 복도는 길고, 손전등 배터리는 반밖에 없다.",
+      "choices": [
+        {
+          "text": "{member}가 앞장서서 길을 연다",
+          "story": "{member}가 '내가 갈게'라며 손전등을 들었다. 목소리가 미세하게 떨린다.",
+          "next": "explore_lead"
+        },
+        {
+          "text": "다 같이 붙어서 한 칸씩 움직인다",
+          "story": "모두가 한 덩어리로 붙어 움직였다. 느리지만 혼자 남는 사람은 없다.",
+          "effects": {
+            "relationship": 2
+          },
+          "next": "explore_group"
+        },
+        {
+          "text": "숨어서 괴물이 지나가길 기다린다",
+          "story": "사물함 안에 숨었다. 숨소리만 들리는 시간이 길어진다.",
+          "next": "explore_hide"
+        }
+      ]
+    },
+    "explore_lead": {
+      "type": "check",
+      "text": "앞장선 {member}의 손전등이 깜빡인다. 복도 끝에서 무언가가 움직였다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 80,
+        "traitBonus": {
+          "horror": 15,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "{member}가 비명 대신 침착하게 길을 꺾었다. 열쇠는 바로 옆 교실에 있었다.",
+          "next": "chase"
+        },
+        "partial": {
+          "text": "열쇠는 찾았지만 {member}의 비명에 괴물이 깨어났다.",
+          "next": "chase"
+        },
+        "fail": {
+          "text": "앞장서던 {member}가 제일 먼저 잡혔다. 남은 사람들의 비명이 이어졌다.",
+          "next": "end_caught"
+        }
+      }
+    },
+    "explore_group": {
+      "type": "check",
+      "text": "한 덩어리로 움직이니 누가 어디를 비추는지 엉망이다. 그래도 서로의 목소리가 위안이 된다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 76,
+        "traitBonus": {
+          "horror": 10,
+          "highTension": 5,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "서로 다른 쪽을 비추며 단서를 빠르게 모았다. 열쇠를 찾았다.",
+          "next": "chase"
+        },
+        "partial": {
+          "text": "열쇠는 찾았지만 너무 시끄러웠다. 복도 끝에서 무언가가 달려온다.",
+          "next": "chase"
+        },
+        "fail": {
+          "text": "뭉쳐 다니다 막다른 교실에 갇혔다.",
+          "next": "end_caught"
+        }
+      }
+    },
+    "explore_hide": {
+      "type": "check",
+      "text": "괴물의 발소리가 사물함 바로 앞에서 멈췄다. 숨을 참아야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "roleplay": 10,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "발소리가 멀어졌다. 숨 참는 장면이 라디오극처럼 생생하게 방송됐다.",
+          "next": "end_hidden"
+        },
+        "partial": {
+          "text": "들키진 않았지만 시간을 너무 많이 썼다. 손전등이 꺼졌다.",
+          "next": "end_hidden_dark"
+        },
+        "fail": {
+          "text": "누군가의 딸꾹질 한 번에 사물함 문이 열렸다.",
+          "next": "end_caught"
+        }
+      }
+    },
+    "chase": {
+      "type": "check",
+      "text": "추격전이다. 교문까지 달려야 한다. 마지막 계단에서 손이 미끄러진다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 78,
+        "traitBonus": {
+          "horror": 10,
+          "competitive": 5,
+          "spontaneous": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "교문을 넘는 순간 모두의 비명이 환호로 바뀌었다. 단 한 명도 잡히지 않았다.",
+          "effects": {
+            "fans": 60
+          },
+          "next": "end_escape"
+        },
+        "success": {
+          "text": "마지막 순간 교문을 넘었다.",
+          "next": "end_escape"
+        },
+        "partial": {
+          "text": "{member}는 빠져나왔지만 한 명이 잡혔다. 구하러 돌아갈 시간은 없다.",
+          "next": "end_half_escape"
+        },
+        "fail": {
+          "text": "교문 바로 앞에서 모두 잡혔다.",
+          "next": "end_caught"
+        }
+      }
+    },
+    "end_escape": {
+      "type": "end",
+      "result": "success",
+      "text": "폐교 탈출 성공. 떨던 목소리로 끝까지 버틴 장면이 클립이 됐다. {member}는 '다음 공포게임도 이 조합으로'라고 했다.",
+      "effects": {
+        "fans": 170,
+        "fame": 1,
+        "relationship": 4,
+        "hp": -8,
+        "memberFlags": {
+          "horrorBuddy": true
+        }
+      }
+    },
+    "end_half_escape": {
+      "type": "end",
+      "result": "partial",
+      "text": "반쯤 성공한 탈출. 잡힌 쪽은 방송이 끝날 때까지 '두고 갔다'며 서운함을 토로했고, 시청자들은 그 장면을 더 좋아했다.",
+      "effects": {
+        "fans": 110,
+        "relationship": 2,
+        "hp": -8
+      }
+    },
+    "end_hidden": {
+      "type": "end",
+      "result": "partial",
+      "text": "끝까지 숨어서 버텼다. 탈출은 못 했지만 '숨 참기 방송'이라는 별명이 붙었다.",
+      "effects": {
+        "fans": 100,
+        "relationship": 3,
+        "hp": -5
+      }
+    },
+    "end_hidden_dark": {
+      "type": "end",
+      "result": "fail",
+      "text": "손전등이 꺼진 채 방송 시간이 끝났다. 다음엔 배터리부터 챙기자며 다 같이 웃었다.",
+      "effects": {
+        "fans": 60,
+        "relationship": 2,
+        "hp": -5
+      }
+    },
+    "end_caught": {
+      "type": "end",
+      "result": "fail",
+      "text": "모두 잡혔다. 그래도 비명 모음 클립은 오늘 가장 많이 돌았다. 재도전 날짜를 잡자는 말이 먼저 나왔다.",
+      "effects": {
+        "fans": 50,
+        "relationship": -1,
+        "hp": -8,
+        "memberFlags": {
+          "horrorRematch": true
+        }
+      }
+    }
+  },
+  "group": "collab_horror"
+}

@@ -1,0 +1,202 @@
+{
+  "id": "st_fan_online_meeting",
+  "title": "온라인 팬미팅",
+  "category": "fan",
+  "description": "첫 온라인 팬미팅. 중심 코너를 고르고, 마지막에는 팬들이 준비한 깜짝 선물이 기다린다.",
+  "meta": {
+    "theme": "fan_event",
+    "setting": "online_fanmeeting",
+    "conflict": "nervousness",
+    "resolution": "audience_help",
+    "activity": "talk",
+    "tone": "warm"
+  },
+  "conditions": {
+    "minDay": 8,
+    "minFans": 2000,
+    "blockedActivityCategories": [
+      "rest"
+    ],
+    "cooldown": 10
+  },
+  "traitWeights": {
+    "introvert": 1.5
+  },
+  "start": "intro",
+  "steps": {
+    "intro": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "anyTraits": [
+              "introvert"
+            ]
+          },
+          "text": "{member}는 온라인 팬미팅 공지를 올려 놓고도 벌써부터 손에 땀이 난다. 낯을 가리는 편이라 수백 명 앞에서 이야기하는 건 여전히 떨린다."
+        },
+        {
+          "text": "{member}의 첫 온라인 팬미팅 날이 잡혔다. 사연 읽기, 라이브 노래, 미니 게임까지 준비할 게 많다."
+        }
+      ],
+      "next": "plan"
+    },
+    "plan": {
+      "type": "choice",
+      "text": "팬미팅의 중심 코너를 무엇으로 할까?",
+      "choices": [
+        {
+          "text": "사연을 읽으며 이야기를 나눈다",
+          "next": "talk"
+        },
+        {
+          "text": "라이브 노래로 분위기를 띄운다",
+          "next": "sing"
+        },
+        {
+          "text": "팬들과 미니 게임을 한다",
+          "next": "game"
+        }
+      ]
+    },
+    "talk": {
+      "type": "check",
+      "text": "첫 사연부터 눈물 버튼이다. 목소리가 떨리지 않게 천천히 읽어 내려간다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "chatter": 10,
+          "calm": 5,
+          "host": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "사연 하나하나에 진심으로 답했다. 채팅창이 조용히 따뜻해졌다.",
+          "effects": {
+            "fans": 50
+          },
+          "next": "surprise"
+        },
+        "partial": {
+          "text": "중간에 말이 꼬여 몇 번 멈칫했지만, 팬들은 끝까지 기다려 줬다.",
+          "next": "surprise_small"
+        },
+        "fail": {
+          "text": "긴장한 탓에 준비한 이야기의 절반도 하지 못했다.",
+          "next": "end_rough"
+        }
+      }
+    },
+    "sing": {
+      "type": "check",
+      "text": "반주가 흐르고 조명이 켜졌다. 팬들 앞에서 부르는 첫 라이브다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 76,
+        "traitBonus": {
+          "instrument": 10,
+          "cover": 5,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "마지막 음이 끝나자 채팅창이 박수 이모티콘으로 뒤덮였다.",
+          "effects": {
+            "fans": 50
+          },
+          "next": "surprise"
+        },
+        "partial": {
+          "text": "고음에서 한 번 흔들렸지만, 오히려 그 뒤로 더 편하게 불렀다.",
+          "next": "surprise_small"
+        },
+        "fail": {
+          "text": "긴장으로 목이 잠겼다. 노래를 중간에 멈춰야 했다.",
+          "next": "end_rough"
+        }
+      }
+    },
+    "game": {
+      "type": "check",
+      "text": "팬 대표들과 미니 게임 한 판. 봐주면 티가 나고, 이기면 원성이 쏟아진다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 70,
+        "traitBonus": {
+          "spontaneous": 5,
+          "competitive": 5,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "아슬아슬한 승부 끝에 딱 한 판 차이로 이겼다. 모두가 웃는 결과다.",
+          "effects": {
+            "fans": 50
+          },
+          "next": "surprise"
+        },
+        "partial": {
+          "text": "게임 규칙 설명에서 한참 헤맸지만 그것마저 웃음 포인트가 됐다.",
+          "next": "surprise_small"
+        },
+        "fail": {
+          "text": "진행이 매끄럽지 않아 시간이 다 가 버렸다.",
+          "next": "end_rough"
+        }
+      }
+    },
+    "surprise_small": {
+      "type": "story",
+      "text": "진행은 조금 서툴렀지만 팬들은 끝까지 채팅으로 응원을 보냈다.",
+      "next": "surprise"
+    },
+    "surprise": {
+      "type": "choice",
+      "text": "끝나갈 무렵, 팬들이 몰래 준비한 축하 영상이 화면에 올라왔다. {member}가 잠시 말을 잃었다.",
+      "choices": [
+        {
+          "text": "솔직한 마음을 그대로 전한다",
+          "next": "end_touching"
+        },
+        {
+          "text": "웃으며 다음 팬미팅을 약속한다",
+          "next": "end_promise"
+        }
+      ]
+    },
+    "end_touching": {
+      "type": "end",
+      "result": "success",
+      "text": "떨리는 목소리로 전한 고맙다는 말이 오래 남았다. 팬미팅 다시보기에는 '울면서 봤다'는 댓글이 가득하다.",
+      "effects": {
+        "fans": 140,
+        "fame": 1,
+        "hp": 5
+      }
+    },
+    "end_promise": {
+      "type": "end",
+      "result": "success",
+      "text": "'다음엔 더 크게 하자!' 그 약속에 채팅창이 한참 동안 멈추지 않았다.",
+      "effects": {
+        "fans": 120,
+        "fame": 1,
+        "flags": {
+          "fanMeetingPromise": true
+        }
+      }
+    },
+    "end_rough": {
+      "type": "end",
+      "result": "fail",
+      "text": "아쉬움이 남는 팬미팅이었다. 그래도 방송을 끄기 전, 팬들은 '처음이니까 괜찮아'라는 말을 끝없이 남겼다.",
+      "effects": {
+        "fans": 40
+      }
+    }
+  }
+}

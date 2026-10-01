@@ -1,0 +1,225 @@
+{
+  "id": "st_game_aos_league",
+  "title": "방송인 AOS 리그",
+  "category": "game",
+  "description": "파트너와 한 팀으로 AOS 리그에 출전한다. 라인전 → 오브젝트 → 한타로 이어지는 경기.",
+  "meta": {
+    "theme": "game_tournament",
+    "setting": "aos_league",
+    "conflict": "big_opportunity",
+    "resolution": "teamwork",
+    "activity": "moba",
+    "tone": "hype"
+  },
+  "collab": {
+    "min": 2,
+    "max": 3
+  },
+  "conditions": {
+    "activityCategories": [
+      "game"
+    ],
+    "blockedActivityCategories": [
+      "horror"
+    ],
+    "cooldown": 8
+  },
+  "weight": 0.8,
+  "start": "intro",
+  "steps": {
+    "intro": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "partyMinRelationship": 35
+          },
+          "text": "방송인 AOS 리그에 {member}와 {partners}가 한 팀으로 나섰다. 평소 합이 좋은 사이라 음성 채팅부터 척척 맞는다."
+        },
+        {
+          "text": "방송인 AOS 리그에 {member}와 {partners}가 한 팀으로 나섰다. 아직 서로의 플레이 스타일을 잘 모르는 만큼, 초반 호흡이 관건이다."
+        }
+      ],
+      "next": "lane"
+    },
+    "lane": {
+      "type": "check",
+      "text": "라인전 단계. 상대 정글이 쉴 새 없이 {member} 쪽 라인을 노린다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 74,
+        "traitBonus": {
+          "competitive": 5,
+          "brain": 5,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "갱킹을 역으로 받아쳐 선취점을 따냈다. 초반 주도권은 우리 팀이다.",
+          "effects": {
+            "fans": 30
+          },
+          "next": "objective"
+        },
+        "success": {
+          "text": "몇 번의 위기를 넘기며 라인전을 무난하게 버텼다.",
+          "next": "objective"
+        },
+        "partial": {
+          "text": "CS 차이가 조금씩 벌어졌다. 크게 밀리진 않았지만 불안하다.",
+          "next": "behind"
+        },
+        "fail": {
+          "text": "킬을 연달아 내줬다. 상대 쪽으로 성장이 크게 기울었다.",
+          "next": "behind"
+        }
+      }
+    },
+    "objective": {
+      "type": "choice",
+      "text": "첫 대형 오브젝트가 곧 등장한다. 팀의 선택은?",
+      "choices": [
+        {
+          "text": "시야를 잡고 오브젝트를 먼저 챙긴다",
+          "next": "fight"
+        },
+        {
+          "text": "상대 정글을 먼저 끊으러 간다",
+          "next": "fight_risky"
+        }
+      ]
+    },
+    "behind": {
+      "type": "choice",
+      "text": "밀리는 흐름. 채팅창에는 걱정과 응원이 섞여 올라온다.",
+      "choices": [
+        {
+          "text": "무리하지 않고 후반을 바라본다",
+          "next": "fight_late"
+        },
+        {
+          "text": "과감하게 한타를 열어 흐름을 뒤집는다",
+          "next": "fight_risky"
+        }
+      ]
+    },
+    "fight": {
+      "type": "check",
+      "text": "오브젝트 앞에서 양 팀이 맞붙었다. 교전의 시작을 누가 여느냐가 승부를 가른다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 74,
+        "traitBonus": {
+          "competitive": 5,
+          "host": 5,
+          "brain": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "완벽한 진입이었다. 한타 대승 후 그대로 넥서스까지 밀어붙였다.",
+          "next": "end_win"
+        },
+        "partial": {
+          "text": "한타는 이겼지만 마무리가 늦어 장기전 끝에 아깝게 무너졌다.",
+          "next": "end_close"
+        },
+        "fail": {
+          "text": "진입 타이밍이 어긋났다. 흐름을 한 번 내주자 되찾지 못했다.",
+          "next": "end_lose"
+        }
+      }
+    },
+    "fight_risky": {
+      "type": "check",
+      "text": "상대의 허를 찌르는 과감한 움직임. 성공하면 단숨에 흐름을 가져오고, 실패하면 그대로 끝이다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 80,
+        "traitBonus": {
+          "spontaneous": 10,
+          "competitive": 5,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "아무도 예상하지 못한 한 수였다. 해설진이 '오늘의 플레이'로 이 장면을 뽑았다.",
+          "effects": {
+            "fans": 50,
+            "fame": 1
+          },
+          "next": "end_win"
+        },
+        "success": {
+          "text": "도박이 통했다. 한타 대승으로 경기를 끝냈다.",
+          "next": "end_win"
+        },
+        "partial": {
+          "text": "절반의 성공. 상대 정글은 잡았지만 우리 팀도 둘이 쓰러지며 결국 역전당했다.",
+          "next": "end_close"
+        },
+        "fail": {
+          "text": "무리한 진입이었다. 전멸과 함께 경기가 끝났다.",
+          "next": "end_lose"
+        }
+      }
+    },
+    "fight_late": {
+      "type": "check",
+      "text": "버티고 또 버텼다. 40분이 넘어가자 성장 차이가 조금씩 줄어든다. 마지막 한타가 온다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 78,
+        "traitBonus": {
+          "calm": 10,
+          "brain": 5,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "끝까지 버틴 보람이 있었다. 후반 한타에서 역전에 성공했다.",
+          "next": "end_win"
+        },
+        "partial": {
+          "text": "마지막까지 팽팽했지만 한 끗 차이로 넥서스를 내줬다.",
+          "next": "end_close"
+        },
+        "fail": {
+          "text": "버티는 것만으로는 부족했다.",
+          "next": "end_lose"
+        }
+      }
+    },
+    "end_win": {
+      "type": "end",
+      "result": "success",
+      "text": "승리. 경기가 끝나자 {member}와 {partners}의 음성 채팅이 환호로 뒤덮였다. 팀 합방 클립이 리그 채널 메인에 걸렸다.",
+      "effects": {
+        "fans": 160,
+        "fame": 1,
+        "relationship": 3
+      }
+    },
+    "end_close": {
+      "type": "end",
+      "result": "partial",
+      "text": "아쉬운 패배. 하지만 끝까지 포기하지 않은 경기에 '졌지만 잘 싸웠다'는 반응이 쏟아졌다.",
+      "effects": {
+        "fans": 80,
+        "relationship": 3
+      }
+    },
+    "end_lose": {
+      "type": "end",
+      "result": "fail",
+      "text": "완패. 그래도 경기 후 복기 방송에서 서로의 실수를 웃으며 짚어 주는 모습은 꽤 훈훈했다.",
+      "effects": {
+        "fans": 30,
+        "relationship": 1
+      }
+    }
+  }
+}

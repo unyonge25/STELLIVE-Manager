@@ -1,0 +1,355 @@
+{
+  "id": "st_equip_mic_cutout",
+  "title": "끊기는 마이크",
+  "category": "broadcast",
+  "group": "equip_trouble",
+  "description": "방송 중 장비 트러블(ev_c01) 변형 A. 첫 대응 판정 결과에 따라 열리는 수습 방법이 달라진다.",
+  "meta": {
+    "theme": "broadcast_incident",
+    "setting": "mic_cutout_stream",
+    "conflict": "technical_trouble",
+    "resolution": "compromise",
+    "activity": "broadcast",
+    "tone": "tense"
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "cooldown": 4
+  },
+  "start": "first_reaction",
+  "steps": {
+    "first_reaction": {
+      "type": "check",
+      "text": "{member}의 목소리가 뚝뚝 끊기기 시작했다. 채팅창에 물음표가 쏟아진다. 마이크 선을 만지작거리는 동안에도 말은 이어 가야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "host": 10,
+          "calm": 10
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "{member}가 끊기는 타이밍에 맞춰 '들리면 1'을 외치게 하자 채팅창이 놀이터가 됐다.",
+          "next": "steady_options"
+        },
+        "partial": {
+          "text": "당황은 숨겼지만 말이 끊길 때마다 흐름도 같이 끊긴다.",
+          "next": "shaky_options"
+        },
+        "fail": {
+          "text": "소리가 거의 들리지 않는다. 시청자들이 하나둘 나가기 시작했다.",
+          "effects": {
+            "fans": -20
+          },
+          "next": "bad_options"
+        }
+      }
+    },
+    "steady_options": {
+      "type": "choice",
+      "text": "분위기는 살렸다. 이제 어떻게 마무리할까?",
+      "choices": [
+        {
+          "text": "이 분위기 그대로 임기응변으로 방송을 이어간다",
+          "story": "끊기는 마이크를 아예 오늘의 콘텐츠로 삼았다.",
+          "effects": {
+            "hp": -3
+          },
+          "next": "improv_finish"
+        },
+        {
+          "text": "바로 새 장비를 주문하고 언박싱 방송을 예고한다",
+          "story": "주문 화면을 띄우고 '다음 방송은 새 마이크 개봉'이라고 공지했다.",
+          "effects": {
+            "money": -80000
+          },
+          "next": "end_unboxing"
+        },
+        {
+          "text": "분위기 좋을 때 짧게 마무리한다",
+          "story": "{member}가 \"오늘은 웃을 때 끝내자\"며 방송을 일찍 정리했다.",
+          "next": "end_steady_early"
+        }
+      ]
+    },
+    "shaky_options": {
+      "type": "choice",
+      "text": "흐름이 위태롭다. 결정이 필요하다.",
+      "choices": [
+        {
+          "text": "바로 새 장비를 주문하고 양해를 구한다",
+          "story": "방송을 잠시 멈추고 상황을 설명했다. 주문 화면을 그대로 보여 주자 채팅창이 진정됐다.",
+          "effects": {
+            "money": -80000
+          },
+          "next": "end_ordered"
+        },
+        {
+          "text": "임기응변으로 방송을 이어간다",
+          "story": "목소리 대신 자막과 채팅으로 소통하기 시작했다.",
+          "effects": {
+            "hp": -3
+          },
+          "next": "improv_shaky"
+        },
+        {
+          "text": "오늘은 짧게 마무리한다",
+          "story": "흔들리는 흐름을 붙잡기보다 짧게 사과하고 끝내기로 했다.",
+          "next": "end_shaky_early"
+        }
+      ]
+    },
+    "bad_options": {
+      "type": "choice",
+      "text": "더 끌면 방송 사고다.",
+      "choices": [
+        {
+          "text": "오늘은 짧게 마무리한다",
+          "story": "{member}가 화면에 '오늘은 여기까지, 미안해요'라고 적었다.",
+          "next": "end_early"
+        },
+        {
+          "text": "바로 새 장비를 주문하고 양해를 구한다",
+          "story": "방송을 끄기 전, 새 마이크 주문 화면을 보여 주며 사과했다.",
+          "effects": {
+            "money": -80000
+          },
+          "next": "end_ordered_late"
+        },
+        {
+          "text": "임기응변으로 끝까지 버틴다",
+          "story": "{member}가 소리가 거의 안 나는 마이크 대신 손글씨 팻말을 들고 방송을 이어 갔다.",
+          "effects": {
+            "hp": -3
+          },
+          "next": "improv_bad"
+        }
+      ]
+    },
+    "improv_finish": {
+      "type": "check",
+      "text": "남은 30분. 끊기는 소리와 함께 방송을 끝까지 끌고 가야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "host": 10,
+          "calm": 10,
+          "spontaneous": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "끊길 때마다 터진 드립이 전부 클립이 됐다. '장비 트러블이 오늘의 콘텐츠'라는 제목까지 붙었다.",
+          "next": "end_improv_great"
+        },
+        "success": {
+          "text": "몇 번 끊겼지만 시청자들이 채팅으로 빈칸을 채워 주며 무사히 끝났다.",
+          "next": "end_improv_ok"
+        },
+        "partial": {
+          "text": "끝까지 갔지만 후반부엔 다들 지쳐 보였다.",
+          "next": "end_improv_tired"
+        },
+        "fail": {
+          "text": "소리가 점점 더 자주 끊겼다. 결국 채팅창에는 '다음에 다시 봐요'만 남았다.",
+          "next": "end_improv_fail"
+        }
+      }
+    },
+    "end_unboxing": {
+      "type": "end",
+      "result": "success",
+      "text": "위기를 넘긴 데다 다음 방송 예고까지 챙겼다. 언박싱 방송 날, 대기실이 평소보다 붐볐다.",
+      "effects": {
+        "fans": 60
+      }
+    },
+    "end_ordered": {
+      "type": "end",
+      "result": "partial",
+      "text": "빠른 처리 덕분에 큰 사고는 피했다. 다만 오늘 방송은 반쯤 날아갔다.",
+      "effects": {
+        "fans": 30
+      }
+    },
+    "end_ordered_late": {
+      "type": "end",
+      "result": "fail",
+      "text": "늦었지만 장비는 바꿨다. '다음엔 소리 잘 들리게 올게'라는 마지막 인사에 응원 채팅이 남았다.",
+      "effects": {
+        "fans": 10
+      }
+    },
+    "end_early": {
+      "type": "end",
+      "result": "fail",
+      "text": "방송은 짧게 끝났다. 아쉬워하는 시청자도 있었지만, 덕분에 {member}는 오랜만에 일찍 쉬었다.",
+      "effects": {
+        "fans": -20,
+        "hp": 5
+      }
+    },
+    "end_improv_great": {
+      "type": "end",
+      "result": "success",
+      "text": "장비 트러블이 오늘 최고의 콘텐츠가 됐다. 다음 방송에서 새 마이크를 쓰자 '옛날 마이크 그립다'는 채팅까지 나왔다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1
+      }
+    },
+    "end_improv_ok": {
+      "type": "end",
+      "result": "success",
+      "text": "무사히 끝났다. 시청자들과 함께 넘긴 위기라 그런지 채널 분위기가 한층 끈끈해졌다.",
+      "effects": {
+        "fans": 60
+      }
+    },
+    "end_improv_tired": {
+      "type": "end",
+      "result": "partial",
+      "text": "끝까지 버틴 건 박수받을 일이지만, 방송의 재미는 반쯤 줄었다는 평이다.",
+      "effects": {
+        "fans": 30,
+        "hp": -2
+      }
+    },
+    "end_improv_fail": {
+      "type": "end",
+      "result": "fail",
+      "text": "버티려다 오히려 시청자를 잃었다. {member}는 장비 점검 목록을 만들어 방송 전에 꼭 확인하기로 했다.",
+      "effects": {
+        "fans": -50
+      }
+    },
+    "improv_shaky": {
+      "type": "check",
+      "text": "흐름이 이미 한 번 흔들린 상태다. 자막과 채팅만으로 남은 시간을 붙잡아야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "host": 10,
+          "calm": 10,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "자막으로 주고받는 대화가 의외로 재밌었다. 흔들리던 방송이 제자리를 찾았다.",
+          "next": "end_shaky_saved"
+        },
+        "partial": {
+          "text": "버티긴 했지만 자막 쓰느라 방송 속도가 확 느려졌다.",
+          "next": "end_shaky_slow"
+        },
+        "fail": {
+          "text": "자막이 채팅 속도를 따라가지 못했다. 시청자들이 하나둘 떠났다.",
+          "next": "end_shaky_lost"
+        }
+      }
+    },
+    "end_shaky_saved": {
+      "type": "end",
+      "result": "success",
+      "text": "한 번 흔들렸던 방송을 끝까지 살려 냈다. \"자막 방송도 괜찮다\"는 반응에 {member}가 다음엔 일부러 해 보겠다고 웃었다.",
+      "effects": {
+        "fans": 50
+      }
+    },
+    "end_shaky_slow": {
+      "type": "end",
+      "result": "partial",
+      "text": "끝까지 갔지만 느린 방송이었다. 그래도 끝까지 남은 시청자들은 고생했다며 박수를 보냈다.",
+      "effects": {
+        "fans": 20,
+        "hp": -2
+      }
+    },
+    "end_shaky_lost": {
+      "type": "end",
+      "result": "fail",
+      "text": "흔들린 흐름을 끝내 되찾지 못했다. {member}는 방송 후 바로 새 마이크를 장바구니에 담았다.",
+      "effects": {
+        "fans": -40
+      }
+    },
+    "end_steady_early": {
+      "type": "end",
+      "result": "neutral",
+      "text": "좋은 분위기로 일찍 끝난 방송이었다. 아쉬워하는 시청자도 있었지만 {member}는 오랜만에 푹 쉬었다.",
+      "effects": {
+        "fans": -10,
+        "hp": 5
+      }
+    },
+    "end_shaky_early": {
+      "type": "end",
+      "result": "neutral",
+      "text": "짧게 끝난 방송에 아쉬움은 남았지만, 무리하지 않은 선택에 \"잘 쉬어\"라는 채팅이 이어졌다.",
+      "effects": {
+        "fans": -20,
+        "hp": 5
+      }
+    },
+    "improv_bad": {
+      "type": "check",
+      "text": "소리 없는 방송. 팻말과 표정만으로 시청자를 붙잡아야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 76,
+        "traitBonus": {
+          "roleplay": 10,
+          "highTension": 5,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "팻말 방송이 의외로 웃겼다. 떠났던 시청자들이 소문을 듣고 돌아왔다.",
+          "next": "end_sign_hit"
+        },
+        "partial": {
+          "text": "몇몇 장면은 웃겼지만 오래 버티기는 힘들었다.",
+          "next": "end_sign_half"
+        },
+        "fail": {
+          "text": "팻말로는 한계가 있었다. 결국 방송을 끝냈다.",
+          "next": "end_sign_fail"
+        }
+      }
+    },
+    "end_sign_hit": {
+      "type": "end",
+      "result": "success",
+      "text": "\"무음 팻말 방송\"이 클립으로 돌았다. 최악의 장비 트러블이 오늘의 명장면이 됐다.",
+      "effects": {
+        "fans": 120,
+        "fame": 1
+      }
+    },
+    "end_sign_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "끝까지 버틴 노력은 박수를 받았지만, 방송으로는 아쉬움이 컸다.",
+      "effects": {
+        "fans": 10,
+        "hp": -2
+      }
+    },
+    "end_sign_fail": {
+      "type": "end",
+      "result": "fail",
+      "text": "버티려다 방송 시간만 길어졌다. {member}는 다음 날 바로 장비 점검 목록부터 만들었다.",
+      "effects": {
+        "fans": -50
+      }
+    }
+  }
+}

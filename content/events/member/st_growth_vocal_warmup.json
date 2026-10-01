@@ -1,0 +1,283 @@
+{
+  "id": "st_growth_vocal_warmup",
+  "title": "목 상태 점검",
+  "category": "member",
+  "group": "growth_vocal",
+  "description": "보컬 트레이닝 제안(ev_s01) 변형 B. 아침 발성 테스트 판정 결과에 따라 고를 수 있는 연습 방법이 달라진다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "morning_vocal_check",
+    "conflict": "early_disadvantage",
+    "resolution": "comeback_win",
+    "activity": "music",
+    "tone": "tense"
+  },
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "cooldown": 6
+  },
+  "start": "warmup",
+  "steps": {
+    "warmup": {
+      "type": "check",
+      "text": "보컬 트레이너에게 레슨 제안을 받은 날 아침. {member}가 먼저 지금 목 상태부터 확인해 보기로 했다. 첫 발성 테스트가 시작됐다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 72,
+        "traitBonus": {
+          "diligent": 5,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "목이 가볍다. 오늘은 고음까지 시원하게 올라간다.",
+          "next": "plan_push"
+        },
+        "partial": {
+          "text": "소리는 나지만 고음에서 살짝 걸린다. 기초부터 다지는 게 좋겠다.",
+          "next": "plan_basic"
+        },
+        "fail": {
+          "text": "첫 소절부터 목이 잠겼다. 최근 일정이 목에 그대로 쌓여 있었다.",
+          "next": "plan_hoarse"
+        }
+      }
+    },
+    "plan_push": {
+      "type": "choice",
+      "text": "컨디션이 좋은 날이다. 이 기세를 어디에 쓸까?",
+      "choices": [
+        {
+          "text": "정식 레슨에서 고음 확장을 배운다",
+          "conditions": {
+            "minMoney": 70000
+          },
+          "story": "레슨비를 내고 고음 확장 과정을 신청했다. 컨디션이 좋은 날이라 트레이너도 욕심을 낸다.",
+          "effects": {
+            "money": -70000
+          },
+          "next": "end_push_lesson"
+        },
+        {
+          "text": "영상 자료로 혼자 고음 연습을 밀어붙인다",
+          "story": "강의 영상을 틀어 두고 한 음씩 높여 간다. 혼자라서 멈출 사람이 없다.",
+          "effects": {
+            "hp": -2
+          },
+          "next": "solo_high"
+        }
+      ]
+    },
+    "plan_basic": {
+      "type": "choice",
+      "text": "애매한 컨디션. 무리하지 않으면서도 뭔가는 얻고 싶다.",
+      "choices": [
+        {
+          "text": "정식 레슨에서 기초 발성부터 다진다",
+          "conditions": {
+            "minMoney": 70000
+          },
+          "story": "트레이너가 오늘은 기초만 하자고 했다. 지루하지만 지금 목에 딱 맞는 처방이다.",
+          "effects": {
+            "money": -70000
+          },
+          "next": "end_basic_lesson"
+        },
+        {
+          "text": "영상 자료로 호흡 연습만 한다",
+          "story": "고음은 내려놓고 호흡 강의만 골라 따라 했다.",
+          "effects": {
+            "hp": -2
+          },
+          "next": "breath_check"
+        }
+      ]
+    },
+    "plan_hoarse": {
+      "type": "choice",
+      "text": "목이 잠긴 날이다. 오늘 무엇을 할 수 있을까?",
+      "choices": [
+        {
+          "text": "레슨에서 목 관리법부터 배운다",
+          "conditions": {
+            "minMoney": 70000
+          },
+          "story": "트레이너는 노래 대신 목 풀기와 관리법만 한 시간 내내 가르쳤다.",
+          "effects": {
+            "money": -70000
+          },
+          "next": "end_care_lesson"
+        },
+        {
+          "text": "노래는 쉬고 강의 영상만 본다",
+          "story": "소리는 내지 않고 강의 영상만 보며 메모했다. 머리로라도 연습한다.",
+          "next": "end_rest_watch"
+        }
+      ]
+    },
+    "solo_high": {
+      "type": "check",
+      "text": "오늘의 목표 음까지 반음 남았다. 여기서 더 올리면 목에 무리가 갈 수도 있다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 80,
+        "traitBonus": {
+          "perfectionist": 10,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "목표 음이 깨끗하게 나왔다. 혼자 박수를 쳤다.",
+          "next": "end_solo_high"
+        },
+        "partial": {
+          "text": "음은 닿았지만 끝이 갈라졌다.",
+          "next": "end_solo_strain"
+        },
+        "fail": {
+          "text": "무리하게 올리다 목이 쉬어 버렸다.",
+          "next": "end_solo_hoarse"
+        }
+      }
+    },
+    "breath_check": {
+      "type": "check",
+      "text": "한 호흡으로 몇 소절까지 갈 수 있는지 재 본다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 75,
+        "traitBonus": {
+          "diligent": 10,
+          "perfectionist": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "처음보다 두 소절이나 늘었다.",
+          "next": "end_breath_good"
+        },
+        "partial": {
+          "text": "조금 늘었지만 아직 부족하다.",
+          "next": "end_breath_half"
+        },
+        "fail": {
+          "text": "숫자는 그대로였다. 오늘은 여기까지.",
+          "next": "end_breath_flat"
+        }
+      }
+    },
+    "end_push_lesson": {
+      "type": "end",
+      "result": "success",
+      "text": "컨디션 좋은 날에 받은 레슨은 효과가 컸다. 그날 밤 노래 방송에서 {member}의 고음이 한 단계 올라갔다.",
+      "effects": {
+        "stats": {
+          "Vc": 3
+        },
+        "fans": 40,
+        "hp": -3
+      }
+    },
+    "end_basic_lesson": {
+      "type": "end",
+      "result": "success",
+      "text": "기초부터 다진 레슨이었다. 화려하진 않아도 다음 노래 방송부터 목이 덜 지친다.",
+      "effects": {
+        "stats": {
+          "Vc": 3
+        },
+        "hp": -3
+      }
+    },
+    "end_care_lesson": {
+      "type": "end",
+      "result": "partial",
+      "text": "노래는 거의 못 했지만 목 관리법을 제대로 배웠다. 며칠 뒤 목이 돌아오자 확실히 덜 지쳤다.",
+      "effects": {
+        "stats": {
+          "Vc": 2
+        },
+        "hp": 4
+      }
+    },
+    "end_rest_watch": {
+      "type": "end",
+      "result": "neutral",
+      "text": "목을 쉬게 한 덕분에 다음 날 컨디션이 돌아왔다. 메모해 둔 내용도 꽤 쌓였다.",
+      "effects": {
+        "stats": {
+          "Vc": 1
+        },
+        "hp": 5
+      }
+    },
+    "end_solo_high": {
+      "type": "end",
+      "result": "success",
+      "text": "혼자서 목표 음을 넘었다. 다음 노래 방송에서 그 음을 처음 공개하자 채팅창이 놀라움으로 가득 찼다.",
+      "effects": {
+        "stats": {
+          "Vc": 2
+        },
+        "fans": 40
+      }
+    },
+    "end_solo_strain": {
+      "type": "end",
+      "result": "partial",
+      "text": "고음은 늘었지만 목도 그만큼 지쳤다. 며칠은 아껴 써야 한다.",
+      "effects": {
+        "stats": {
+          "Vc": 1
+        },
+        "hp": -4
+      }
+    },
+    "end_solo_hoarse": {
+      "type": "end",
+      "result": "fail",
+      "text": "목이 쉬어 그날 노래 방송을 토크로 바꿨다. '무리하지 마'라는 채팅에 {member}는 다음엔 레슨부터 받겠다고 했다.",
+      "effects": {
+        "hp": -5,
+        "memberFlags": {
+          "vocalRetry": true
+        }
+      }
+    },
+    "end_breath_good": {
+      "type": "end",
+      "result": "success",
+      "text": "호흡이 길어지니 고음도 덩달아 편해졌다. 애매했던 아침이 꽤 괜찮은 하루로 바뀌었다.",
+      "effects": {
+        "stats": {
+          "Vc": 2
+        }
+      }
+    },
+    "end_breath_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "호흡은 조금 늘었다. 고음까지 닿으려면 시간이 더 필요하다.",
+      "effects": {
+        "stats": {
+          "Vc": 1
+        },
+        "hp": -2
+      }
+    },
+    "end_breath_flat": {
+      "type": "end",
+      "result": "fail",
+      "text": "변화가 없어 아쉬웠다. {member}는 컨디션이 좋은 날 다시 도전하기로 했다.",
+      "effects": {
+        "memberFlags": {
+          "vocalRetry": true
+        }
+      }
+    }
+  }
+}

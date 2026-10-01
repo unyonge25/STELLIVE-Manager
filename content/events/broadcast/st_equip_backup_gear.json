@@ -1,0 +1,267 @@
+{
+  "id": "st_equip_backup_gear",
+  "title": "창고 속 예비 장비",
+  "category": "broadcast",
+  "group": "equip_trouble",
+  "description": "방송 중 장비 트러블(ev_c01) 변형 B. 새 장비 주문 / 임기응변 / 짧게 마무리 / 창고의 예비 장비 도박 중 하나를 고른다.",
+  "meta": {
+    "theme": "broadcast_live",
+    "setting": "backup_gear_hunt",
+    "conflict": "budget_limit",
+    "resolution": "risky_gamble",
+    "activity": "broadcast",
+    "tone": "comedic"
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "cooldown": 4
+  },
+  "start": "pick",
+  "steps": {
+    "pick": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "anyTraits": [
+              "unlucky"
+            ]
+          },
+          "text": "방송 도중 {member}의 마이크가 지직거리기 시작했다. '또 나야?' 운 없기로 유명한 {member}답게 채팅창은 벌써 익숙하다는 반응이다. 새 마이크는 비싸고, 창고 어딘가엔 오래된 예비 마이크가 있다."
+        },
+        {
+          "text": "방송 도중 {member}의 마이크가 지직거리기 시작했다. 새 마이크는 비싸고, 창고 어딘가엔 언제 샀는지 모를 예비 마이크가 있다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "바로 새 장비를 주문하고 양해를 구한다",
+          "story": "주문 화면을 그대로 보여 주며 사정을 설명했다. 배송은 내일이다. 남은 방송 시간을 어떻게 채울까.",
+          "effects": {
+            "money": -80000
+          },
+          "next": "order_talk"
+        },
+        {
+          "text": "임기응변으로 방송을 이어간다",
+          "story": "{member}는 지직거리는 소리에 맞춰 효과음을 내기 시작했다.",
+          "effects": {
+            "hp": -3
+          },
+          "next": "improv"
+        },
+        {
+          "text": "창고의 예비 마이크를 꺼내 본다",
+          "story": "{member}가 화면 밖으로 사라졌다. 창고를 뒤지는 소리만 들린다. 채팅창은 '저거 되긴 함?'으로 가득하다.",
+          "next": "backup_gamble"
+        },
+        {
+          "text": "오늘은 짧게 마무리한다",
+          "story": "짧게 사과하고 방송을 끝냈다. 덕분에 저녁 시간이 통째로 생겼다.",
+          "next": "early_evening"
+        }
+      ]
+    },
+    "order_talk": {
+      "type": "check",
+      "text": "새 장비가 올 때까지 남은 시간은 장비 이야기로 채우기로 했다. 지직거리는 마이크로 하는 장비 토크다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "chatter": 10,
+          "brain": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "장비 고르는 과정을 시청자와 함께하자 의외로 반응이 좋았다.",
+          "next": "end_order_hype"
+        },
+        "partial": {
+          "text": "이야기는 이어졌지만 지직거림 때문에 집중이 잘 안 됐다.",
+          "next": "end_order_ok"
+        },
+        "fail": {
+          "text": "소리가 너무 거슬려 시청자들이 하나둘 나갔다.",
+          "next": "end_order_quiet"
+        }
+      }
+    },
+    "improv": {
+      "type": "check",
+      "text": "지직, 효과음, 지직, 효과음. 이 리듬을 방송 끝까지 끌고 갈 수 있을까.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "host": 10,
+          "calm": 10
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "효과음 리듬이 하나의 노래처럼 됐다. 채팅창이 비트를 맞추기 시작했다.",
+          "next": "end_improv_great"
+        },
+        "success": {
+          "text": "웃음으로 끝까지 버텼다.",
+          "next": "end_improv_ok"
+        },
+        "partial": {
+          "text": "처음엔 웃겼지만 갈수록 지쳤다.",
+          "next": "end_improv_tired"
+        },
+        "fail": {
+          "text": "효과음 개그가 세 번째부터 먹히지 않았다.",
+          "next": "end_improv_fail"
+        }
+      }
+    },
+    "backup_gamble": {
+      "type": "check",
+      "text": "먼지를 털어 낸 예비 마이크를 꽂았다. 첫 소리가 나오는 순간이다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 76,
+        "traitBonus": {
+          "brain": 10,
+          "spontaneous": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "놀랍게도 새것처럼 깨끗한 소리가 났다. 채팅창이 '창고의 기적'을 외쳤다.",
+          "next": "end_backup_win"
+        },
+        "partial": {
+          "text": "소리는 나지만 묘하게 라디오처럼 들린다. 그래도 지직거림보단 낫다.",
+          "next": "end_backup_radio"
+        },
+        "fail": {
+          "text": "예비 마이크는 아예 소리가 나지 않았다. 원래 마이크로 돌아가자 지직거림이 더 심해졌다.",
+          "next": "end_backup_bust"
+        }
+      }
+    },
+    "early_evening": {
+      "type": "choice",
+      "text": "갑자기 생긴 저녁 시간. 걱정하는 팬들의 메시지가 계속 온다.",
+      "choices": [
+        {
+          "text": "휴식 인증 글을 올리고 푹 쉰다",
+          "story": "'오늘은 마이크도 나도 쉬는 날'이라는 글을 올렸다. 귀여운 걱정이 섞인 댓글이 달렸다.",
+          "next": "end_rest_post"
+        },
+        {
+          "text": "아무 말 없이 그냥 푹 쉰다",
+          "story": "휴대폰을 내려놓고 일찍 잠들었다.",
+          "next": "end_rest_quiet"
+        }
+      ]
+    },
+    "end_order_hype": {
+      "type": "end",
+      "result": "success",
+      "text": "장비 토크가 다음 방송 예고가 됐다. 새 마이크가 도착한 날, 시청자들은 첫 소리를 함께 들으러 모였다.",
+      "effects": {
+        "fans": 60
+      }
+    },
+    "end_order_ok": {
+      "type": "end",
+      "result": "partial",
+      "text": "장비는 바꿨지만 오늘 방송은 반쯤 아쉬웠다.",
+      "effects": {
+        "fans": 30
+      }
+    },
+    "end_order_quiet": {
+      "type": "end",
+      "result": "fail",
+      "text": "돈은 썼는데 오늘 방송은 놓쳤다. 새 마이크로 다음 방송을 제대로 하기로 했다.",
+      "effects": {
+        "fans": 0
+      }
+    },
+    "end_improv_great": {
+      "type": "end",
+      "result": "success",
+      "text": "'지직 비트' 클립이 퍼지며 고장 난 마이크가 오늘의 주인공이 됐다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1
+      }
+    },
+    "end_improv_ok": {
+      "type": "end",
+      "result": "success",
+      "text": "웃음으로 버틴 방송이었다. 다음 날 새 마이크를 사러 가면서도 {member}는 효과음을 흥얼거렸다.",
+      "effects": {
+        "fans": 60
+      }
+    },
+    "end_improv_tired": {
+      "type": "end",
+      "result": "partial",
+      "text": "끝까지 버텼지만 다들 지쳤다. 장비 점검을 미루지 말자는 교훈이 남았다.",
+      "effects": {
+        "fans": 20,
+        "hp": -2
+      }
+    },
+    "end_improv_fail": {
+      "type": "end",
+      "result": "fail",
+      "text": "반복되는 효과음에 시청자들이 지쳤다. 방송 후 {member}는 바로 새 마이크를 장바구니에 담았다.",
+      "effects": {
+        "fans": -50
+      }
+    },
+    "end_backup_win": {
+      "type": "end",
+      "result": "success",
+      "text": "돈 한 푼 안 들이고 위기를 넘겼다. 창고의 예비 마이크는 그날부터 '행운의 마이크'로 불렸다.",
+      "effects": {
+        "fans": 90
+      }
+    },
+    "end_backup_radio": {
+      "type": "end",
+      "result": "partial",
+      "text": "라디오 같은 음질이 오히려 분위기를 냈다. 그래도 새 마이크는 사야겠다.",
+      "effects": {
+        "fans": 40
+      }
+    },
+    "end_backup_bust": {
+      "type": "end",
+      "result": "fail",
+      "text": "도박은 실패했다. 결국 방송을 일찍 끝내고, 새 마이크 주문 버튼을 눌렀다.",
+      "effects": {
+        "fans": -40,
+        "money": -80000
+      }
+    },
+    "end_rest_post": {
+      "type": "end",
+      "result": "neutral",
+      "text": "푹 쉬고 나니 몸이 가벼웠다. 팬들도 '가끔은 쉬어도 된다'며 다음 방송을 기다렸다.",
+      "effects": {
+        "fans": -10,
+        "hp": 5
+      }
+    },
+    "end_rest_quiet": {
+      "type": "end",
+      "result": "neutral",
+      "text": "말없이 사라진 저녁에 걱정하는 댓글이 조금 쌓였다. 몸은 충분히 쉬었다.",
+      "effects": {
+        "fans": -20,
+        "hp": 5
+      }
+    }
+  }
+}

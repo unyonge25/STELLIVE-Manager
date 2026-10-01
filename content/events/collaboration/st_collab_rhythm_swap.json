@@ -1,0 +1,159 @@
+{
+  "id": "st_collab_rhythm_swap",
+  "title": "추천곡 교환전",
+  "category": "collaboration",
+  "description": "리듬게임 대결(collab_005) 변형 B. 관계도에 따라 대결 분위기가 갈리고, 곡 교환 방식 선택 뒤 판정 하나로 끝난다.",
+  "meta": {
+    "theme": "game_content",
+    "setting": "rhythm_song_swap",
+    "conflict": "audience_reaction",
+    "resolution": "viral_moment",
+    "activity": "rhythm",
+    "tone": "comedic"
+  },
+  "collab": {
+    "min": 2,
+    "max": 3
+  },
+  "conditions": {
+    "activityCategories": [
+      "rhythm"
+    ],
+    "cooldown": 3
+  },
+  "weight": 2,
+  "start": "mood",
+  "steps": {
+    "mood": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "partyMinRelationship": 40
+          },
+          "next": "friendly"
+        }
+      ],
+      "next": "polite"
+    },
+    "friendly": {
+      "type": "story",
+      "text": "{member}와 {partners}가 리듬게임 추천곡 교환전을 열었다. 서로의 취향을 잘 아는 사이라, 고른 곡마다 함정이 숨어 있다.",
+      "next": "swap"
+    },
+    "polite": {
+      "type": "story",
+      "text": "{member}와 {partners}가 리듬게임 추천곡 교환전을 열었다. 아직 서로의 취향을 몰라서, 곡을 고를 때마다 상대 반응을 살핀다.",
+      "next": "swap"
+    },
+    "swap": {
+      "type": "choice",
+      "text": "채팅창은 벌써 서로 다른 곡을 밀고 있다. 어떤 방식으로 곡을 주고받을까?",
+      "choices": [
+        {
+          "text": "서로의 최애곡을 상대에게 시킨다",
+          "story": "{member}가 고른 곡이 나오자 상대가 '이게 최애야?'라며 웃었다.",
+          "next": "play"
+        },
+        {
+          "text": "채팅 투표로 가장 이상한 곡을 고른다",
+          "story": "투표 1위는 박자를 세기도 어려운 괴곡이었다. 채팅창은 이미 신났다.",
+          "effects": {
+            "fans": 20
+          },
+          "next": "play"
+        },
+        {
+          "text": "서로 한 손 핸디캡을 걸고 한다",
+          "story": "왼손만 쓰기로 했다. 시작 전부터 둘 다 웃음을 참지 못한다.",
+          "next": "play_handicap"
+        }
+      ]
+    },
+    "play": {
+      "type": "check",
+      "text": "낯선 곡을 처음 보는 순간의 리액션이 이 방송의 핵심이다. 플레이와 말을 동시에 챙겨야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "rhythm": 10,
+          "chatter": 5,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "{member}의 첫 리액션이 클립으로 잘려 바로 퍼졌다.",
+          "next": "end_viral"
+        },
+        "partial": {
+          "text": "플레이는 엉망이었지만 리액션은 살았다.",
+          "next": "end_laugh"
+        },
+        "fail": {
+          "text": "곡에 집중하느라 리액션이 사라졌다. 조용한 플레이가 이어졌다.",
+          "next": "end_quiet"
+        }
+      }
+    },
+    "play_handicap": {
+      "type": "check",
+      "text": "한 손으로 치는 리듬게임. 점수보다 버티는 모습이 웃음 포인트다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 76,
+        "traitBonus": {
+          "rhythm": 10,
+          "spontaneous": 10
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "한 손으로 클리어하는 기적이 나왔다. 채팅창이 박수로 가득 찼다.",
+          "next": "end_viral"
+        },
+        "partial": {
+          "text": "클리어는 못 했지만 끝까지 버티는 모습에 응원이 쏟아졌다.",
+          "next": "end_laugh"
+        },
+        "fail": {
+          "text": "시작 10초 만에 게임 오버. 너무 빨라서 웃기지도 않았다.",
+          "next": "end_quiet"
+        }
+      }
+    },
+    "end_viral": {
+      "type": "end",
+      "result": "success",
+      "text": "추천곡 교환전 클립이 리듬게임 커뮤니티까지 퍼졌다. 다음 교환전 곡을 추천하는 댓글이 수백 개 달렸다.",
+      "effects": {
+        "fans": 170,
+        "fame": 1,
+        "relationship": 4,
+        "hp": -3
+      }
+    },
+    "end_laugh": {
+      "type": "end",
+      "result": "partial",
+      "text": "승부는 흐지부지됐지만 웃음은 남았다. 다만 점수를 기대한 시청자들은 조금 아쉬워했다.",
+      "effects": {
+        "fans": 100,
+        "relationship": 4,
+        "hp": -3
+      }
+    },
+    "end_quiet": {
+      "type": "end",
+      "result": "fail",
+      "text": "생각보다 조용한 방송이었다. 둘은 다음엔 리액션 담당을 정해 오자고 웃으며 마무리했다.",
+      "effects": {
+        "fans": 40,
+        "relationship": 2,
+        "hp": -3
+      }
+    }
+  },
+  "group": "collab_rhythm"
+}

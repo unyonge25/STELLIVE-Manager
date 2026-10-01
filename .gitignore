@@ -1,0 +1,6 @@
+# 개발 도구 의존성 / 산출물 (게임 실행에는 필요 없다)
+tools/node_modules/
+tools/out/
+# LLM 결과 처리 기록 / 거절된 이벤트 (검토용, 커밋하지 않는다)
+content/inbox/
+content/rejected/

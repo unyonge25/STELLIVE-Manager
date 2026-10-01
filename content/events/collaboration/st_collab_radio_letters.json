@@ -1,0 +1,165 @@
+{
+  "id": "st_collab_radio_letters",
+  "title": "심야 라디오 사연 코너",
+  "category": "collaboration",
+  "description": "듀오 라디오 방송(collab_004) 변형 A. 어떤 사연을 읽을지 먼저 고르고 진행 판정 하나로 마무리된다.",
+  "meta": {
+    "theme": "broadcast_live",
+    "setting": "late_radio_letters",
+    "conflict": "high_expectations",
+    "resolution": "quiet_growth",
+    "activity": "talk",
+    "tone": "emotional"
+  },
+  "collab": {
+    "min": 2,
+    "max": 2
+  },
+  "conditions": {
+    "activityCategories": [
+      "talk"
+    ],
+    "cooldown": 3
+  },
+  "weight": 1,
+  "start": "letters",
+  "steps": {
+    "letters": {
+      "type": "choice",
+      "text": "{member}와 {partners}의 라디오 형식 합방. 사연함에는 생각보다 많은 편지가 모였다. 오늘의 첫 사연을 골라야 한다.",
+      "choices": [
+        {
+          "text": "진지한 고민 상담 사연",
+          "story": "진로 때문에 밤잠을 설친다는 사연이다. 가볍게 답할 수 없는 이야기라 둘 다 말을 고른다.",
+          "next": "worry"
+        },
+        {
+          "text": "웃긴 실수담 사연",
+          "story": "엘리베이터에서 모르는 사람에게 손을 흔들었다는 사연이다. 읽기도 전에 둘 다 웃음이 터졌다.",
+          "next": "funny"
+        },
+        {
+          "text": "오래된 팬의 편지",
+          "story": "처음 방송부터 봤다는 팬의 편지다. 첫 문장부터 목이 메어 온다.",
+          "next": "fan_letter"
+        }
+      ]
+    },
+    "worry": {
+      "type": "check",
+      "text": "섣부른 조언은 독이 된다. 둘이 번갈아 진심을 담아 답해야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "calm": 10,
+          "chatter": 5,
+          "brain": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "둘의 대답이 서로를 보완했다. 채팅창에 '나도 위로받았다'는 말이 이어졌다.",
+          "next": "end_warm"
+        },
+        "partial": {
+          "text": "좋은 말을 했지만 조금 길어졌다. 사연자는 고맙다는 채팅을 남겼다.",
+          "next": "end_quiet"
+        },
+        "fail": {
+          "text": "둘의 조언이 정반대로 갈려 어색하게 끝났다.",
+          "next": "end_awkward"
+        }
+      }
+    },
+    "funny": {
+      "type": "check",
+      "text": "사연을 재연해 보자는 채팅이 올라왔다. 둘이 즉석 상황극을 해야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "roleplay": 10,
+          "chatter": 5,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "즉석 재연이 사연보다 웃겼다. 사연자 본인도 채팅창에서 웃다 울었다.",
+          "next": "end_warm"
+        },
+        "partial": {
+          "text": "웃기긴 했지만 재연이 길어져 다음 사연을 못 읽었다.",
+          "next": "end_quiet"
+        },
+        "fail": {
+          "text": "재연 도중 대사가 꼬여 둘 다 수습하지 못했다.",
+          "next": "end_awkward"
+        }
+      }
+    },
+    "fan_letter": {
+      "type": "check",
+      "text": "편지를 끝까지 읽어야 한다. 목소리가 떨리면 상대가 이어 읽어 주기로 했다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 76,
+        "traitBonus": {
+          "calm": 5,
+          "host": 10,
+          "introvert": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "중간에 목소리가 떨리자 {partners}가 자연스럽게 이어 읽었다. 마지막 문장은 둘이 함께 읽었다.",
+          "next": "end_warm"
+        },
+        "partial": {
+          "text": "끝까지 읽었지만 둘 다 울컥해서 한동안 말을 잇지 못했다.",
+          "next": "end_quiet"
+        },
+        "fail": {
+          "text": "감정이 북받쳐 편지를 다 읽지 못했다.",
+          "next": "end_awkward"
+        }
+      }
+    },
+    "end_warm": {
+      "type": "end",
+      "result": "success",
+      "text": "라디오 합방이 끝났다. '다음 회차도 해 달라'는 사연이 벌써 들어왔다. 둘은 조용히 정규 코너 이름을 고민하기 시작했다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1,
+        "relationship": 5,
+        "hp": -4,
+        "memberFlags": {
+          "radioRegular": true
+        }
+      }
+    },
+    "end_quiet": {
+      "type": "end",
+      "result": "partial",
+      "text": "크게 웃기거나 울리진 않았지만 잔잔하게 오래 남는 방송이었다. 서로에 대해 몰랐던 이야기도 조금 알게 됐다.",
+      "effects": {
+        "fans": 90,
+        "relationship": 4,
+        "hp": -4
+      }
+    },
+    "end_awkward": {
+      "type": "end",
+      "result": "fail",
+      "text": "라디오 합방은 어색하게 끝났다. 방송 후 둘은 다음엔 사연을 미리 읽어 보고 오자고 정했다.",
+      "effects": {
+        "fans": 40,
+        "relationship": 2,
+        "hp": -4
+      }
+    }
+  },
+  "group": "collab_radio"
+}

@@ -12,7 +12,8 @@ import {
   STAT_KEYS,
   createInitialState,
 } from './state.js';
-import { getActivityById, getEventById } from './events.js';
+import { getActivityById, getEventById, isStoryEvent } from './events.js';
+import { STORY_RULES } from './story.js';
 import { SHOP_ITEMS, getInvestment, STOCKS, STOCK_RULES } from './economy-data.js';
 
 export const SAVE_KEY = 'stellive-manager-save';
@@ -46,16 +47,20 @@ export function clearSave() {
 }
 
 // 이벤트 화면 도중에 저장되면 일정표로 돌아간 상태로 저장한다. (진행 중 이벤트는 다시 열 수 있다)
+// 단, 이미 진행을 시작한 스토리 이벤트는 효과가 일부 적용됐으므로 그 단계 그대로 저장하고 이어서 진행한다.
 export function saveGame(state) {
   const storage = getStorage();
   if (!storage || !state || state.gamePhase === GAME_PHASE.TITLE) return false;
   try {
+    const run = state.storyRun;
+    const resumable = state.gamePhase === GAME_PHASE.EVENT && Boolean(run?.committed) && !run.finished;
     const snapshot = {
       ...state,
-      gamePhase: state.gamePhase === GAME_PHASE.EVENT ? GAME_PHASE.DAY_BOARD : state.gamePhase,
-      selectedMemberId: null,
+      gamePhase: state.gamePhase === GAME_PHASE.EVENT && !resumable ? GAME_PHASE.DAY_BOARD : state.gamePhase,
+      selectedMemberId: resumable ? run.hostId : null,
       currentEvent: null,
-      collabPartnerIds: [],
+      collabPartnerIds: resumable ? run.partnerIds : [],
+      storyRun: resumable ? run : null,
     };
     storage.setItem(SAVE_KEY, JSON.stringify({ version: SAVE_VERSION, savedAt: Date.now(), state: snapshot }));
     return true;
@@ -172,6 +177,87 @@ function validInvestment(record, withOutcome) {
   };
 }
 
+/* ---------- 스토리 이벤트 ---------- */
+
+const STORY_ENTRY_TYPES = ['story', 'choice', 'check', 'end'];
+const STORY_RESULTS = ['success', 'partial', 'fail', 'neutral'];
+const STORY_OUTCOMES = ['great', 'success', 'partial', 'fail'];
+const RESUMABLE_NODES = ['story', 'choice', 'check'];
+
+const str = (value) => (typeof value === 'string' ? value : undefined);
+const cleanDeltas = (list) => (Array.isArray(list) ? list.filter((delta) => isObject(delta) && Number.isFinite(delta.delta)) : []);
+
+function validStoryResults(saved) {
+  if (!isObject(saved)) return {};
+  return Object.fromEntries(
+    Object.entries(saved).filter(([id, result]) => isStoryEvent(getEventById(id)) && STORY_RESULTS.includes(result)),
+  );
+}
+
+function validStoryRecent(saved) {
+  if (!Array.isArray(saved)) return [];
+  return saved
+    .filter((item) => isObject(item) && isStoryEvent(getEventById(item.id)) && Number.isFinite(item.day))
+    .map((item) => ({ id: item.id, day: item.day }))
+    .slice(-STORY_RULES.maxRecent);
+}
+
+// 진행 중 스토리: 이벤트 / 주인공 / 파트너 / 현재 노드가 모두 지금의 게임 데이터와 맞아야 이어서 진행한다.
+function validStoryRun(saved, state) {
+  if (!isObject(saved) || saved.committed !== true || saved.finished === true) return null;
+  const event = getEventById(saved.eventId);
+  if (!isStoryEvent(event)) return null;
+  const host = state.members.find((member) => member.id === saved.hostId);
+  const entry = state.schedule.find((item) => item.memberId === saved.hostId);
+  if (!host || !entry || entry.done || entry.eventId !== event.id || entry.kind === ENTRY_KIND.ROUTINE) return null;
+
+  const partnerIds = Array.isArray(saved.partnerIds) ? saved.partnerIds : [];
+  const partnersOk = partnerIds.every((id) => {
+    const partnerEntry = state.schedule.find((item) => item.memberId === id);
+    return id !== host.id && partnerEntry && !partnerEntry.done && partnerEntry.kind === ENTRY_KIND.ROUTINE;
+  });
+  if (!partnersOk || new Set(partnerIds).size !== partnerIds.length) return null;
+  if (event.collab ? partnerIds.length + 1 < event.collab.min || partnerIds.length + 1 > event.collab.max : partnerIds.length > 0) return null;
+
+  const node = event.steps[saved.stepId];
+  if (!node || !RESUMABLE_NODES.includes(node.type)) return null;
+
+  const transcript = Array.isArray(saved.transcript)
+    ? saved.transcript
+        .filter((item) => isObject(item) && STORY_ENTRY_TYPES.includes(item.type) && typeof item.text === 'string')
+        .map((item) => ({
+          type: item.type,
+          text: item.text,
+          choiceText: str(item.choiceText),
+          story: str(item.story),
+          resultText: str(item.resultText),
+          stat: str(item.stat),
+          chance: Number.isFinite(item.chance) ? item.chance : undefined,
+          outcome: STORY_OUTCOMES.includes(item.outcome) ? item.outcome : undefined,
+          result: STORY_RESULTS.includes(item.result) ? item.result : undefined,
+          deltas: cleanDeltas(item.deltas),
+        }))
+        .slice(-STORY_RULES.maxTranscript)
+    : [];
+  const lastCheck = isObject(saved.lastCheck) && STORY_OUTCOMES.includes(saved.lastCheck.outcome)
+    ? { stat: str(saved.lastCheck.stat) || null, chance: Number.isFinite(saved.lastCheck.chance) ? saved.lastCheck.chance : null, outcome: saved.lastCheck.outcome }
+    : null;
+
+  return {
+    eventId: event.id,
+    hostId: host.id,
+    partnerIds: [...partnerIds],
+    stepId: saved.stepId,
+    committed: true,
+    finished: false,
+    result: null,
+    transcript,
+    path: Array.isArray(saved.path) ? saved.path.filter((text) => typeof text === 'string') : [],
+    deltas: cleanDeltas(saved.deltas),
+    lastCheck,
+  };
+}
+
 // 예전 세이브 호환: 콜라보 파트너 기록이 없거나 한쪽만 있으면 오늘의 콜라보 로그(memberIds = [주최, ...파트너])로 채운다.
 function restoreCollabLinks(state) {
   const entryOf = (id) => state.schedule.find((entry) => entry.memberId === id);
@@ -267,6 +353,7 @@ function restoreInto(state, saved) {
           deltas: Array.isArray(log.deltas) ? log.deltas.filter((delta) => isObject(delta) && Number.isFinite(delta.delta)) : [],
           title: typeof log.title === 'string' ? log.title : '',
           choiceText: typeof log.choiceText === 'string' ? log.choiceText : null,
+          storyText: typeof log.storyText === 'string' ? log.storyText : undefined,
         }))
         .slice(-3000)
     : [];
@@ -302,6 +389,27 @@ function restoreInto(state, saved) {
   state.gamePhase = phase === GAME_PHASE.TITLE || phase === GAME_PHASE.EVENT ? GAME_PHASE.DAY_BOARD : phase;
   // 일정이 없는데 하루 결과 화면이면 일정표로 되돌린다.
   if (!schedule && state.gamePhase === GAME_PHASE.DAY_RESULT) state.gamePhase = GAME_PHASE.DAY_BOARD;
+
+  // 스토리 이벤트: 결말 기록 / 최근 목록 / 진행 중인 스토리
+  state.storyResults = validStoryResults(saved.storyResults);
+  state.storyRecent = validStoryRecent(saved.storyRecent);
+  const run = schedule ? validStoryRun(saved.storyRun, state) : null;
+  if (run) {
+    state.storyRun = run;
+    state.currentEvent = getEventById(run.eventId);
+    state.selectedMemberId = run.hostId;
+    state.collabPartnerIds = [...run.partnerIds];
+    state.gamePhase = GAME_PHASE.EVENT;
+  } else if (schedule && isObject(saved.storyRun) && saved.storyRun.committed === true) {
+    // 이어갈 수 없는 진행 기록(데이터가 바뀌었거나 손상됨): 효과가 이미 일부 적용됐을 수 있으므로
+    // 같은 이벤트를 처음부터 다시 받지 않도록 그 일정을 끝난 것으로 처리한다.
+    const entry = state.schedule.find((item) => item.memberId === saved.storyRun.hostId && item.eventId === saved.storyRun.eventId);
+    if (entry && !entry.done) {
+      entry.done = true;
+      const member = state.members.find((item) => item.id === entry.memberId);
+      if (member) member.todayCompleted = true;
+    }
+  }
 
   return state;
 }

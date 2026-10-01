@@ -46,7 +46,7 @@ test('모든 이벤트 / 선택지 조건 키가 CONDITION_CHECKS 에 등록되�
   const unknown = [];
   E.EVENTS.forEach((event) => {
     Object.keys(event.conditions || {}).forEach((key) => { if (!E.CONDITION_CHECKS[key]) unknown.push(`${event.id}.${key}`); });
-    event.choices.forEach((choice, i) =>
+    (event.choices || []).forEach((choice, i) =>
       Object.keys(choice.conditions || {}).forEach((key) => { if (!E.CONDITION_CHECKS[key]) unknown.push(`${event.id}.choices[${i}].${key}`); }));
   });
   assert(unknown.length === 0, `등록되지 않은 조건 키: ${unknown.join(', ')}`);
@@ -61,7 +61,7 @@ test('일정 / 이벤트 / 선택지에 쓰인 카테고리가 모두 ACTIVITY_C
     checkList(event.id, event.conditions?.activityCategories);
     checkList(event.id, event.conditions?.blockedActivityCategories);
     checkList(event.id, Object.keys(event.activityWeights || {}));
-    event.choices.forEach((choice, i) => {
+    (event.choices || []).forEach((choice, i) => {
       checkList(`${event.id}[${i}]`, choice.conditions?.activityCategories);
       checkList(`${event.id}[${i}]`, choice.conditions?.blockedActivityCategories);
     });
@@ -106,13 +106,26 @@ test('event_001(자정 넘긴 방송) / event_101(즉석 노래 방송)도 방�
   assert(bad.length === 0, bad.map((b) => `${b.memberId}@${b.activity.id}`).join(', '));
 });
 
-test('콜라보 이벤트는 휴방 날 후보가 되지 않고, 녹음 날에는 노래 콜라보만 후보가 된다', () => {
+// 음악 카테고리 콜라보: 일정 조건이 음악 카테고리를 요구하거나, 음악 일정만 허용한다.
+// (특정 id 로 고정하지 않는다: 원본이 내려가고 스토리 변형이 대신 나와도 같은 규칙으로 검사한다)
+const isMusicCollab = (event) => {
+  const c = event.conditions || {};
+  if (c.activityCategories) return c.activityCategories.includes('music');
+  if (c.activity) return c.activity.every((id) => hasCat(E.getActivityById(id), 'music'));
+  return false;
+};
+
+test('콜라보 이벤트는 휴방 날 후보가 되지 않고, 녹음 날에는 음악 카테고리 콜라보만 (1개 이상) 후보가 된다', () => {
   for (const m of MEMBERS) {
     for (const a of E.ACTIVITIES) {
       const { st, member, activity } = setup(m.id, a.id);
-      const ids = eventIds(E.collectCandidates(member, st, { activity, collab: true }));
+      const events = E.collectCandidates(member, st, { activity, collab: true });
+      const ids = eventIds(events);
       if (a.id === 'rest') assert(ids.length === 0, `휴방 날 콜라보: ${ids}`);
-      if (a.id === 'recording') assert(ids.every((id) => id === 'collab_003'), `녹음 날 콜라보: ${ids}`);
+      if (a.id === 'recording') {
+        assert(ids.length > 0, `${m.id}: 녹음 날 콜라보 후보가 없다`);
+        assert(events.every(isMusicCollab), `녹음 날 음악이 아닌 콜라보: ${eventIds(events.filter((e) => !isMusicCollab(e)))}`);
+      }
     }
   }
 });
@@ -247,9 +260,10 @@ test('방송 날에는 항상 토크 합방이 표시된다', () => {
 /* ---------- 4. 유효 선택지 0개 방지 ---------- */
 console.log('\n[4] 유효 선택지 0개 방지');
 
+// 스토리 이벤트는 노드마다 "조건 없는 선택지 1개 이상"을 스키마 검증이 보장한다. (story.test.mjs)
 test('모든 이벤트 × 모든 일정 × 모든 멤버에서 선택지가 최소 1개 남는다 (등장하지 않는 조합 포함)', () => {
   const empty = [];
-  for (const event of E.EVENTS) {
+  for (const event of E.EVENTS.filter((item) => !E.isStoryEvent(item))) {
     for (const a of E.ACTIVITIES) {
       for (const m of MEMBERS) {
         const { st } = setup(m.id, a.id);

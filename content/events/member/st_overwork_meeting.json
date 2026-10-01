@@ -1,0 +1,221 @@
+{
+  "id": "st_overwork_meeting",
+  "title": "과로 경보 면담",
+  "category": "member",
+  "group": "overwork_alert",
+  "description": "과로 경보(ev_h01) 변형 A. 휴식 / 방송 시간 단축 / 의지 존중 중 하나를 고르고, 선택마다 다른 판정과 결말이 이어진다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "manager_meeting",
+    "conflict": "fatigue",
+    "resolution": "compromise",
+    "activity": "rest",
+    "tone": "warm"
+  },
+  "conditions": {
+    "maxHp": 45,
+    "cooldown": 3
+  },
+  "urgent": true,
+  "start": "pick",
+  "steps": {
+    "pick": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "anyTraits": [
+              "longStream"
+            ]
+          },
+          "text": "{member}의 방송 시간이 계속 늘고 있다. 원래 길게 방송하는 걸 좋아하지만, 요즘은 끝날 무렵 목소리가 눈에 띄게 갈라진다. 매니저가 면담을 잡았다."
+        },
+        {
+          "text": "{member}의 방송 시간이 계속 늘고 있다. 본인은 즐겁다지만 피로가 눈에 띈다. 매니저가 면담을 잡았다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "반강제로 이틀 치 휴식을 준다",
+          "story": "'이틀은 무조건 쉬어야 해요.' {member}는 아쉬워했지만 결국 고개를 끄덕였다. 이제 휴방 공지를 써야 한다.",
+          "next": "rest_notice"
+        },
+        {
+          "text": "방송 시간을 절반으로 줄인다",
+          "story": "방송은 하되 시간을 절반으로 줄이기로 했다. 짧아진 만큼 알차게 채워야 한다.",
+          "next": "half_check"
+        },
+        {
+          "text": "본인 의지를 존중한다",
+          "story": "'지금이 제일 재밌어서요.' {member}의 눈빛이 단단하다. 매니저는 대신 중간 휴식만은 약속받았다.",
+          "next": "push_check"
+        }
+      ]
+    },
+    "rest_notice": {
+      "type": "check",
+      "text": "휴방 공지는 아쉬움을 달래면서도 걱정을 키우지 않게 써야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 68,
+        "traitBonus": {
+          "calm": 10,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "솔직하고 따뜻한 공지에 '푹 쉬고 와'라는 댓글이 줄을 이었다.",
+          "next": "end_rest_good"
+        },
+        "partial": {
+          "text": "응원이 대부분이었지만, 갑작스러운 휴방에 아쉬워하는 목소리도 있었다.",
+          "next": "end_rest_mixed"
+        },
+        "fail": {
+          "text": "공지가 너무 짧았다. '무슨 일 있냐'는 걱정이 커졌다.",
+          "next": "end_rest_worry"
+        }
+      }
+    },
+    "half_check": {
+      "type": "check",
+      "text": "평소의 절반 시간 안에 하고 싶은 이야기를 다 담아야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "host": 10,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "짧고 굵은 방송이었다. '오히려 밀도가 높다'는 반응이 나왔다.",
+          "next": "end_half_good"
+        },
+        "partial": {
+          "text": "알찼지만 준비한 코너 하나를 못 했다.",
+          "next": "end_half_ok"
+        },
+        "fail": {
+          "text": "시간에 쫓기다 정신없이 끝났다.",
+          "next": "end_half_rushed"
+        }
+      }
+    },
+    "push_check": {
+      "type": "check",
+      "text": "긴 방송이 이어진다. 약속한 중간 휴식을 챙기면서도 분위기를 지켜야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 75,
+        "traitBonus": {
+          "longStream": 10,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "중간 휴식까지 콘텐츠로 만들며 끝까지 즐겁게 달렸다.",
+          "next": "end_push_ok"
+        },
+        "partial": {
+          "text": "방송은 즐거웠지만 끝날 무렵엔 확실히 지쳐 보였다.",
+          "next": "end_push_tired"
+        },
+        "fail": {
+          "text": "후반부에 목소리가 거의 나오지 않았다. 채팅창이 걱정으로 가득 찼다.",
+          "next": "end_push_crash"
+        }
+      }
+    },
+    "end_rest_good": {
+      "type": "end",
+      "result": "success",
+      "text": "이틀을 푹 쉰 {member}가 돌아왔다. 복귀 방송의 첫마디는 '다들 기다려 줘서 고마워'였다.",
+      "effects": {
+        "hp": 18,
+        "fans": -20
+      }
+    },
+    "end_rest_mixed": {
+      "type": "end",
+      "result": "partial",
+      "text": "몸은 회복했지만 이틀간의 빈자리는 조금 컸다. 복귀 방송에서 차근차근 메워 가기로 했다.",
+      "effects": {
+        "hp": 18,
+        "fans": -40
+      }
+    },
+    "end_rest_worry": {
+      "type": "end",
+      "result": "fail",
+      "text": "쉬는 동안 걱정 섞인 추측이 퍼졌다. 복귀 방송에서 {member}가 직접 '그냥 피곤했던 것'이라고 웃으며 정리했다.",
+      "effects": {
+        "hp": 14,
+        "fans": -60
+      }
+    },
+    "end_half_good": {
+      "type": "end",
+      "result": "success",
+      "text": "짧아진 방송이 오히려 새로운 매력이 됐다. 몸도 조금씩 회복되고 있다.",
+      "effects": {
+        "hp": 8,
+        "fans": 40
+      }
+    },
+    "end_half_ok": {
+      "type": "end",
+      "result": "partial",
+      "text": "방송도 회복도 반반이었다. 다음 주까지는 이 리듬을 지켜 보기로 했다.",
+      "effects": {
+        "hp": 8,
+        "fans": 20
+      }
+    },
+    "end_half_rushed": {
+      "type": "end",
+      "result": "fail",
+      "text": "시간에 쫓긴 방송은 아쉬움만 남겼다. 그래도 쉬는 시간이 늘어 몸은 조금 나아졌다.",
+      "effects": {
+        "hp": 6,
+        "fans": -10
+      }
+    },
+    "end_push_ok": {
+      "type": "end",
+      "result": "success",
+      "text": "{member}의 의지는 진짜였다. 긴 방송이 또 하나의 명장면을 만들었다. 다만 피로는 그대로 쌓였다.",
+      "effects": {
+        "hp": -5,
+        "fans": 80
+      }
+    },
+    "end_push_tired": {
+      "type": "end",
+      "result": "partial",
+      "text": "즐거운 방송이었지만 다음 날 일어나기가 힘들었다. 매니저와 다음 주 일정을 다시 보기로 했다.",
+      "effects": {
+        "hp": -8,
+        "fans": 60,
+        "memberFlags": {
+          "overworkWarned": true
+        }
+      }
+    },
+    "end_push_crash": {
+      "type": "end",
+      "result": "fail",
+      "text": "결국 방송을 일찍 끝내야 했다. 걱정하는 팬들에게 {member}는 다음 방송부터 시간을 줄이겠다고 약속했다.",
+      "effects": {
+        "hp": -10,
+        "fans": 20,
+        "memberFlags": {
+          "overworkWarned": true
+        }
+      }
+    }
+  }
+}

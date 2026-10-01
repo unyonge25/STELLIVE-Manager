@@ -1,0 +1,289 @@
+{
+  "id": "st_music_first_original",
+  "title": "첫 자작곡",
+  "category": "music",
+  "description": "첫 자작곡을 완성하는 이야기. 혼자 쓰기 / 작곡가와 협업 / 팬 가사 공모 중 방식을 고른다. 결과에 따라 공개 이벤트로 이어진다.",
+  "meta": {
+    "theme": "music_production",
+    "setting": "songwriting_session",
+    "conflict": "high_expectations",
+    "resolution": "teamwork",
+    "activity": "recording",
+    "tone": "emotional"
+  },
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "minDay": 4,
+    "maxDay": 20,
+    "minFans": 1500
+  },
+  "traitWeights": {
+    "perfectionist": 1.4,
+    "diligent": 1.4,
+    "instrument": 1.3
+  },
+  "once": true,
+  "start": "intro",
+  "steps": {
+    "intro": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "anyTraits": [
+              "instrument"
+            ]
+          },
+          "text": "{member}가 몇 달째 악기로 흥얼거리던 멜로디가 드디어 한 곡 분량이 됐다. 팬들이 '자작곡은 언제 나오냐'고 물을 때마다 미뤄 왔던 바로 그 곡이다."
+        },
+        {
+          "when": {
+            "anyTraits": [
+              "introvert"
+            ]
+          },
+          "text": "{member}가 조심스럽게 파일 하나를 보내왔다. '이거… 제가 만든 곡인데요.' 남에게 들려주는 건 처음이라고 했다."
+        },
+        {
+          "text": "{member}가 첫 자작곡을 만들어 보고 싶다고 했다. 팬들의 기대는 이미 높다. '자작곡'이라는 단어만 나와도 채팅창이 들썩인다."
+        }
+      ],
+      "next": "approach"
+    },
+    "approach": {
+      "type": "choice",
+      "text": "곡을 어떻게 완성할까?",
+      "choices": [
+        {
+          "text": "가사와 멜로디 모두 직접 끝까지 쓴다",
+          "story": "모든 걸 혼자 책임지는 길이다. 완성되면 온전히 {member}의 곡이 된다.",
+          "effects": {
+            "hp": -5
+          },
+          "next": "crunch"
+        },
+        {
+          "text": "전문 작곡가와 함께 다듬는다",
+          "story": "작곡가와의 첫 미팅. 머릿속 아이디어를 말로 설명하는 것부터 쉽지 않다.",
+          "effects": {
+            "money": -80000
+          },
+          "next": "cowrite"
+        },
+        {
+          "text": "후렴 가사를 팬들에게서 공모한다",
+          "story": "공모 공지를 올리자 하루 만에 수백 개의 문장이 모였다. 고르는 것도 일이다.",
+          "next": "fan_lyrics"
+        }
+      ]
+    },
+    "crunch": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "maxHp": 59
+          },
+          "next": "crunch_tired"
+        }
+      ],
+      "next": "crunch_check"
+    },
+    "crunch_tired": {
+      "type": "story",
+      "text": "밤샘 작업이 며칠째다. 멜로디는 머릿속에 있는데 손이 따라오지 않는다.",
+      "effects": {
+        "hp": -4
+      },
+      "next": "crunch_check"
+    },
+    "crunch_check": {
+      "type": "check",
+      "text": "마감 전날 밤. 2절 가사가 아직 비어 있다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 82,
+        "traitBonus": {
+          "perfectionist": 10,
+          "instrument": 5,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "새벽 네 시, 마지막 줄이 써졌다. 다시 들어 보니 처음부터 이 가사였던 것 같다.",
+          "next": "end_demo_strong"
+        },
+        "partial": {
+          "text": "가사는 채웠지만 2절이 1절보다 약하다는 게 스스로도 느껴진다.",
+          "next": "end_demo_rough"
+        },
+        "fail": {
+          "text": "결국 2절을 채우지 못했다. 데모는 1절에서 멈췄다.",
+          "next": "end_shelved"
+        }
+      }
+    },
+    "cowrite": {
+      "type": "check",
+      "text": "작곡가가 멜로디 일부를 바꾸자고 제안했다. 지키고 싶은 부분은 지키면서 협업을 살려야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "brain": 10,
+          "calm": 5,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "{member}가 원하는 감정을 정확히 설명하자 작곡가가 무릎을 쳤다. 서로의 장점이 맞물렸다.",
+          "next": "end_demo_strong"
+        },
+        "partial": {
+          "text": "타협 끝에 곡은 완성됐지만, 처음 멜로디의 일부는 사라졌다.",
+          "next": "end_demo_rough"
+        },
+        "fail": {
+          "text": "의견 차이가 좁혀지지 않았다. 작업은 잠시 멈추기로 했다.",
+          "next": "end_shelved"
+        }
+      }
+    },
+    "fan_lyrics": {
+      "type": "choice",
+      "text": "팬 공모 가사 중 두 개가 최종 후보에 올랐다.",
+      "choices": [
+        {
+          "text": "재치 있는 말장난이 들어간 가사",
+          "next": "pick_fun"
+        },
+        {
+          "text": "짧지만 마음을 울리는 한 문장",
+          "next": "pick_heart"
+        }
+      ]
+    },
+    "pick_fun": {
+      "type": "check",
+      "text": "말장난 가사를 멜로디에 붙여 부르자 스태프가 웃음을 터뜨렸다. 문제는 곡의 분위기와 맞느냐다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "chatter": 10,
+          "spontaneous": 5,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "어색할 줄 알았던 가사가 의외로 곡을 살렸다.",
+          "next": "end_demo_fan"
+        },
+        "partial": {
+          "text": "재밌지만 곡의 감정선이 조금 흐려졌다.",
+          "next": "end_demo_rough"
+        },
+        "fail": {
+          "text": "밝은 가사가 멜로디와 끝까지 어울리지 않았다.",
+          "next": "end_lyrics_clash"
+        }
+      }
+    },
+    "pick_heart": {
+      "type": "check",
+      "text": "한 문장을 후렴 전체로 늘려야 한다. 반복될수록 진심이 흐려지지 않게 불러야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 74,
+        "traitBonus": {
+          "calm": 5,
+          "cover": 5,
+          "perfectionist": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "같은 문장이 반복될수록 오히려 깊어졌다.",
+          "next": "end_demo_fan"
+        },
+        "partial": {
+          "text": "좋은 후렴이지만 곡 전체와 이어지는 부분이 조금 어색하다.",
+          "next": "end_demo_rough"
+        },
+        "fail": {
+          "text": "반복될수록 문장이 가벼워졌다.",
+          "next": "end_lyrics_clash"
+        }
+      }
+    },
+    "end_demo_strong": {
+      "type": "end",
+      "result": "success",
+      "text": "데모가 완성됐다. 스태프 모두가 '이건 정식으로 내자'고 입을 모았다. 공개 준비가 시작된다.",
+      "effects": {
+        "fans": 110,
+        "fame": 1,
+        "stats": {
+          "Vc": 1
+        },
+        "memberFlags": {
+          "originalSongDemo": true
+        }
+      }
+    },
+    "end_demo_fan": {
+      "type": "end",
+      "result": "success",
+      "text": "공모에 뽑힌 팬의 닉네임이 크레딧에 들어간다는 소식에 채팅창이 축제가 됐다. 공개 준비가 시작된다.",
+      "effects": {
+        "fans": 140,
+        "fame": 1,
+        "memberFlags": {
+          "originalSongDemo": true
+        }
+      }
+    },
+    "end_demo_rough": {
+      "type": "end",
+      "result": "partial",
+      "text": "곡은 완성됐지만 {member}는 아직 만족하지 못했다. 그래도 공개를 향해 한 걸음을 내디뎠다.",
+      "effects": {
+        "fans": 70,
+        "memberFlags": {
+          "originalSongDemo": true
+        }
+      }
+    },
+    "end_shelved": {
+      "type": "end",
+      "result": "fail",
+      "text": "자작곡은 잠시 서랍에 넣기로 했다. 대신 작업 과정을 방송으로 공유하며 '언젠가 꼭 낸다'고 약속하자 응원이 쏟아졌다.",
+      "effects": {
+        "fans": 40,
+        "stats": {
+          "Vc": 1
+        },
+        "memberFlags": {
+          "originalSongShelved": true
+        }
+      }
+    },
+    "end_lyrics_clash": {
+      "type": "end",
+      "result": "fail",
+      "text": "고른 가사를 끝내 쓰지 못했다. {member}는 공모에 참여한 팬들에게 직접 사과하고, 다음 곡에서 꼭 쓰겠다고 약속했다.",
+      "effects": {
+        "fans": 20,
+        "fame": -1,
+        "memberFlags": {
+          "originalSongShelved": true
+        }
+      }
+    }
+  }
+}

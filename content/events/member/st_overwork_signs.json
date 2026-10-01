@@ -1,0 +1,221 @@
+{
+  "id": "st_overwork_signs",
+  "title": "과로의 신호",
+  "category": "member",
+  "group": "overwork_alert",
+  "description": "과로 경보(ev_h01) 변형 B. 지친 정도에 따라 시작 장면이 갈리고, 대화 판정 결과에 따라 열리는 해결책이 달라진다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "stream_schedule_review",
+    "conflict": "schedule_clash",
+    "resolution": "quiet_growth",
+    "activity": "rest",
+    "tone": "emotional"
+  },
+  "conditions": {
+    "maxHp": 45,
+    "cooldown": 3
+  },
+  "urgent": true,
+  "start": "level",
+  "steps": {
+    "level": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "maxHp": 29
+          },
+          "next": "critical"
+        }
+      ],
+      "next": "tired"
+    },
+    "critical": {
+      "type": "story",
+      "text": "일정표를 보던 매니저가 멈칫했다. 이번 주 {member}의 방송 시간이 지난주의 두 배다. 방금 끝난 방송에서는 웃다가 잠깐 멍해지는 순간까지 있었다. 그런데 다음 주에는 기다리던 기획 방송까지 잡혀 있다.",
+      "next": "talk"
+    },
+    "tired": {
+      "type": "story",
+      "text": "일정표를 보던 매니저가 고개를 갸웃했다. {member}의 방송 시간이 슬금슬금 늘고 있다. 본인은 괜찮다고 하지만, 다음 주에 잡힌 기획 방송 준비까지 겹쳐 있다.",
+      "next": "talk"
+    },
+    "talk": {
+      "type": "check",
+      "text": "매니저가 {member}와 마주 앉았다. 걱정을 잔소리로 듣지 않게, 본인이 먼저 지금 상태를 말하게 해야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "calm": 10,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "{member}가 먼저 '사실 요즘 좀 힘들었다'고 털어놨다. 같이 해결책을 찾을 수 있게 됐다.",
+          "next": "options_open"
+        },
+        "partial": {
+          "text": "{member}는 피곤하다는 건 인정했지만, 방송을 쉬는 건 싫다고 했다.",
+          "next": "options_guarded"
+        },
+        "fail": {
+          "text": "'괜찮다니까요.' 대화가 엇나갔다. {member}는 걱정을 부담으로 느낀 것 같다.",
+          "next": "options_stubborn"
+        }
+      }
+    },
+    "options_open": {
+      "type": "choice",
+      "text": "솔직한 대화 끝에 선택지가 넓어졌다.",
+      "choices": [
+        {
+          "text": "기획 방송을 미루고 이틀 쉬게 한다",
+          "story": "기획 방송을 일주일 미루고, 이틀 동안 아무것도 하지 않기로 했다.",
+          "next": "end_open_rest"
+        },
+        {
+          "text": "방송 시간을 절반으로 줄이고 기획 준비를 나눈다",
+          "story": "방송 시간을 절반으로 줄이고, 기획 준비는 스태프와 나눠 맡기로 했다.",
+          "next": "end_open_half"
+        },
+        {
+          "text": "본인 뜻대로 하되 매일 컨디션을 같이 점검한다",
+          "story": "{member}의 뜻을 존중하기로 했다. 대신 매일 방송 전 컨디션 체크를 약속했다.",
+          "next": "end_open_trust"
+        }
+      ]
+    },
+    "options_guarded": {
+      "type": "choice",
+      "text": "방송을 쉬는 건 싫다고 한다. 할 수 있는 건 많지 않다.",
+      "choices": [
+        {
+          "text": "방송 시간을 절반으로 줄이자고 설득한다",
+          "story": "'쉬는 게 아니라 짧게 하는 거예요.' 한참을 고민한 끝에 {member}가 받아들였다.",
+          "next": "end_guarded_half"
+        },
+        {
+          "text": "본인 의지를 존중한다",
+          "story": "결국 {member}의 뜻대로 하기로 했다. 매니저의 걱정은 그대로 남았다.",
+          "next": "end_guarded_push"
+        },
+        {
+          "text": "반강제로 이틀 치 휴식을 준다",
+          "story": "쉬기 싫다는 말에도 매니저는 일정표에서 이틀을 지웠다. {member}가 한숨을 쉬며 휴방 공지를 썼다.",
+          "next": "end_guarded_rest"
+        }
+      ]
+    },
+    "options_stubborn": {
+      "type": "choice",
+      "text": "대화가 엇나간 채 끝났다. 매니저로서 결정해야 한다.",
+      "choices": [
+        {
+          "text": "반강제로 이틀 치 휴식을 준다",
+          "story": "매니저가 일정표에서 이틀을 지웠다. {member}는 서운한 얼굴로 휴방 공지를 썼다.",
+          "next": "end_forced_rest"
+        },
+        {
+          "text": "방송 시간을 절반으로 줄인다",
+          "story": "대화는 엇나갔지만 매니저는 방송 시간만은 절반으로 줄여 일정표에 넣었다. {member}는 말없이 받아들였다.",
+          "next": "end_stubborn_half"
+        },
+        {
+          "text": "본인 의지를 존중한다",
+          "story": "더 말하지 않기로 했다. {member}는 평소처럼, 아니 평소보다 더 길게 방송을 켰다.",
+          "next": "end_stubborn_push"
+        }
+      ]
+    },
+    "end_open_rest": {
+      "type": "end",
+      "result": "success",
+      "text": "푹 쉬고 돌아온 {member}의 기획 방송은 예정보다 일주일 늦었지만, 그만큼 완성도가 높았다.",
+      "effects": {
+        "hp": 18,
+        "fans": -20
+      }
+    },
+    "end_open_half": {
+      "type": "end",
+      "result": "success",
+      "text": "짧아진 방송과 나눠 맡은 기획 준비 덕분에 몸도 방송도 지킬 수 있었다.",
+      "effects": {
+        "hp": 8,
+        "fans": 30
+      }
+    },
+    "end_open_trust": {
+      "type": "end",
+      "result": "partial",
+      "text": "매일 컨디션 체크는 잘 지켜졌다. 피로는 쌓였지만, 위험한 신호는 바로 알아챌 수 있게 됐다.",
+      "effects": {
+        "hp": -3,
+        "fans": 80
+      }
+    },
+    "end_guarded_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "방송 시간을 줄이자 몸은 조금 나아졌다. 다만 쉬지 못한 피로는 다 풀리지 않았다.",
+      "effects": {
+        "hp": 8,
+        "fans": 20
+      }
+    },
+    "end_guarded_push": {
+      "type": "end",
+      "result": "fail",
+      "text": "{member}는 끝까지 달렸고 방송은 즐거웠다. 하지만 기획 방송 날, 목소리가 반쯤 잠겨 있었다.",
+      "effects": {
+        "hp": -5,
+        "fans": 60,
+        "memberFlags": {
+          "overworkWarned": true
+        }
+      }
+    },
+    "end_forced_rest": {
+      "type": "end",
+      "result": "partial",
+      "text": "이틀을 쉬자 몸은 돌아왔다. 복귀 후 {member}가 먼저 '그때는 서운했는데 고마웠다'고 말했다.",
+      "effects": {
+        "hp": 18,
+        "fans": -40
+      }
+    },
+    "end_stubborn_push": {
+      "type": "end",
+      "result": "fail",
+      "text": "무리한 일정 끝에 결국 기획 방송을 미뤄야 했다. 팬들의 걱정 메시지를 읽던 {member}가 조용히 일정표를 다시 짰다.",
+      "effects": {
+        "hp": -5,
+        "fans": 80,
+        "memberFlags": {
+          "overworkWarned": true
+        }
+      }
+    },
+    "end_guarded_rest": {
+      "type": "end",
+      "result": "partial",
+      "text": "이틀 휴식으로 몸은 돌아왔다. 다만 쉬고 싶지 않았던 마음은 조금 남아, 복귀 방송에서 평소보다 말수가 적었다.",
+      "effects": {
+        "hp": 18,
+        "fans": -40
+      }
+    },
+    "end_stubborn_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "짧아진 방송에 몸은 조금 나아졌다. 며칠 뒤 {member}가 먼저 \"그때 줄여 줘서 다행이었다\"고 말했다.",
+      "effects": {
+        "hp": 8,
+        "fans": 10
+      }
+    }
+  }
+}

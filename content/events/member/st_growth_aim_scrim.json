@@ -1,0 +1,279 @@
+{
+  "id": "st_growth_aim_scrim",
+  "title": "스크림에서 드러난 약점",
+  "category": "member",
+  "group": "growth_aim",
+  "description": "에임 연습 루틴(ev_s02) 변형 B. 다른 방송인과의 스크림 판정으로 시작해, 결과에 따라 다른 연습 방법을 고른다.",
+  "meta": {
+    "theme": "game_content",
+    "setting": "scrim_review",
+    "conflict": "rivalry",
+    "resolution": "quiet_growth",
+    "activity": "fps",
+    "tone": "tense"
+  },
+  "conditions": {
+    "activityCategories": [
+      "fps"
+    ],
+    "cooldown": 5
+  },
+  "start": "scrim",
+  "steps": {
+    "scrim": {
+      "type": "check",
+      "text": "다른 방송인 팀과의 스크림. {member}의 에임이 결정적인 순간마다 빗나간다. 상대 팀에서 '오늘 컨디션 안 좋네?'라는 말까지 나왔다. 마지막 판은 이겨야 한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 78,
+        "traitBonus": {
+          "fps": 15,
+          "competitive": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "마지막 판에서 연속 처치로 자존심을 지켰다. 그래도 앞선 판의 약점은 분명했다.",
+          "next": "review_good"
+        },
+        "partial": {
+          "text": "마지막 판은 비겼다. 약점이 그대로 드러난 하루였다.",
+          "next": "review_mid"
+        },
+        "fail": {
+          "text": "마지막 판까지 졌다. 상대 팀의 웃음소리가 오래 남았다.",
+          "next": "review_bad"
+        }
+      }
+    },
+    "review_good": {
+      "type": "choice",
+      "text": "다시보기를 보니 근거리 교전에서만 유독 흔들린다. 약점이 하나로 좁혀졌다.",
+      "choices": [
+        {
+          "text": "약점만 집중해서 매일 연습한다",
+          "story": "근거리 교전 연습 맵만 골라 매일 30분씩 돌렸다.",
+          "next": "end_focused"
+        },
+        {
+          "text": "다음 스크림을 방송으로 공개해 리벤지를 예고한다",
+          "story": "'다음 주 리벤지 스크림'을 공지했다. 채팅창이 벌써 응원 중이다.",
+          "next": "end_revenge_notice"
+        }
+      ]
+    },
+    "review_mid": {
+      "type": "choice",
+      "text": "어디가 문제인지 아직 확실하지 않다.",
+      "choices": [
+        {
+          "text": "매일 연습 시간을 따로 잡는다",
+          "story": "방송 전 연습 시간을 잡았다. 무엇을 고칠지는 연습하면서 찾기로 했다.",
+          "next": "drill"
+        },
+        {
+          "text": "방송에서 연습 과정을 공개한다",
+          "story": "시청자들과 함께 다시보기를 돌려 보며 연습을 공개했다. 채팅창의 분석이 생각보다 날카롭다.",
+          "next": "end_public_review"
+        }
+      ]
+    },
+    "review_bad": {
+      "type": "choice",
+      "text": "완패였다. 마음이 꺾이기 쉬운 날이다.",
+      "choices": [
+        {
+          "text": "기본기부터 다시 매일 연습한다",
+          "story": "자존심은 내려놓고 감도 설정부터 다시 맞췄다.",
+          "next": "basics"
+        },
+        {
+          "text": "방송에서 연습 과정을 공개한다",
+          "story": "완패 직후 연습 방송을 켰다. \"오늘 진 거 다 봤죠? 지금부터 복수 준비합니다.\" 채팅창이 응원으로 가득 찼다.",
+          "next": "end_bad_public"
+        },
+        {
+          "text": "오늘은 내려놓고 쉰다",
+          "story": "게임을 끄고 일찍 잠자리에 들었다. 분한 마음은 내일로 미뤘다.",
+          "next": "end_letgo"
+        }
+      ]
+    },
+    "drill": {
+      "type": "check",
+      "text": "일주일 연습의 마지막 날. 같은 맵에서 첫날 기록과 비교한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 74,
+        "traitBonus": {
+          "fps": 10,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "기록이 확실히 좋아졌다. 약점도 스스로 찾았다.",
+          "next": "end_drill"
+        },
+        "partial": {
+          "text": "조금 나아졌지만 손목이 뻐근하다.",
+          "next": "end_drill_half"
+        },
+        "fail": {
+          "text": "연습량에 비해 기록이 그대로다.",
+          "next": "end_drill_flat"
+        }
+      }
+    },
+    "basics": {
+      "type": "check",
+      "text": "기본기 연습 열흘째. 감도부터 다시 맞춘 손이 조금씩 적응한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 72,
+        "traitBonus": {
+          "diligent": 10,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "기초가 잡히자 에임이 거짓말처럼 안정됐다.",
+          "next": "end_basics"
+        },
+        "partial": {
+          "text": "안정은 됐지만 예전 감각과는 아직 다르다.",
+          "next": "end_basics_half"
+        },
+        "fail": {
+          "text": "새 감도에 끝내 적응하지 못했다.",
+          "next": "end_basics_fail"
+        }
+      }
+    },
+    "end_focused": {
+      "type": "end",
+      "result": "success",
+      "text": "약점을 정확히 짚은 연습이 효과를 봤다. 다음 스크림에서 근거리 교전은 {member}의 무대였다.",
+      "effects": {
+        "stats": {
+          "Ga": 2
+        },
+        "hp": -4
+      }
+    },
+    "end_revenge_notice": {
+      "type": "end",
+      "result": "success",
+      "text": "리벤지 예고만으로도 화제가 됐다. 연습에도 자연스럽게 힘이 들어간다.",
+      "effects": {
+        "stats": {
+          "Ga": 1
+        },
+        "fans": 100,
+        "hp": -4
+      }
+    },
+    "end_public_review": {
+      "type": "end",
+      "result": "partial",
+      "text": "시청자들과의 분석 방송은 반응이 좋았다. 다만 실제 실력 향상은 아직 조금이다.",
+      "effects": {
+        "stats": {
+          "Ga": 1
+        },
+        "fans": 90,
+        "hp": -4
+      }
+    },
+    "end_drill": {
+      "type": "end",
+      "result": "success",
+      "text": "일주일 연습이 결과로 돌아왔다. 다음 스크림이 기다려진다.",
+      "effects": {
+        "stats": {
+          "Ga": 2
+        },
+        "hp": -6
+      }
+    },
+    "end_drill_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "실력은 조금 늘었지만 몸이 지쳤다. 연습량을 조절할 필요가 있다.",
+      "effects": {
+        "stats": {
+          "Ga": 1
+        },
+        "hp": -6
+      }
+    },
+    "end_drill_flat": {
+      "type": "end",
+      "result": "fail",
+      "text": "연습량만 늘고 결과는 없었다. {member}는 방법부터 다시 고민해 보기로 했다.",
+      "effects": {
+        "hp": -6,
+        "memberFlags": {
+          "aimRetry": true
+        }
+      }
+    },
+    "end_basics": {
+      "type": "end",
+      "result": "success",
+      "text": "완패에서 시작한 기본기 연습이 오히려 큰 발전이 됐다. 다음 스크림에서 상대 팀이 놀란 표정을 지었다.",
+      "effects": {
+        "stats": {
+          "Ga": 2
+        },
+        "hp": -6
+      }
+    },
+    "end_basics_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "기초는 다졌지만 실전 감각을 되찾는 데 시간이 더 필요하다.",
+      "effects": {
+        "stats": {
+          "Ga": 1
+        },
+        "hp": -6
+      }
+    },
+    "end_basics_fail": {
+      "type": "end",
+      "result": "fail",
+      "text": "새 감도에 적응하지 못해 원래 설정으로 돌아갔다. 리벤지는 다음 기회로 미뤘다.",
+      "effects": {
+        "hp": -6,
+        "memberFlags": {
+          "aimRetry": true
+        }
+      }
+    },
+    "end_letgo": {
+      "type": "end",
+      "result": "neutral",
+      "text": "푹 자고 나니 분한 마음이 조금 가라앉았다. 연습은 컨디션이 좋은 날 다시 하기로 했다.",
+      "effects": {
+        "hp": 4,
+        "memberFlags": {
+          "aimRetry": true
+        }
+      }
+    },
+    "end_bad_public": {
+      "type": "end",
+      "result": "partial",
+      "text": "완패 후 바로 켠 연습 방송에 응원이 쏟아졌다. 실력은 아직 조금 올랐을 뿐이지만, 리벤지를 기다리는 팬들이 생겼다.",
+      "effects": {
+        "stats": {
+          "Ga": 1
+        },
+        "fans": 90,
+        "hp": -4
+      }
+    }
+  }
+}

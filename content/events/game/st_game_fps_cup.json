@@ -1,0 +1,317 @@
+{
+  "id": "st_game_fps_cup",
+  "title": "방송인 FPS 친선 대회",
+  "category": "game",
+  "description": "5대5 전술 FPS 친선 대회 초대. 준비 방식에 따라 예선 난이도가 달라진다.",
+  "meta": {
+    "theme": "game_tournament",
+    "setting": "online_fps_cup",
+    "conflict": "early_disadvantage",
+    "resolution": "comeback_win",
+    "activity": "fps",
+    "tone": "hype"
+  },
+  "conditions": {
+    "activityCategories": [
+      "game"
+    ],
+    "minDay": 3
+  },
+  "activityWeights": {
+    "fps": 3
+  },
+  "traitWeights": {
+    "fps": 2,
+    "competitive": 1.5
+  },
+  "once": true,
+  "start": "intro",
+  "steps": {
+    "intro": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "maxHp": 59
+          },
+          "text": "{member}에게 5대5 전술 FPS 친선 대회 초대장이 도착했다. 상위권 팀의 하이라이트는 대회 채널에 걸린다. 다만 요즘 일정이 빡빡했던 탓에 {member}의 얼굴에는 피곤한 기색이 역력하다."
+        },
+        {
+          "text": "{member}에게 5대5 전술 FPS 친선 대회 초대장이 도착했다. 방송인 팀들이 모이는 작은 대회지만, 상위권 팀의 하이라이트는 대회 채널에 걸린다."
+        }
+      ],
+      "next": "prep"
+    },
+    "prep": {
+      "type": "choice",
+      "text": "대회까지 남은 시간은 이틀. 어떻게 준비할까?",
+      "choices": [
+        {
+          "text": "밤늦게까지 스크림을 돌린다",
+          "story": "연습 경기를 몇 판이고 돌렸다. 손은 확실히 풀렸지만 눈 밑이 무겁다.",
+          "effects": {
+            "hp": -8,
+            "stats": {
+              "Ga": 1
+            }
+          },
+          "next": "qual_trained"
+        },
+        {
+          "text": "기본 전략만 맞추고 컨디션을 챙긴다",
+          "story": "무리하지 않고 역할과 기본 전략만 정리했다. 대신 실전 감각은 조금 걱정이다.",
+          "effects": {
+            "hp": -2
+          },
+          "next": "qual_light"
+        },
+        {
+          "text": "이번 대회는 즐기는 데 의의를 둔다",
+          "story": "승패는 내려놓고 참가 신청서만 보냈다. 목표는 우승이 아니라 대회 최고의 리액션이다.",
+          "next": "qual_fun"
+        }
+      ]
+    },
+    "qual_trained": {
+      "type": "check",
+      "text": "예선 첫 경기. 상대는 대회 경험이 많은 팀이다. 초반 라운드를 연달아 내주며 점수가 1대 5까지 벌어졌다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 72,
+        "traitBonus": {
+          "fps": 10,
+          "competitive": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "연습 때 맞춰 둔 전략을 꺼내 들자 흐름이 뒤집혔다. 연속 라운드를 따내며 예선을 1위로 통과했다.",
+          "effects": {
+            "fans": 50
+          },
+          "next": "final"
+        },
+        "success": {
+          "text": "위기가 계속됐지만 막판 세 라운드를 내리 따내며 본선 티켓을 잡았다.",
+          "effects": {
+            "fans": 20
+          },
+          "next": "final"
+        },
+        "partial": {
+          "text": "끝내 역전은 못 했지만 마지막까지 따라붙은 경기력이 인정받아 와일드카드로 본선에 올랐다.",
+          "effects": {
+            "fans": 20
+          },
+          "next": "underdog"
+        },
+        "fail": {
+          "text": "벌어진 격차를 끝내 좁히지 못했다. 예선 탈락이다.",
+          "next": "end_out"
+        }
+      }
+    },
+    "qual_light": {
+      "type": "check",
+      "text": "예선 첫 경기. 연습량이 부족한 게 초반부터 드러났다. 합이 맞지 않아 라운드를 연달아 내준다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 80,
+        "traitBonus": {
+          "fps": 10,
+          "competitive": 5,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "컨디션을 아낀 보람이 있었다. 후반 집중력이 살아나며 역전승으로 예선을 통과했다.",
+          "effects": {
+            "fans": 50
+          },
+          "next": "final"
+        },
+        "success": {
+          "text": "느리게 발동이 걸렸지만 결국 흐름을 잡았다. 본선 진출이다.",
+          "effects": {
+            "fans": 20
+          },
+          "next": "final"
+        },
+        "partial": {
+          "text": "한 끗 차이로 졌지만, 다른 경기 결과 덕분에 와일드카드 자리가 생겼다.",
+          "effects": {
+            "fans": 10
+          },
+          "next": "underdog"
+        },
+        "fail": {
+          "text": "끝까지 호흡이 맞지 않았다. 예선에서 대회를 마무리했다.",
+          "next": "end_out"
+        }
+      }
+    },
+    "qual_fun": {
+      "type": "check",
+      "text": "승패보다 리액션. {member}는 경기 내내 중계하듯 떠들며 분위기를 끌어올린다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 66,
+        "traitBonus": {
+          "chatter": 10,
+          "highTension": 5,
+          "spontaneous": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "패배 장면마저 웃음으로 바꿔 버렸다. 대회 공식 채널이 {member}의 리액션을 따로 클립으로 올렸다.",
+          "next": "end_fun_good"
+        },
+        "partial": {
+          "text": "경기는 금방 끝났지만 채팅창은 내내 즐거웠다.",
+          "next": "end_fun_ok"
+        },
+        "fail": {
+          "text": "경기도 리액션도 조용하게 끝났다.",
+          "next": "end_fun_quiet"
+        }
+      }
+    },
+    "underdog": {
+      "type": "story",
+      "text": "와일드카드 팀에게 기대를 거는 사람은 없었다. 그래서 오히려 부담 없이 결승까지 치고 올라갔다.",
+      "next": "final"
+    },
+    "final": {
+      "type": "choice",
+      "text": "결승 상대는 우승 후보로 꼽히던 팀. 마지막 라운드, 1대1 클러치 상황이 {member}에게 걸렸다.",
+      "choices": [
+        {
+          "text": "과감하게 먼저 치고 들어간다",
+          "next": "clutch_aggressive"
+        },
+        {
+          "text": "발소리를 듣고 침착하게 기다린다",
+          "next": "clutch_calm"
+        }
+      ]
+    },
+    "clutch_aggressive": {
+      "type": "check",
+      "text": "{member}가 연막 속으로 먼저 뛰어들었다. 상대가 반응하기 전에 끝내야 한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 82,
+        "traitBonus": {
+          "competitive": 10,
+          "fps": 5,
+          "spontaneous": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "먼저 본 쪽이 {member}였다. 마지막 한 발이 정확히 들어갔다.",
+          "next": "end_win"
+        },
+        "partial": {
+          "text": "한 명은 잡았지만 숨어 있던 마지막 상대에게 당했다.",
+          "next": "end_second"
+        },
+        "fail": {
+          "text": "돌진 타이밍이 읽혔다. 상대가 기다리고 있었다.",
+          "next": "end_second"
+        }
+      }
+    },
+    "clutch_calm": {
+      "type": "check",
+      "text": "{member}는 숨을 죽이고 소리에 집중했다. 시간은 흐르고, 먼저 움직이는 쪽이 불리하다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 76,
+        "traitBonus": {
+          "calm": 10,
+          "brain": 10,
+          "fps": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "상대가 먼저 발소리를 냈다. {member}의 조준선 위로 정확히 걸어 들어왔다.",
+          "next": "end_win"
+        },
+        "partial": {
+          "text": "위치는 읽었지만 한 끗 차이로 먼저 맞았다.",
+          "next": "end_second"
+        },
+        "fail": {
+          "text": "기다리는 사이 폭탄 타이머가 끝났다.",
+          "next": "end_second"
+        }
+      }
+    },
+    "end_win": {
+      "type": "end",
+      "result": "success",
+      "text": "우승이다. 마지막 한 발이 들어가는 순간 {member}의 환호가 방송을 가득 채웠다. 우승 하이라이트는 하루 만에 대회 채널 최다 조회수를 찍었다.",
+      "effects": {
+        "fans": 190,
+        "fame": 1,
+        "money": 90000,
+        "flags": {
+          "fpsCupWinner": true
+        }
+      }
+    },
+    "end_second": {
+      "type": "end",
+      "result": "partial",
+      "text": "아쉽게 준우승. 그래도 결승까지 가는 과정이 클립으로 퍼지며 '다음엔 우승각'이라는 반응이 줄을 이었다.",
+      "effects": {
+        "fans": 110,
+        "fame": 1,
+        "money": 40000,
+        "memberFlags": {
+          "fpsCupRematch": true
+        }
+      }
+    },
+    "end_out": {
+      "type": "end",
+      "result": "fail",
+      "text": "대회는 짧게 끝났다. {member}는 방송을 마치며 '다음엔 예선부터 이기고 온다'고 선언했다.",
+      "effects": {
+        "fans": 20,
+        "memberFlags": {
+          "fpsCupRematch": true
+        }
+      }
+    },
+    "end_fun_good": {
+      "type": "end",
+      "result": "success",
+      "text": "성적은 하위권이었지만 대회 최고의 리액션상을 받았다. 대회 채널 클립 조회수 1위는 결승이 아니라 {member}의 비명 모음이었다.",
+      "effects": {
+        "fans": 100,
+        "fame": 1
+      }
+    },
+    "end_fun_ok": {
+      "type": "end",
+      "result": "partial",
+      "text": "짧지만 즐거운 대회였다. 시청자들은 다음 대회도 나가 달라고 했다.",
+      "effects": {
+        "fans": 50
+      }
+    },
+    "end_fun_quiet": {
+      "type": "end",
+      "result": "fail",
+      "text": "대회는 조용히 끝났다. 가볍게 나간 만큼 아쉬움도 크지는 않다.",
+      "effects": {
+        "fans": 10
+      }
+    }
+  }
+}

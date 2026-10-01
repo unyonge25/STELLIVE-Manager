@@ -1,0 +1,250 @@
+{
+  "id": "st_growth_aim_routine",
+  "title": "에임 연습 루틴 짜기",
+  "category": "member",
+  "group": "growth_aim",
+  "description": "에임 연습 루틴(ev_s02) 변형 A. 매일 연습 / 공개 연습 / 프로 영상 분석 중 하나를 고르고, 매일 연습은 컨디션에 따라 장면이 갈린다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "aim_trainer_routine",
+    "conflict": "fatigue",
+    "resolution": "lesson_learned",
+    "activity": "fps",
+    "tone": "calm"
+  },
+  "conditions": {
+    "activityCategories": [
+      "fps"
+    ],
+    "cooldown": 5
+  },
+  "start": "pick",
+  "steps": {
+    "pick": {
+      "type": "choice",
+      "text": "{member}가 요즘 에임이 흔들린다며 연습 루틴을 새로 짜 보고 싶다고 했다. 어떤 방식으로 할까?",
+      "choices": [
+        {
+          "text": "매일 연습 시간을 따로 잡는다",
+          "story": "방송 전 30분, 에임 연습 프로그램을 켜는 것으로 하루를 시작하기로 했다.",
+          "next": "routine_week"
+        },
+        {
+          "text": "방송에서 연습 과정을 공개한다",
+          "story": "'에임 교정 프로젝트 1일차'라는 제목으로 방송을 켰다. 시청자들이 점수 기록을 함께 세기 시작했다.",
+          "next": "public_check"
+        },
+        {
+          "text": "프로 선수 영상을 분석한다",
+          "story": "프로 경기 영상을 느리게 돌려 보며 마우스 움직임을 따라 했다.",
+          "next": "analysis_check"
+        }
+      ]
+    },
+    "routine_week": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "maxHp": 59
+          },
+          "next": "week_tired"
+        }
+      ],
+      "next": "week_fresh"
+    },
+    "week_tired": {
+      "type": "story",
+      "text": "루틴 사흘째. 쌓인 피로 때문에 손목이 무겁다. 그래도 {member}는 연습 프로그램을 끄지 않았다.",
+      "effects": {
+        "hp": -3
+      },
+      "next": "routine_check"
+    },
+    "week_fresh": {
+      "type": "story",
+      "text": "루틴 사흘째. 몸이 가벼워서 연습 시간이 오히려 기다려진다.",
+      "next": "routine_check"
+    },
+    "routine_check": {
+      "type": "check",
+      "text": "일주일째 되는 날, 첫날 점수와 비교해 본다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 76,
+        "traitBonus": {
+          "fps": 10,
+          "diligent": 10
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "점수가 눈에 띄게 올랐다. 무엇보다 손이 덜 떨린다.",
+          "next": "end_routine"
+        },
+        "partial": {
+          "text": "점수는 올랐지만 손목이 뻐근하다. 쉬는 날도 넣어야겠다.",
+          "next": "end_routine_tired"
+        },
+        "fail": {
+          "text": "점수가 오히려 떨어졌다. 피로가 실력을 갉아먹고 있었다.",
+          "next": "end_routine_burn"
+        }
+      }
+    },
+    "public_check": {
+      "type": "check",
+      "text": "연습 방송은 지루해지기 쉽다. 점수를 올리면서 말도 끊기지 않게 해야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "chatter": 10,
+          "competitive": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "시청자들이 점수 내기를 걸기 시작했다. 연습이 하나의 콘텐츠가 됐다.",
+          "next": "end_public"
+        },
+        "partial": {
+          "text": "방송은 무난했지만 연습에 집중하다 보니 말이 줄었다.",
+          "next": "end_public_quiet"
+        },
+        "fail": {
+          "text": "같은 연습이 반복되자 시청자 수가 서서히 줄었다.",
+          "next": "end_public_bored"
+        }
+      }
+    },
+    "analysis_check": {
+      "type": "check",
+      "text": "분석한 움직임을 실제 게임에서 써 본다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 72,
+        "traitBonus": {
+          "brain": 10,
+          "fps": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "프로처럼 각을 미리 잡는 습관이 몸에 붙었다.",
+          "next": "end_analysis"
+        },
+        "partial": {
+          "text": "머리로는 알겠는데 손이 아직 못 따라간다.",
+          "next": "end_analysis_half"
+        },
+        "fail": {
+          "text": "따라 하다가 원래 감각까지 흐트러졌다.",
+          "next": "end_analysis_lost"
+        }
+      }
+    },
+    "end_routine": {
+      "type": "end",
+      "result": "success",
+      "text": "일주일 루틴이 성공했다. 다음 FPS 방송에서 달라진 에임에 '연습했냐'는 채팅이 쏟아졌다.",
+      "effects": {
+        "stats": {
+          "Ga": 2
+        },
+        "hp": -6
+      }
+    },
+    "end_routine_tired": {
+      "type": "end",
+      "result": "partial",
+      "text": "실력은 늘었지만 몸이 지쳤다. {member}는 루틴에 쉬는 날을 넣는 법을 배웠다.",
+      "effects": {
+        "stats": {
+          "Ga": 1
+        },
+        "hp": -8
+      }
+    },
+    "end_routine_burn": {
+      "type": "end",
+      "result": "fail",
+      "text": "무리한 루틴이 역효과를 냈다. 당분간은 컨디션부터 챙기고 다시 시작하기로 했다.",
+      "effects": {
+        "hp": -6,
+        "memberFlags": {
+          "aimRetry": true
+        }
+      }
+    },
+    "end_public": {
+      "type": "end",
+      "result": "success",
+      "text": "'에임 교정 프로젝트'가 정기 코너가 됐다. 실력도 오르고 팬도 늘었다.",
+      "effects": {
+        "stats": {
+          "Ga": 1
+        },
+        "fans": 90,
+        "hp": -4
+      }
+    },
+    "end_public_quiet": {
+      "type": "end",
+      "result": "partial",
+      "text": "연습은 제대로 됐지만 방송으로는 조금 심심했다는 평이다.",
+      "effects": {
+        "stats": {
+          "Ga": 1
+        },
+        "fans": 40,
+        "hp": -4
+      }
+    },
+    "end_public_bored": {
+      "type": "end",
+      "result": "fail",
+      "text": "연습 방송은 생각보다 반응이 없었다. 다음엔 시청자 참여 미션을 섞어 보자는 아이디어가 남았다.",
+      "effects": {
+        "fans": 10,
+        "hp": -4,
+        "memberFlags": {
+          "aimRetry": true
+        }
+      }
+    },
+    "end_analysis": {
+      "type": "end",
+      "result": "success",
+      "text": "몸보다 머리로 먼저 고친 에임이었다. 무리 없이 실력이 늘었다.",
+      "effects": {
+        "stats": {
+          "Ga": 2
+        },
+        "hp": -2
+      }
+    },
+    "end_analysis_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "이론은 쌓였지만 손에 익히려면 반복 연습이 더 필요하다.",
+      "effects": {
+        "stats": {
+          "Ga": 1
+        },
+        "hp": -2
+      }
+    },
+    "end_analysis_lost": {
+      "type": "end",
+      "result": "fail",
+      "text": "남의 방식을 따라 하다 자기 감각을 잃을 뻔했다. {member}는 '내 스타일부터 지키자'며 웃었다.",
+      "effects": {
+        "hp": -2,
+        "memberFlags": {
+          "aimRetry": true
+        }
+      }
+    }
+  }
+}

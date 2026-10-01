@@ -1,0 +1,172 @@
+{
+  "id": "st_collab_escape_room",
+  "title": "방탈출 합방",
+  "category": "collaboration",
+  "description": "파트너와 함께 온라인 방탈출에 도전한다. 관계도에 따라 호흡이 달라진다.",
+  "meta": {
+    "theme": "collab_content",
+    "setting": "escape_room_game",
+    "conflict": "miscommunication",
+    "resolution": "teamwork",
+    "activity": "puzzle_game",
+    "tone": "comedic"
+  },
+  "collab": {
+    "min": 2,
+    "max": 3
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "blockedActivityCategories": [
+      "music"
+    ],
+    "cooldown": 5
+  },
+  "activityWeights": {
+    "talk": 1.5,
+    "game": 1.5
+  },
+  "start": "intro",
+  "steps": {
+    "intro": {
+      "type": "story",
+      "text": "{member}가 {partners}와 함께 온라인 방탈출 게임 합방을 켰다. 제한 시간은 60분, 단서는 방 곳곳에 흩어져 있다.",
+      "next": "chemistry"
+    },
+    "chemistry": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "partyMinRelationship": 35
+          },
+          "next": "synergy"
+        }
+      ],
+      "next": "awkward"
+    },
+    "synergy": {
+      "type": "story",
+      "text": "평소 합이 좋은 사이답게 역할 분담이 자연스럽다. 시작 10분 만에 첫 번째 방을 열었다.",
+      "effects": {
+        "fans": 20
+      },
+      "next": "last_room"
+    },
+    "awkward": {
+      "type": "story",
+      "text": "아직 서로 호흡이 덜 맞는다. 같은 단서를 두 사람이 동시에 들고 있는 상황이 몇 번이나 반복됐다. 채팅창은 그 장면마다 폭소다.",
+      "next": "last_room"
+    },
+    "last_room": {
+      "type": "choice",
+      "text": "마지막 방. 남은 시간은 8분. 풀어야 할 자물쇠는 세 개다.",
+      "choices": [
+        {
+          "text": "{member}가 지휘를 맡아 하나씩 정리한다",
+          "story": "{member}가 '지금부터 내 말 들어!'라고 외쳤다. 모두가 잠시 조용해졌다.",
+          "next": "lead"
+        },
+        {
+          "text": "각자 떠오르는 대로 마구 시도한다",
+          "story": "셋이 동시에 다른 번호를 외치기 시작했다. 혼돈 그 자체다.",
+          "next": "chaos"
+        }
+      ]
+    },
+    "lead": {
+      "type": "check",
+      "text": "지휘에 맞춰 단서를 하나씩 맞춰 나간다. 마지막 자물쇠의 힌트는 처음 방에 있던 그림이다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "host": 10,
+          "brain": 10,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "마지막 자물쇠가 열렸다. 남은 시간 2분 17초.",
+          "next": "end_clear"
+        },
+        "partial": {
+          "text": "시간 종료 3초 전, 문이 열렸다. 모두의 비명이 합쳐졌다.",
+          "next": "end_last_second"
+        },
+        "fail": {
+          "text": "마지막 번호 한 자리가 틀렸다. 문 너머로 탈출 실패 음악이 울린다.",
+          "next": "end_timeout"
+        }
+      }
+    },
+    "chaos": {
+      "type": "check",
+      "text": "누가 무엇을 풀고 있는지 아무도 모른다. 그런데 이상하게 자물쇠가 하나씩 열린다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 70,
+        "traitBonus": {
+          "spontaneous": 10,
+          "highTension": 5,
+          "brain": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "마구잡이로 누른 번호가 정답이었다. 누가 맞혔는지는 끝내 아무도 모른다.",
+          "next": "end_clear"
+        },
+        "partial": {
+          "text": "탈출은 못 했지만 역대급 혼돈 방송으로 남았다.",
+          "next": "end_chaos_fun"
+        },
+        "fail": {
+          "text": "혼돈 속에서 시간만 흘렀다.",
+          "next": "end_timeout"
+        }
+      }
+    },
+    "end_clear": {
+      "type": "end",
+      "result": "success",
+      "text": "탈출 성공. {member}와 {partners}는 방송이 끝난 뒤에도 한참 동안 서로의 활약을 칭찬했다.",
+      "effects": {
+        "fans": 140,
+        "fame": 1,
+        "relationship": 4
+      }
+    },
+    "end_last_second": {
+      "type": "end",
+      "result": "success",
+      "text": "3초 남기고 극적인 탈출. 그 3초가 이번 주 가장 많이 돌려 본 클립이 됐다.",
+      "effects": {
+        "fans": 130,
+        "fame": 1,
+        "relationship": 3
+      }
+    },
+    "end_chaos_fun": {
+      "type": "end",
+      "result": "partial",
+      "text": "탈출은 실패했지만 웃음은 대성공. 시청자들은 이 조합으로 한 번 더 해 달라고 졸랐다.",
+      "effects": {
+        "fans": 100,
+        "relationship": 2
+      }
+    },
+    "end_timeout": {
+      "type": "end",
+      "result": "fail",
+      "text": "시간 초과. '다음엔 꼭 나간다'며 다 같이 재도전을 약속했다.",
+      "effects": {
+        "fans": 40,
+        "relationship": 1
+      }
+    }
+  }
+}

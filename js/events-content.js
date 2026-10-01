@@ -79,22 +79,40 @@ export const EXTRA_EVENTS = [
   {
     id: 'ev_c01',
     title: '방송 중 장비 트러블',
+    // 스토리 변형(group: equip_trouble)으로 전환됨. 정의는 저장 호환 / 테스트용으로 남기고 등장만 막는다.
+    weight: 0,
     description: '{member}의 방송 도중 마이크 소리가 끊기기 시작했다. 채팅창에 물음표가 쏟아진다.',
     conditions: { ...BROADCAST, cooldown: 4 },
     choices: [
-      { text: '바로 새 장비를 주문하고 양해를 구한다', effects: { money: -80000, fans: 30 } },
+      {
+        text: '바로 새 장비를 주문하고 양해를 구한다',
+        story: '{member}가 방송을 잠시 멈추고 상황을 솔직하게 설명했다. 새 마이크 주문 화면을 그대로 보여 주자 채팅창이 "빠른 처리 좋다"는 반응으로 바뀌었다.',
+        effects: { money: -80000, fans: 30 },
+      },
       {
         text: '임기응변으로 방송을 이어간다',
+        story: '{member}는 끊기는 소리를 아예 콘텐츠로 삼기로 했다. 채팅으로 "들리면 1, 안 들리면 2"를 받으며 방송을 이어 간다.',
         check: { stat: 'Bs', difficulty: 72, traitBonus: { host: 10, calm: 10 } },
         effects: { hp: -3 },
         outcomes: { great: { fans: 150, fame: 1 }, success: { fans: 60 }, fail: { fans: -50 } },
+        outcomeStories: {
+          great: '끊기는 순간마다 받아친 한마디가 전부 웃음 포인트가 됐다. "장비 트러블이 오늘의 콘텐츠"라는 클립이 따로 올라왔다.',
+          success: '몇 번 말이 끊겼지만 시청자들이 채팅으로 빈칸을 채워 주며 방송이 무사히 끝났다.',
+          fail: '소리가 점점 더 자주 끊겼다. 결국 채팅창에는 "다음에 다시 봐요"라는 인사만 남았다.',
+        },
       },
-      { text: '오늘은 짧게 마무리한다', effects: { fans: -20, hp: 5 } },
+      {
+        text: '오늘은 짧게 마무리한다',
+        story: '{member}가 짧게 사과하고 방송을 일찍 끝냈다. 아쉬워하는 시청자도 있었지만 덕분에 오랜만에 푹 쉬었다.',
+        effects: { fans: -20, hp: 5 },
+      },
     ],
   },
   {
     id: 'ev_c02',
     title: '팬아트 모음 방송 제안',
+    // 스토리 변형(group: fanart_stream)으로 전환됨. 정의는 저장 호환 / 테스트용으로 남기고 등장만 막는다.
+    weight: 0,
     description: '{member}에게 그동안 쌓인 팬아트를 모아 감상하자는 요청이 쏟아졌다.',
     conditions: { activityCategories: ['talk'], cooldown: 5 },
     choices: [
@@ -225,6 +243,8 @@ export const EXTRA_EVENTS = [
   {
     id: 'ev_s01',
     title: '보컬 트레이닝 제안',
+    // 스토리 변형(group: growth_vocal)으로 전환됨. 정의는 저장 호환 / 테스트용으로 남기고 등장만 막는다.
+    weight: 0,
     description: '보컬 트레이너가 {member}에게 단기 레슨을 제안했다.',
     conditions: { activityCategories: ['music'], cooldown: 6 },
     choices: [
@@ -240,6 +260,8 @@ export const EXTRA_EVENTS = [
   {
     id: 'ev_s02',
     title: '에임 연습 루틴',
+    // 스토리 변형(group: growth_aim)으로 전환됨. 정의는 저장 호환 / 테스트용으로 남기고 등장만 막는다.
+    weight: 0,
     description: '{member}가 요즘 에임이 흔들린다며 연습 루틴을 새로 짜 보고 싶다고 한다.',
     conditions: { activityCategories: ['fps'], cooldown: 5 },
     choices: [
@@ -250,6 +272,8 @@ export const EXTRA_EVENTS = [
   {
     id: 'ev_s03',
     title: '토크 워크숍',
+    // 스토리 변형(group: growth_talk)으로 전환됨. 정의는 저장 호환 / 테스트용으로 남기고 등장만 막는다.
+    weight: 0,
     description: '방송 진행 워크숍에 {member}를 보내 보자는 의견이 나왔다.',
     conditions: { activityCategories: ['talk'], cooldown: 6 },
     choices: [
@@ -260,6 +284,8 @@ export const EXTRA_EVENTS = [
   {
     id: 'ev_h01',
     title: '과로 경보',
+    // 스토리 변형(group: overwork_alert)으로 전환됨. 정의는 저장 호환 / 테스트용으로 남기고 등장만 막는다.
+    weight: 0,
     description: '{member}의 방송 시간이 계속 늘고 있다. 본인은 즐겁다지만 피로가 눈에 띈다.',
     conditions: { maxHp: 45, cooldown: 3 },
     urgent: true,
@@ -816,7 +842,7 @@ export const EXTRA_EVENTS = [
     memberId: 'shibuki',
     collab: { min: 2, max: 3 },
     conditions: { ...BROADCAST, cooldown: 5 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '코너를 짜서 체계적으로 진행한다',
@@ -1020,7 +1046,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 라디오 형식으로 사연을 읽는 합방을 해 보고 싶다고 한다.',
     collab: { min: 2, max: 2 },
     conditions: { activityCategories: ['talk'], cooldown: 3 },
-    weight: 1,
+    weight: 0,
     choices: [
       {
         text: '사연 코너를 정성껏 준비한다',
@@ -1037,7 +1063,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 리듬게임으로 정면 승부를 하자며 상대를 찾는다.',
     collab: { min: 2, max: 3 },
     conditions: { activityCategories: ['rhythm'], cooldown: 3 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '최고 난이도 곡으로 맞붙는다',
@@ -1054,7 +1080,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 친한 멤버들과 오랜만에 유닛 합방을 하고 싶다고 한다. 함께할수록 호흡이 좋아진다.',
     collab: { min: 2, max: 3 },
     conditions: { ...BROADCAST, minRelationship: 35, cooldown: 4 },
-    weight: 1,
+    weight: 0,
     choices: [
       {
         text: '서로의 매력을 살리는 코너를 준비한다',

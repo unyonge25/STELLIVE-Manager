@@ -1,0 +1,240 @@
+{
+  "id": "st_collab_invite_lineup",
+  "title": "합방 콘텐츠 정하기",
+  "category": "collaboration",
+  "description": "합방 제안(collab_001) 변형 A. 오늘 일정에 맞는 합방 콘텐츠를 고르고 한 번의 판정으로 승부한다.",
+  "meta": {
+    "theme": "collab_content",
+    "setting": "joint_stream_planning",
+    "conflict": "schedule_clash",
+    "resolution": "compromise",
+    "activity": "joint_stream",
+    "tone": "warm"
+  },
+  "collab": {
+    "min": 2,
+    "max": 3
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ]
+  },
+  "weight": 1,
+  "start": "pick",
+  "steps": {
+    "pick": {
+      "type": "choice",
+      "text": "{member}와 {partners}의 합방이 잡혔다. 그런데 각자 하고 싶은 콘텐츠가 다르다. 방송 시작까지 30분, 오늘 무엇으로 갈지 정해야 한다.",
+      "choices": [
+        {
+          "text": "FPS 스쿼드를 짜서 같이 달린다",
+          "conditions": {
+            "activityCategories": [
+              "fps"
+            ]
+          },
+          "story": "결국 {member}의 오늘 일정에 맞춰 FPS로 정했다. 포지션을 나누는 동안 벌써 서로 누가 오더를 낼지 신경전이다.",
+          "next": "squad"
+        },
+        {
+          "text": "격투게임 대전으로 맞붙는다",
+          "conditions": {
+            "activityCategories": [
+              "fighting"
+            ]
+          },
+          "story": "'말보다 주먹'이라는 한마디로 격투게임 대전이 결정됐다. 캐릭터 선택 화면에서부터 심리전이 시작됐다.",
+          "next": "versus"
+        },
+        {
+          "text": "노래를 한 곡씩 이어 부른다",
+          "conditions": {
+            "activityCategories": [
+              "music"
+            ]
+          },
+          "story": "노래 릴레이로 하자는 데 모두 동의했다. 다만 곡 순서를 정하는 데만 10분이 걸렸다.",
+          "next": "relay"
+        },
+        {
+          "text": "하고 싶던 이야기를 다 하는 토크 합방으로 간다",
+          "story": "콘텐츠는 내려놓고 수다로 가기로 했다. 대신 각자 준비해 온 이야깃거리를 하나씩 꺼내 놓는다.",
+          "next": "talk"
+        }
+      ]
+    },
+    "squad": {
+      "type": "check",
+      "text": "첫 판부터 상대 스쿼드가 거세다. 오더가 엇갈리면 그대로 무너진다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 78,
+        "traitBonus": {
+          "fps": 15,
+          "competitive": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "오더가 한 번도 엇갈리지 않았다. 마지막 판은 거의 완벽한 팀플레이였다.",
+          "effects": {
+            "fans": 50
+          },
+          "next": "end_good"
+        },
+        "success": {
+          "text": "몇 번 엇갈렸지만 결국 합이 맞기 시작했다.",
+          "next": "end_good"
+        },
+        "partial": {
+          "text": "이긴 판보다 진 판이 많았지만, 진 판마다 서로 탓하는 장면이 꽤 웃겼다.",
+          "next": "end_half"
+        },
+        "fail": {
+          "text": "오더가 계속 엇갈리며 연패가 이어졌다. 분위기가 조금 가라앉았다.",
+          "next": "end_flat"
+        }
+      }
+    },
+    "versus": {
+      "type": "check",
+      "text": "1대1 대전. 서로의 손버릇을 아는 사이라 한 수 앞을 읽어야 한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 78,
+        "traitBonus": {
+          "fighting": 15,
+          "competitive": 5,
+          "brain": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "마지막 라운드에서 체력 한 칸 차이로 역전이 나왔다. 채팅창이 비명으로 가득 찼다.",
+          "effects": {
+            "fans": 50
+          },
+          "next": "end_good"
+        },
+        "success": {
+          "text": "치고받는 접전 끝에 승부가 났다. 진 쪽도 웃으며 재대결을 외쳤다.",
+          "next": "end_good"
+        },
+        "partial": {
+          "text": "한쪽이 일방적으로 이겼다. 경기는 싱거웠지만 진 쪽의 리액션이 살렸다.",
+          "next": "end_half"
+        },
+        "fail": {
+          "text": "서로 조심하다 시간 초과만 반복됐다. 보는 사람도 하는 사람도 지쳤다.",
+          "next": "end_flat"
+        }
+      }
+    },
+    "relay": {
+      "type": "check",
+      "text": "릴레이 첫 곡. 앞 사람의 분위기를 이어받아 다음 곡으로 넘겨야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 80,
+        "traitBonus": {
+          "cover": 10,
+          "instrument": 10
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "곡과 곡이 이어질 때마다 화음이 하나씩 늘어났다. 마지막 곡은 다 함께 불렀다.",
+          "effects": {
+            "fans": 50
+          },
+          "next": "end_good"
+        },
+        "success": {
+          "text": "릴레이가 매끄럽게 이어졌다. 신청곡 요청이 끝없이 올라왔다.",
+          "next": "end_good"
+        },
+        "partial": {
+          "text": "몇 곡은 키가 안 맞았지만 웃으며 넘어갔다.",
+          "next": "end_half"
+        },
+        "fail": {
+          "text": "곡 분위기가 계속 엇갈려 릴레이가 자꾸 끊겼다.",
+          "next": "end_flat"
+        }
+      }
+    },
+    "talk": {
+      "type": "check",
+      "text": "수다 합방은 흐름이 전부다. 누가 이야기를 끌고 누가 받아칠지 자연스럽게 정해져야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 75,
+        "traitBonus": {
+          "chatter": 10,
+          "host": 10,
+          "roleplay": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "준비한 이야깃거리가 바닥났는데도 대화가 끊기지 않았다. 세 시간이 순식간에 지나갔다.",
+          "effects": {
+            "fans": 50
+          },
+          "next": "end_good"
+        },
+        "success": {
+          "text": "서로의 근황에 맞장구를 치다 보니 방송 시간이 훌쩍 지났다.",
+          "next": "end_good"
+        },
+        "partial": {
+          "text": "재밌는 구간과 어색한 침묵이 번갈아 찾아왔다.",
+          "next": "end_half"
+        },
+        "fail": {
+          "text": "이야기가 자꾸 겹치고 끊겼다. 서로 눈치만 보는 시간이 길었다.",
+          "next": "end_flat"
+        }
+      }
+    },
+    "end_good": {
+      "type": "end",
+      "result": "success",
+      "text": "처음엔 콘텐츠를 정하지 못해 우왕좌왕했지만, 결과는 대만족이었다. 방송이 끝나고도 {member}와 {partners}의 대화방은 한참 시끄러웠다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1,
+        "relationship": 4,
+        "hp": -5
+      }
+    },
+    "end_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "완벽한 합방은 아니었지만 서로의 스타일은 확실히 알게 됐다. 다음엔 콘텐츠를 미리 정해 오자는 약속이 남았다.",
+      "effects": {
+        "fans": 90,
+        "relationship": 3,
+        "hp": -5,
+        "memberFlags": {
+          "collabPlanAhead": true
+        }
+      }
+    },
+    "end_flat": {
+      "type": "end",
+      "result": "fail",
+      "text": "아쉬운 합방이었다. {member}는 방송 후 '다음엔 내가 기획부터 제대로 짜 오겠다'고 메시지를 남겼다.",
+      "effects": {
+        "fans": 30,
+        "relationship": 1,
+        "hp": -5,
+        "memberFlags": {
+          "collabPlanAhead": true
+        }
+      }
+    }
+  },
+  "group": "collab_invite"
+}

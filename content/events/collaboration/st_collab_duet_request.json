@@ -1,0 +1,579 @@
+{
+  "id": "st_collab_duet_request",
+  "title": "10분 만에 맞춘 즉석 듀엣",
+  "category": "collaboration",
+  "description": "듀엣 제안(collab_003) 변형 B. 신청곡으로 즉석 듀엣을 하게 되어 음 맞추기 판정부터 시작한다.",
+  "meta": {
+    "theme": "music_live",
+    "setting": "live_duet_request",
+    "conflict": "time_pressure",
+    "resolution": "risky_gamble",
+    "activity": "sing",
+    "tone": "hype"
+  },
+  "collab": {
+    "min": 2,
+    "max": 3
+  },
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "cooldown": 2
+  },
+  "weight": 1,
+  "start": "warmup",
+  "steps": {
+    "warmup": {
+      "type": "check",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "{member}의 녹음 날, 잠깐 들른 {partners}에게 스태프가 즉석 듀엣 가이드를 남겨 보자고 했다. 스튜디오 예약 시간이 빠듯해 맞춰 볼 시간은 단 10분. 부스에서 헤드폰을 나눠 끼고 키부터 맞춰야 한다."
+        },
+        {
+          "text": "{member}의 노래 방송에 {partners}가 놀러 왔다. 채팅창이 즉석 듀엣을 외친다. 연습 시간은 단 10분. 일단 키부터 맞춰야 한다."
+        }
+      ],
+      "check": {
+        "stat": "Vc",
+        "difficulty": 72,
+        "traitBonus": {
+          "cover": 5,
+          "instrument": 10,
+          "spontaneous": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": [
+            {
+              "when": {
+                "activity": [
+                  "recording"
+                ]
+              },
+              "text": "첫 소절에 바로 키가 맞았다. 유리창 너머 스태프가 엄지를 들어 보인다."
+            },
+            {
+              "text": "첫 소절에 바로 키가 맞았다. 채팅창이 벌써 박수를 친다."
+            }
+          ],
+          "next": "bond"
+        },
+        "partial": {
+          "text": "키는 맞췄지만 서로 숨 쉬는 타이밍이 다르다.",
+          "next": "bond_partial"
+        },
+        "fail": {
+          "text": "키가 반음씩 계속 어긋났다. 아무리 친해도 오늘 목소리는 서로 낯설다. 남은 시간은 5분.",
+          "effects": {
+            "hp": -2
+          },
+          "next": "gamble_new"
+        }
+      }
+    },
+    "bond": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "partyMinRelationship": 40
+          },
+          "next": "gamble_close"
+        }
+      ],
+      "next": "gamble_new_s"
+    },
+    "gamble_close": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "평소 많이 불러 본 사이다. 보면대에 놓인 건 팬 신청곡 1위, 고음 파트가 몰린 어려운 곡이다."
+        },
+        {
+          "text": "평소 많이 불러 본 사이다. 채팅창에서 고음 파트가 몰린 어려운 곡이 신청됐다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "신청곡 그대로 도전한다",
+          "story": "서로 눈빛만 보고 고개를 끄덕였다. 실패해도 웃을 수 있는 사이라 가능한 도박이다.",
+          "next": "end_jackpot"
+        },
+        {
+          "text": "둘 다 아는 쉬운 곡으로 바꾼다",
+          "story": "무리하지 않기로 했다. 대신 화음을 하나 더 얹어 보기로 했다.",
+          "next": "end_safe_sweet"
+        }
+      ]
+    },
+    "gamble_new": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "아직 함께 불러 본 적이 없다. 보면대에 놓인 건 팬 신청곡 1위, 고음 파트가 몰린 어려운 곡이다."
+        },
+        {
+          "text": "아직 함께 불러 본 적이 없다. 채팅창에서 고음 파트가 몰린 어려운 곡이 신청됐다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "모험이지만 신청곡에 도전한다",
+          "story": "처음 맞춰 보는 호흡으로 어려운 곡에 도전했다. 결과는 반반이다.",
+          "effects": {
+            "relationship": 1
+          },
+          "next": "end_gamble_split"
+        },
+        {
+          "text": "한 사람씩 솔로로 나눠 부른다",
+          "story": [
+            {
+              "when": {
+                "activity": [
+                  "recording"
+                ]
+              },
+              "text": "듀엣 대신 한 사람씩 파트를 나눠 녹음하기로 했다. 안전하지만 스태프는 조금 아쉬운 눈치다."
+            },
+            {
+              "text": "듀엣 대신 솔로 릴레이로 바꿨다. 안전하지만 채팅창은 조금 아쉬워한다."
+            }
+          ],
+          "next": "end_solo_relay"
+        }
+      ]
+    },
+    "end_jackpot": {
+      "type": "end",
+      "result": "success",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "도박이 통했다. 10분 맞춰 본 듀엣이라고는 믿기 어려운 테이크에 컨트롤룸이 한동안 조용했다."
+        },
+        {
+          "text": "도박이 통했다. 10분 연습한 듀엣이라고는 믿기 어려운 무대에 채팅창이 한동안 멈췄다."
+        }
+      ],
+      "effects": {
+        "fans": 180,
+        "fame": 1,
+        "stats": {
+          "Vc": 1
+        },
+        "relationship": 4,
+        "hp": -6
+      }
+    },
+    "end_safe_sweet": {
+      "type": "end",
+      "result": "success",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "쉬운 곡이었지만 즉석에서 얹은 화음이 녹음본에서 가장 좋은 부분이 됐다."
+        },
+        {
+          "text": "쉬운 곡이었지만 즉석에서 얹은 화음이 의외의 명장면이 됐다."
+        }
+      ],
+      "effects": {
+        "fans": 120,
+        "relationship": 3,
+        "hp": -3
+      }
+    },
+    "end_gamble_split": {
+      "type": "end",
+      "result": "partial",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "후렴은 완벽했지만 2절은 엉망이었다. 그래도 스태프가 '처음인데 이 정도면'이라며 정식 듀엣 녹음 일정을 잡자고 했다."
+        },
+        {
+          "text": "후렴은 완벽했지만 2절은 엉망이었다. 그래도 '처음인데 이 정도면'이라는 반응과 함께 정식 듀엣 요청이 들어왔다."
+        }
+      ],
+      "effects": {
+        "fans": 100,
+        "relationship": 3,
+        "hp": -6,
+        "memberFlags": {
+          "duetRetry": true
+        }
+      }
+    },
+    "end_solo_relay": {
+      "type": "end",
+      "result": "fail",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "듀엣은 다음으로 미뤘다. 파트를 나눠 녹음한 버전도 나쁘지 않았지만, 다음엔 꼭 같이 부르자는 숙제가 남았다."
+        },
+        {
+          "text": "듀엣은 다음으로 미뤘다. 솔로 릴레이도 나쁘지 않았지만, 다음엔 꼭 같이 부르자는 숙제가 남았다."
+        }
+      ],
+      "effects": {
+        "fans": 60,
+        "relationship": 2,
+        "hp": -3,
+        "memberFlags": {
+          "duetRetry": true
+        }
+      }
+    },
+    "bond_partial": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "partyMinRelationship": 40
+          },
+          "next": "gamble_close_p"
+        }
+      ],
+      "next": "gamble_new_p"
+    },
+    "gamble_new_s": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "키는 금방 맞았지만 아직 함께 불러 본 적은 없다. 보면대에 놓인 건 팬 신청곡 1위, 고음 파트가 몰린 어려운 곡이다."
+        },
+        {
+          "text": "키는 금방 맞았지만 아직 함께 불러 본 적은 없다. 채팅창에서 고음 파트가 몰린 어려운 곡이 신청됐다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "모험이지만 신청곡에 도전한다",
+          "effects": {
+            "relationship": 1
+          },
+          "next": "end_fresh_gamble",
+          "story": [
+            {
+              "when": {
+                "activity": [
+                  "recording"
+                ]
+              },
+              "text": "맞춰 둔 키를 믿고 어려운 곡에 도전했다. 처음 맞춰 보는 호흡인데도 첫 가이드부터 깔끔하다."
+            },
+            {
+              "text": "맞춰 둔 키를 믿고 어려운 곡에 도전했다. 처음 맞춰 보는 호흡인데도 첫 소절부터 채팅창 반응이 좋다."
+            }
+          ]
+        },
+        {
+          "text": "한 사람씩 솔로로 나눠 부른다",
+          "next": "end_fresh_relay",
+          "story": [
+            {
+              "when": {
+                "activity": [
+                  "recording"
+                ]
+              },
+              "text": "키는 맞았지만 무리하지 않기로 했다. 한 사람씩 파트를 나눠 녹음하고, 듀엣은 다음 녹음으로 아껴 두기로 했다."
+            },
+            {
+              "text": "키는 맞았지만 무리하지 않기로 했다. 서로의 솔로를 이어 부르고 듀엣은 다음으로 아껴 두자, 채팅창이 다음을 약속하라고 외친다."
+            }
+          ]
+        }
+      ]
+    },
+    "end_fresh_gamble": {
+      "type": "end",
+      "result": "success",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "처음 함께 부른 듀엣이라고는 믿기 어려울 만큼 고음이 깔끔하게 맞았다. 엔지니어가 '이 조합 처음 맞냐'며 녹음본을 두 번이나 돌려 들었다."
+        },
+        {
+          "text": "처음 함께 부른 듀엣이라고는 믿기 어려울 만큼 고음이 깔끔하게 맞았다. '이 조합 처음 맞냐'는 채팅이 쏟아졌다."
+        }
+      ],
+      "effects": {
+        "fans": 150,
+        "relationship": 3,
+        "hp": -6
+      }
+    },
+    "end_fresh_relay": {
+      "type": "end",
+      "result": "success",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "키가 잘 맞은 덕에 나눠 녹음한 파트가 매끄럽게 이어 붙었다. 엔지니어는 다음엔 꼭 같이 부스에 들어가 보라고 했다."
+        },
+        {
+          "text": "키가 잘 맞은 덕에 솔로 릴레이가 매끄럽게 이어졌다. '다음엔 꼭 같이 불러 달라'는 채팅이 끝까지 이어졌다."
+        }
+      ],
+      "effects": {
+        "fans": 110,
+        "relationship": 2,
+        "hp": -3,
+        "memberFlags": {
+          "duetRetry": true
+        }
+      }
+    },
+    "gamble_close_p": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "숨 쉬는 타이밍은 아직 어긋나지만 평소 많이 불러 본 사이다. 보면대에 놓인 건 팬 신청곡 1위, 고음 파트가 몰린 어려운 곡이다."
+        },
+        {
+          "text": "숨 쉬는 타이밍은 아직 어긋나지만 평소 많이 불러 본 사이다. 채팅창에서 고음 파트가 몰린 어려운 곡이 신청됐다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "신청곡 그대로 도전한다",
+          "next": "end_close_rough",
+          "story": [
+            {
+              "when": {
+                "activity": [
+                  "recording"
+                ]
+              },
+              "text": "어긋난 호흡은 서로 믿고 맞춰 가기로 했다. 유리창 너머 엔지니어가 숨을 죽인다."
+            },
+            {
+              "text": "어긋난 호흡은 서로 믿고 맞춰 가기로 했다. 첫 소절부터 채팅창이 숨을 죽인다."
+            }
+          ]
+        },
+        {
+          "text": "둘 다 아는 쉬운 곡으로 바꾼다",
+          "next": "end_close_easy",
+          "story": [
+            {
+              "when": {
+                "activity": [
+                  "recording"
+                ]
+              },
+              "text": "호흡부터 맞추기로 했다. 쉬운 곡이라면 숨 쉬는 타이밍도 금방 맞출 수 있다. 엔지니어는 살짝 아쉬운 눈치다."
+            },
+            {
+              "text": "호흡부터 맞추기로 했다. 쉬운 곡이라면 숨 쉬는 타이밍도 금방 맞출 수 있다. 채팅창은 살짝 아쉬워한다."
+            }
+          ]
+        }
+      ]
+    },
+    "end_close_rough": {
+      "type": "end",
+      "result": "partial",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "고음 클라이맥스는 소름 돋게 맞았다. 다만 1절 내내 숨이 엇갈려, 녹음본에서 쓸 수 있는 건 후렴 30초뿐이었다. 그 30초가 너무 좋아서 다시 녹음할 이유가 생겼다."
+        },
+        {
+          "text": "고음 클라이맥스는 소름 돋게 맞았다. 다만 1절 내내 숨이 엇갈려, 클립으로 남은 건 후렴 30초뿐이었다. 그래도 '후렴만으로 충분하다'는 채팅이 많았다."
+        }
+      ],
+      "effects": {
+        "fans": 140,
+        "relationship": 4,
+        "hp": -6
+      }
+    },
+    "end_close_easy": {
+      "type": "end",
+      "result": "partial",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "쉬운 곡이라 끝까지 안정적으로 녹음했고, 둘의 호흡도 조금씩 맞아 갔다. 대신 기대했던 도전이 없어 엔지니어에게 '무난하다'는 말만 들었다."
+        },
+        {
+          "text": "쉬운 곡이라 끝까지 안정적으로 불렀고, 둘의 호흡도 조금씩 맞아 갔다. 대신 기대했던 도전이 없어 '오늘은 무난했다'는 채팅에 그쳤다."
+        }
+      ],
+      "effects": {
+        "fans": 90,
+        "relationship": 3,
+        "hp": -3
+      }
+    },
+    "gamble_new_p": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "숨 쉬는 타이밍이 다른 데다 아직 함께 불러 본 적도 없다. 보면대에 놓인 건 팬 신청곡 1위, 고음 파트가 몰린 어려운 곡이다."
+        },
+        {
+          "text": "숨 쉬는 타이밍이 다른 데다 아직 함께 불러 본 적도 없다. 채팅창에서 고음 파트가 몰린 어려운 곡이 신청됐다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "모험이지만 신청곡에 도전한다",
+          "effects": {
+            "relationship": 1
+          },
+          "next": "end_new_rough",
+          "story": [
+            {
+              "when": {
+                "activity": [
+                  "recording"
+                ]
+              },
+              "text": "맞춰 둔 키 하나만 믿고 어려운 곡에 도전했다. 헤드폰 너머 상대의 숨소리에 온 신경을 모았다."
+            },
+            {
+              "text": "맞춰 둔 키 하나만 믿고 어려운 곡에 도전했다. 채팅창이 반쯤은 걱정, 반쯤은 기대다."
+            }
+          ]
+        },
+        {
+          "text": "한 사람씩 솔로로 나눠 부른다",
+          "next": "end_new_relay",
+          "story": [
+            {
+              "when": {
+                "activity": [
+                  "recording"
+                ]
+              },
+              "text": "듀엣 대신 한 사람씩 파트를 나눠 녹음하기로 했다. 키를 맞춰 둔 덕에 이어 붙이는 부분은 자연스럽다."
+            },
+            {
+              "text": "듀엣 대신 솔로 릴레이로 바꿨다. 키를 맞춰 둔 덕에 이어 부르는 부분은 자연스럽다. 채팅창은 조금 아쉬워한다."
+            }
+          ]
+        }
+      ]
+    },
+    "end_new_rough": {
+      "type": "end",
+      "result": "partial",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "고음 한 구간이 기적처럼 맞아 그 부분만은 녹음본에 그대로 쓰기로 했다. 나머지는 숨이 엇갈려 다시 녹음해야 해서, 다음 녹음 일정을 함께 잡았다."
+        },
+        {
+          "text": "고음 한 구간이 기적처럼 맞아 그 장면만 클립으로 퍼졌다. 나머지는 숨이 엇갈려 아쉬웠고, '정식으로 맞춰서 다시 불러 달라'는 채팅이 이어졌다."
+        }
+      ],
+      "effects": {
+        "fans": 110,
+        "relationship": 3,
+        "hp": -6,
+        "memberFlags": {
+          "duetRetry": true
+        }
+      }
+    },
+    "end_new_relay": {
+      "type": "end",
+      "result": "partial",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "각자 맡은 파트는 깔끔하게 녹음됐고, 키를 맞춰 둔 덕에 이음새도 자연스러웠다. 다만 둘이 함께 부른 소절은 한 줄도 남지 않았다."
+        },
+        {
+          "text": "각자 솔로로 실력은 확실히 보여 줬고, 키를 맞춰 둔 덕에 이음새도 자연스러웠다. 다만 듀엣을 기대한 채팅은 끝까지 아쉬워했다."
+        }
+      ],
+      "effects": {
+        "fans": 80,
+        "relationship": 2,
+        "hp": -3,
+        "memberFlags": {
+          "duetRetry": true
+        }
+      }
+    }
+  },
+  "group": "collab_duet"
+}

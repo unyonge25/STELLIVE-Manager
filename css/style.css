@@ -1739,6 +1739,284 @@ button {
 .check--low { color: var(--sub); }
 .check--low .check__bar > span { background: var(--sub); }
 
+/* ===================== 스토리(멀티스텝) 이벤트 ===================== */
+
+.cast {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 2px 0 4px;
+}
+
+.cast__label {
+  margin-right: 2px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--faint);
+}
+
+.cast__member {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  padding: 2px 12px 2px 3px;
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* 장면이 세로로 이어지는 이야기 줄기: 왼쪽 선 + 장면마다 별 표시 */
+.storyline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0 0 0 28px;
+  list-style: none;
+}
+
+.storyline::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 9px;
+  width: 2px;
+  border-radius: 1px;
+  background: linear-gradient(180deg, var(--line-2), var(--lilac));
+}
+
+.beat {
+  position: relative;
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: inset 0 0 0 1px var(--line), var(--shadow);
+  animation: beat-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.beat::before {
+  content: '✦';
+  position: absolute;
+  top: 14px;
+  left: -27px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg);
+  font-size: 11px;
+  line-height: 1;
+  color: var(--line-2);
+}
+
+/* 지나간 장면은 조금 가볍게 */
+.beat:not(.beat--now):not(.beat--end) {
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+@keyframes beat-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
+.beat__text {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.beat__text + .beat__text,
+.beat__pick + .beat__text,
+.beat__roll + .beat__text {
+  margin-top: 8px;
+}
+
+.beat__text--prompt {
+  font-weight: 700;
+}
+
+.beat__pick {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  margin: 8px 0 0;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--main-lo);
+}
+
+.beat__pick-label,
+.result__path {
+  flex-shrink: 0;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--bg-2);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 19px;
+  color: var(--main-lo);
+}
+
+.result__path {
+  margin-right: 6px;
+}
+
+.beat__roll {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 8px 0 0;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: var(--bg);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-2);
+}
+
+.beat__roll .ic {
+  width: 14px;
+  height: 14px;
+  color: var(--main);
+}
+
+.beat__deltas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.beat--check.beat--great::before,
+.beat--check.beat--success::before {
+  color: var(--main);
+}
+
+.beat--check.beat--partial::before {
+  color: var(--point);
+}
+
+.beat--check.beat--fail::before {
+  color: var(--sub);
+}
+
+/* 지금 장면 */
+.beat--now {
+  padding: 18px 20px;
+  box-shadow: inset 0 0 0 1.5px var(--main-hi), var(--shadow-hi);
+}
+
+.beat--now::before {
+  background: var(--grad);
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(142, 147, 249, 0.2);
+  animation: now-pulse 2s ease-in-out infinite;
+}
+
+@keyframes now-pulse {
+  50% { box-shadow: 0 0 0 7px rgba(142, 147, 249, 0.08); }
+}
+
+.beat--now .choices {
+  margin-top: 14px;
+}
+
+.beat__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.roll-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.roll-card .check {
+  font-size: 13px;
+}
+
+.roll-card .check__bar {
+  min-width: 180px;
+  height: 6px;
+}
+
+/* 결말 */
+.beat--end {
+  padding: 38px 22px 22px;
+  box-shadow: inset 0 0 0 1.5px var(--main-hi), var(--shadow-hi);
+}
+
+.beat--end::before {
+  background: var(--grad);
+  color: #fff;
+}
+
+.beat--end.beat--partial .tab-label {
+  background: var(--point);
+}
+
+.beat--end.beat--fail .tab-label {
+  background: var(--sub);
+}
+
+.beat--end.beat--neutral .tab-label {
+  background: var(--faint);
+}
+
+.beat--end .beat__text {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.beat__sum-label {
+  margin: 16px 0 0;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--faint);
+}
+
+.beat--end .beat__deltas {
+  margin-top: 6px;
+}
+
+.story-lock {
+  margin: 0;
+  font-size: 13px;
+  color: var(--faint);
+  text-align: center;
+}
+
+.outcome--partial {
+  box-shadow: inset 0 0 0 1px rgba(255, 137, 83, 0.7);
+  color: #d9622c;
+}
+
+.result--partial {
+  box-shadow: inset 0 0 0 1px rgba(255, 137, 83, 0.45), var(--shadow);
+}
+
+.result__story {
+  margin: 0 0 10px;
+  padding-left: 12px;
+  border-left: 2px solid var(--line-2);
+  font-size: 14px;
+  color: var(--text-2);
+}
+
 /* ===================== 콜라보 파트너 선택 ===================== */
 
 .picker {
@@ -2630,6 +2908,39 @@ button {
     width: 30px;
     height: 30px;
     font-size: 14px;
+  }
+
+  .storyline {
+    padding-left: 20px;
+  }
+
+  .storyline::before {
+    left: 5px;
+  }
+
+  .beat::before {
+    left: -21px;
+    width: 14px;
+    height: 14px;
+    font-size: 9px;
+  }
+
+  .beat,
+  .beat--now {
+    padding: 14px;
+  }
+
+  .beat--end {
+    padding: 34px 14px 16px;
+  }
+
+  .roll-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .roll-card .check__bar {
+    min-width: 0;
   }
 
   .check {

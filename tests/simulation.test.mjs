@@ -7,7 +7,7 @@ import { S, E, D, X, END, createRunner, assert, playGame } from './helpers.mjs';
 const RUNS = Number(process.argv[2] || 200);
 const { test, section, finish } = createRunner();
 
-const stats = { days: 0, decisions: 0, great: 0, success: 0, fail: 0, shop: 0, invest: 0, trades: 0, scores: [], grades: {}, events: new Set(), chains: {} };
+const stats = { days: 0, decisions: 0, great: 0, success: 0, partial: 0, fail: 0, shop: 0, invest: 0, trades: 0, scores: [], grades: {}, events: new Set(), chains: {} };
 const errors = [];
 
 function randomManager(state) {
@@ -98,7 +98,7 @@ test('등장한 이벤트 종류가 충분히 다양하다 (전체의 70% 이상
 
 const avg = stats.scores.reduce((a, b) => a + b, 0) / Math.max(stats.scores.length, 1);
 console.log('\n[요약]');
-console.log(`  중요 이벤트/콜라보 ${(stats.decisions / RUNS).toFixed(1)}건/게임 · 판정 대성공 ${stats.great} / 성공 ${stats.success} / 실패 ${stats.fail}`);
+console.log(`  중요 이벤트/콜라보 ${(stats.decisions / RUNS).toFixed(1)}건/게임 · 판정 대성공 ${stats.great} / 성공 ${stats.success} / 부분성공 ${stats.partial} / 실패 ${stats.fail}`);
 console.log(`  매니저 행동: 상점 ${stats.shop} · 투자 ${stats.invest} · 매매 ${stats.trades}`);
 console.log(`  등장한 이벤트 ${stats.events.size}종 · 체인 완주: ${JSON.stringify(stats.chains)}`);
 console.log(`  평균 점수 ${avg.toFixed(0)} · 등급 분포 ${JSON.stringify(stats.grades)}`);

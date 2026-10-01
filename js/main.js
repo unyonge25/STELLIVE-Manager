@@ -29,7 +29,8 @@ import {
   endDay,
   isLastDay,
 } from './state.js';
-import { getEventById, getAvailableChoices, planDay } from './events.js';
+import { getEventById, getAvailableChoices, planDay, isStoryEvent } from './events.js';
+import { startStory, advanceStory, clearStory, canLeaveStory, getStoryRun } from './story.js';
 import { resolveChoice, resolveRoutines, resolveInvestments, applyScheduledStockEffects } from './actions.js';
 import { buyShopItem, startInvestment, buyStock, sellStock, openMarket, closeMarket } from './economy.js';
 import { saveGame, loadGame, hasSave, clearSave } from './save.js';
@@ -52,6 +53,7 @@ function startDay() {
 }
 
 function closeEvent() {
+  clearStory(getState());
   setCurrentEvent(null);
   setSelectedMember(null);
   setCollabPartners([]);
@@ -114,10 +116,27 @@ const handlers = {
     const entry = getScheduleEntry(memberId);
     if (!member || !entry || entry.done || entry.kind === ENTRY_KIND.ROUTINE) return;
 
+    const event = getEventById(entry.eventId);
     setSelectedMember(memberId);
-    setCurrentEvent(getEventById(entry.eventId));
+    setCurrentEvent(event);
     setCollabPartners([]);
+    // 스토리 이벤트: 진행 상태를 만든다. (첫 행동 전까지는 아무 효과도 없다)
+    if (isStoryEvent(event)) startStory(getState(), event, memberId);
     setGamePhase(GAME_PHASE.EVENT);
+    refresh();
+  },
+
+  // 스토리 이벤트 진행: { type: 'continue' } | { type: 'choose', index } | { type: 'roll' }
+  onStory(action) {
+    if (getState().gamePhase !== GAME_PHASE.EVENT || !getStoryRun()) return;
+    if (!advanceStory(getState(), action)) return;
+    refresh();
+  },
+
+  // 스토리 결말을 보고 일정표로 돌아간다.
+  onStoryClose() {
+    if (!getStoryRun()?.finished) return;
+    closeEvent();
     refresh();
   },
 
@@ -125,6 +144,8 @@ const handlers = {
     const state = getState();
     const event = state.currentEvent;
     if (!event?.collab || !isSelectablePartner(memberId)) return;
+    // 스토리가 시작된 뒤에는 파트너를 바꿀 수 없다.
+    if (getStoryRun()?.committed) return;
 
     const selected = state.collabPartnerIds;
     if (selected.includes(memberId)) {
@@ -153,6 +174,8 @@ const handlers = {
   },
 
   onBack() {
+    // 스토리를 이미 진행했다면 결말까지 가야 한다. (효과가 적용된 뒤 빠져나가 다시 여는 것을 막는다)
+    if (!canLeaveStory()) return;
     closeEvent();
     refresh();
   },

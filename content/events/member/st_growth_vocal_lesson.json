@@ -1,0 +1,287 @@
+{
+  "id": "st_growth_vocal_lesson",
+  "title": "보컬 레슨 첫날",
+  "category": "member",
+  "group": "growth_vocal",
+  "description": "보컬 트레이닝 제안(ev_s01) 변형 A. 정식 레슨 / 독학 / 시청자 피드백 연습 중 하나를 고르고, 방식마다 다른 장면과 판정이 이어진다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "vocal_lesson_studio",
+    "conflict": "high_expectations",
+    "resolution": "steady_success",
+    "activity": "music",
+    "tone": "calm"
+  },
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "cooldown": 6
+  },
+  "start": "pick",
+  "steps": {
+    "pick": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "anyTraits": [
+              "perfectionist"
+            ]
+          },
+          "text": "보컬 트레이너가 {member}에게 단기 레슨을 제안했다. 평소 자기 노래에 엄격한 {member}는 제안서를 몇 번이고 다시 읽는다. 팬들도 '레슨 받으면 어떻게 될지 궁금하다'며 기대 중이다."
+        },
+        {
+          "text": "보컬 트레이너가 {member}에게 단기 레슨을 제안했다. 팬들도 '레슨 받으면 어떻게 될지 궁금하다'며 기대 중이다. 어떤 방식으로 실력을 키울까?"
+        }
+      ],
+      "choices": [
+        {
+          "text": "정식 레슨을 받는다",
+          "conditions": {
+            "minMoney": 70000
+          },
+          "story": "레슨비를 내고 트레이너의 연습실을 찾았다. 첫 시간부터 발성 기초를 처음부터 다시 짚는다.",
+          "effects": {
+            "money": -70000
+          },
+          "next": "lesson_feedback"
+        },
+        {
+          "text": "영상 자료로 독학한다",
+          "story": "강의 영상을 모아 재생 목록을 만들었다. 혼자 하는 만큼 꾸준함이 관건이다.",
+          "effects": {
+            "hp": -2
+          },
+          "next": "self_check"
+        },
+        {
+          "text": "노래 방송에서 시청자 피드백을 받으며 연습한다",
+          "story": "'오늘은 연습 방송입니다'라는 제목으로 방송을 켰다. 채팅창이 금세 보컬 코치들로 가득 찼다.",
+          "next": "stream_check"
+        }
+      ]
+    },
+    "lesson_feedback": {
+      "type": "choice",
+      "text": "레슨 중반, 트레이너가 {member}의 고음 습관을 짚었다. '이대로면 목이 쉽게 지쳐요.'",
+      "choices": [
+        {
+          "text": "트레이너의 방식을 그대로 따른다",
+          "story": "익숙한 창법을 잠시 내려놓고 트레이너의 지시대로 기초부터 다시 쌓았다. 답답하지만 확실한 방법이다.",
+          "next": "end_lesson_steady"
+        },
+        {
+          "text": "내 창법에 맞게 조정해 달라고 한다",
+          "story": "{member}가 자기 창법의 장점을 설명하자 트레이너가 흥미롭다는 듯 고개를 끄덕였다. 둘이 함께 새 연습법을 짜 본다.",
+          "next": "lesson_custom"
+        }
+      ]
+    },
+    "lesson_custom": {
+      "type": "check",
+      "text": "맞춤 연습법을 바로 시험해 본다. 내 색깔을 지키면서 습관만 고쳐야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 76,
+        "traitBonus": {
+          "perfectionist": 10,
+          "cover": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "고음이 한결 편안하게 나왔다. 트레이너가 '이건 {member}만의 방식'이라며 웃었다.",
+          "next": "end_lesson_custom"
+        },
+        "partial": {
+          "text": "습관은 고쳤지만 원래 음색이 조금 흐려졌다.",
+          "next": "end_lesson_mixed"
+        },
+        "fail": {
+          "text": "두 방식 사이에서 헤매다 목만 지쳤다.",
+          "next": "end_lesson_clash"
+        }
+      }
+    },
+    "self_check": {
+      "type": "check",
+      "text": "일주일째 독학 중. 오늘은 녹음해 둔 첫날 노래와 비교해 본다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 75,
+        "traitBonus": {
+          "diligent": 10,
+          "perfectionist": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "첫날 녹음과 비교하니 다른 사람 같았다. 혼자서 여기까지 왔다.",
+          "next": "end_self_great"
+        },
+        "success": {
+          "text": "확실히 나아졌다. 특히 호흡이 길어졌다.",
+          "next": "end_self_ok"
+        },
+        "partial": {
+          "text": "몇 군데는 좋아졌지만 이상한 버릇도 하나 생겼다.",
+          "next": "end_self_half"
+        },
+        "fail": {
+          "text": "영상은 많이 봤는데 노래는 그대로다.",
+          "next": "end_self_stuck"
+        }
+      }
+    },
+    "stream_check": {
+      "type": "check",
+      "text": "채팅창의 조언이 쏟아진다. 쓸 만한 피드백을 골라내며 노래도 이어 가야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "chatter": 10,
+          "host": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "한 시청자의 '턱에 힘을 빼 보라'는 조언이 정확히 들어맞았다. 채팅창이 함께 환호했다.",
+          "next": "end_stream_tips"
+        },
+        "partial": {
+          "text": "재밌는 방송이었지만 조언이 엇갈려 연습은 반쯤만 됐다.",
+          "next": "end_stream_noisy"
+        },
+        "fail": {
+          "text": "조언이 너무 많아 무엇부터 해야 할지 몰라 연습이 산으로 갔다.",
+          "next": "end_stream_mess"
+        }
+      }
+    },
+    "end_lesson_steady": {
+      "type": "end",
+      "result": "success",
+      "text": "레슨이 끝났다. 극적인 변화는 없었지만 고음이 한결 안정됐다. {member}는 배운 연습법을 매일 아침 루틴에 넣었다.",
+      "effects": {
+        "stats": {
+          "Vc": 3
+        },
+        "hp": -3
+      }
+    },
+    "end_lesson_custom": {
+      "type": "end",
+      "result": "success",
+      "text": "{member}에게 꼭 맞는 연습법이 생겼다. 다음 노래 방송에서 달라진 고음을 들은 팬들의 반응이 뜨거웠다.",
+      "effects": {
+        "stats": {
+          "Vc": 3
+        },
+        "fans": 50,
+        "hp": -3
+      }
+    },
+    "end_lesson_mixed": {
+      "type": "end",
+      "result": "partial",
+      "text": "목은 편해졌지만 원래 음색을 되찾는 데 시간이 더 필요하다. 트레이너와 다음 레슨 날짜를 잡았다.",
+      "effects": {
+        "stats": {
+          "Vc": 2
+        },
+        "hp": -3
+      }
+    },
+    "end_lesson_clash": {
+      "type": "end",
+      "result": "fail",
+      "text": "이번 레슨은 엇갈리기만 했다. 그래도 {member}는 '내 목소리를 더 잘 알게 됐다'며 다음엔 기초부터 따라 보겠다고 했다.",
+      "effects": {
+        "stats": {
+          "Vc": 1
+        },
+        "hp": -5,
+        "memberFlags": {
+          "vocalRetry": true
+        }
+      }
+    },
+    "end_self_great": {
+      "type": "end",
+      "result": "success",
+      "text": "독학 비포·애프터 영상을 올리자 '레슨 받은 줄 알았다'는 댓글이 달렸다.",
+      "effects": {
+        "stats": {
+          "Vc": 2
+        },
+        "fans": 40
+      }
+    },
+    "end_self_ok": {
+      "type": "end",
+      "result": "success",
+      "text": "꾸준히 한 만큼 돌아왔다. {member}는 독학 루틴을 한 달 더 이어 가기로 했다.",
+      "effects": {
+        "stats": {
+          "Vc": 1
+        }
+      }
+    },
+    "end_self_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "호흡은 늘었지만 새로 생긴 버릇을 고치는 게 다음 숙제가 됐다.",
+      "effects": {
+        "stats": {
+          "Vc": 1
+        },
+        "hp": -2
+      }
+    },
+    "end_self_stuck": {
+      "type": "end",
+      "result": "fail",
+      "text": "혼자서는 한계가 있었다. {member}는 다음엔 누군가에게 직접 배워 보겠다고 메모를 남겼다.",
+      "effects": {
+        "memberFlags": {
+          "vocalRetry": true
+        }
+      }
+    },
+    "end_stream_tips": {
+      "type": "end",
+      "result": "success",
+      "text": "연습 방송이 의외로 인기였다. '같이 성장하는 느낌'이라는 채팅이 이어졌고, 노래도 실제로 좋아졌다.",
+      "effects": {
+        "stats": {
+          "Vc": 1
+        },
+        "fans": 90,
+        "hp": -3
+      }
+    },
+    "end_stream_noisy": {
+      "type": "end",
+      "result": "partial",
+      "text": "방송은 즐거웠지만 연습으로는 반쯤 성공이었다. 다음엔 조언 받을 주제를 하나로 정해 오기로 했다.",
+      "effects": {
+        "fans": 50,
+        "hp": -3
+      }
+    },
+    "end_stream_mess": {
+      "type": "end",
+      "result": "fail",
+      "text": "연습 방송은 수다 방송이 되어 버렸다. 그래도 시청자들은 '다음 연습 방송도 기다린다'고 했다.",
+      "effects": {
+        "fans": 20,
+        "hp": -3,
+        "memberFlags": {
+          "vocalRetry": true
+        }
+      }
+    }
+  }
+}

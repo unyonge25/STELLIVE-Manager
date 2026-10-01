@@ -1,0 +1,339 @@
+{
+  "id": "st_music_cover_project",
+  "title": "커버곡 프로젝트",
+  "category": "music",
+  "description": "오래 부르고 싶던 곡의 커버 작업. 편곡 방향 → 녹음 → 수정 → 공개로 이어진다.",
+  "meta": {
+    "theme": "music_production",
+    "setting": "home_studio",
+    "conflict": "creative_block",
+    "resolution": "quiet_growth",
+    "activity": "music",
+    "tone": "emotional"
+  },
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "cooldown": 6
+  },
+  "activityWeights": {
+    "music": 2
+  },
+  "traitWeights": {
+    "cover": 1.5,
+    "perfectionist": 1.5
+  },
+  "start": "intro",
+  "steps": {
+    "intro": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "anyTraits": [
+              "perfectionist"
+            ]
+          },
+          "text": "{member}가 오래전부터 부르고 싶던 곡의 커버 작업을 시작했다. 그런데 완벽주의 성격 탓에 데모만 벌써 열 번째 다시 만들고 있다."
+        },
+        {
+          "text": "{member}가 오래전부터 부르고 싶던 곡의 커버 작업을 시작했다. 편곡 방향을 두고 한 시간째 고민 중이다."
+        }
+      ],
+      "next": "direction"
+    },
+    "direction": {
+      "type": "choice",
+      "text": "어떤 방향으로 갈까?",
+      "choices": [
+        {
+          "text": "원곡의 느낌을 살린 정석 커버",
+          "story": "안정적인 선택이다. 대신 {member}만의 색을 어떻게 보여줄지가 과제로 남았다.",
+          "next": "rec_classic"
+        },
+        {
+          "text": "장르를 과감하게 바꾼 리메이크",
+          "story": "위험하지만 터지면 크다. 편곡 작업만 반나절이 걸렸다.",
+          "effects": {
+            "hp": -3
+          },
+          "next": "rec_remake"
+        },
+        {
+          "text": "악기 연주까지 직접 넣는다",
+          "conditions": {
+            "anyTraits": [
+              "instrument"
+            ]
+          },
+          "story": "{member}가 직접 반주를 녹음하기로 했다. 연주와 노래를 모두 챙겨야 한다.",
+          "effects": {
+            "hp": -3
+          },
+          "next": "rec_instrument"
+        }
+      ]
+    },
+    "rec_classic": {
+      "type": "check",
+      "text": "녹음 부스. 익숙한 멜로디지만 그래서 더 비교되기 쉽다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 74,
+        "traitBonus": {
+          "cover": 10,
+          "perfectionist": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "원곡을 존중하면서도 {member}의 음색이 또렷하게 살아 있는 녹음본이 나왔다.",
+          "next": "release"
+        },
+        "partial": {
+          "text": "나쁘지 않다. 하지만 후렴 한 소절이 계속 귀에 걸린다.",
+          "next": "fix"
+        },
+        "fail": {
+          "text": "목이 잘 풀리지 않았다. 음정이 흔들리는 구간이 여러 군데다.",
+          "next": "fix"
+        }
+      }
+    },
+    "rec_remake": {
+      "type": "check",
+      "text": "녹음 부스. 새 편곡에 맞춰 부르는 건 생각보다 어렵다. 원곡 버릇이 자꾸 튀어나온다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 84,
+        "traitBonus": {
+          "perfectionist": 10,
+          "cover": 5,
+          "spontaneous": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "원곡을 아는 사람일수록 놀랄 만한 완성도가 나왔다.",
+          "effects": {
+            "stats": {
+              "Vc": 1
+            }
+          },
+          "next": "release_big"
+        },
+        "success": {
+          "text": "완전히 새로운 곡처럼 들린다. 스태프가 몇 번이고 다시 돌려 들었다.",
+          "next": "release_big"
+        },
+        "partial": {
+          "text": "방향은 좋은데 아직 덜 익었다.",
+          "next": "fix"
+        },
+        "fail": {
+          "text": "새 편곡과 목소리가 끝내 어울리지 않았다.",
+          "next": "end_shelved"
+        }
+      }
+    },
+    "rec_instrument": {
+      "type": "check",
+      "text": "반주 녹음부터 시작했다. 손가락과 목소리를 한꺼번에 챙겨야 하는 긴 밤이다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 78,
+        "traitBonus": {
+          "instrument": 15,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "연주와 노래가 한 사람의 호흡으로 이어졌다. 이 버전은 {member}만 만들 수 있다.",
+          "next": "release_big"
+        },
+        "partial": {
+          "text": "연주는 좋았지만 노래가 조금 밀렸다.",
+          "next": "fix"
+        },
+        "fail": {
+          "text": "둘 다 챙기려다 둘 다 흔들렸다.",
+          "next": "fix"
+        }
+      }
+    },
+    "fix": {
+      "type": "choice",
+      "text": "녹음본이 어딘가 아쉽다. 어떻게 할까?",
+      "choices": [
+        {
+          "text": "하루 더 붙잡고 다시 녹음한다",
+          "effects": {
+            "hp": -6
+          },
+          "next": "refix"
+        },
+        {
+          "text": "지금 버전으로 공개한다",
+          "story": "완벽하지 않아도 지금의 목소리를 남기기로 했다.",
+          "next": "release"
+        }
+      ]
+    },
+    "refix": {
+      "type": "check",
+      "text": "다음 날, 같은 부스. 이번에는 걸렸던 부분만 집중해서 다시 부른다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 74,
+        "traitBonus": {
+          "perfectionist": 10,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "걸렸던 소절이 깔끔하게 풀렸다.",
+          "effects": {
+            "stats": {
+              "Vc": 1
+            }
+          },
+          "next": "release"
+        },
+        "partial": {
+          "text": "완벽하진 않지만 어제보다는 훨씬 낫다.",
+          "next": "release"
+        },
+        "fail": {
+          "text": "붙잡을수록 목만 더 지쳤다.",
+          "next": "end_shelved"
+        }
+      }
+    },
+    "release_big": {
+      "type": "story",
+      "text": "완성본을 들은 스태프가 조용히 말했다. '이건 제대로 공개하자.'",
+      "next": "premiere_big"
+    },
+    "release": {
+      "type": "choice",
+      "text": "녹음이 끝났다. 공개 방식을 정하자.",
+      "choices": [
+        {
+          "text": "프리미어로 팬들과 함께 감상한다",
+          "next": "premiere"
+        },
+        {
+          "text": "조용히 업로드만 한다",
+          "next": "end_ok"
+        }
+      ]
+    },
+    "premiere": {
+      "type": "check",
+      "text": "프리미어 공개. {member}도 채팅창에 들어와 팬들과 함께 곡을 듣는다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "host": 5,
+          "chatter": 5,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "후렴에서 채팅창이 하트로 뒤덮였다.",
+          "next": "end_hit"
+        },
+        "partial": {
+          "text": "반응은 따뜻했지만 폭발적이진 않았다.",
+          "next": "end_ok"
+        },
+        "fail": {
+          "text": "공개 시간이 다른 큰 방송과 겹쳐 반응이 조용했다.",
+          "next": "end_soft"
+        }
+      }
+    },
+    "premiere_big": {
+      "type": "check",
+      "text": "프리미어 공개. 기다리던 팬들로 대기실이 꽉 찼다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 66,
+        "traitBonus": {
+          "host": 5,
+          "chatter": 5,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "공개 직후 커버곡이 음원 사이트 커버 차트에 이름을 올렸다.",
+          "next": "end_hit"
+        },
+        "partial": {
+          "text": "들은 사람들의 평가는 최고였다. 입소문이 천천히 퍼지고 있다.",
+          "next": "end_ok"
+        },
+        "fail": {
+          "text": "기대가 컸던 만큼 첫날 반응은 아쉬웠다.",
+          "next": "end_ok"
+        }
+      }
+    },
+    "end_hit": {
+      "type": "end",
+      "result": "success",
+      "text": "커버곡이 크게 화제가 됐다. {member}는 '다음 곡도 벌써 정해 뒀다'며 수줍게 웃었다.",
+      "effects": {
+        "fans": 180,
+        "fame": 1,
+        "stats": {
+          "Vc": 1
+        },
+        "stockEffect": {
+          "ticker": "TUNE",
+          "percentage": 3
+        }
+      }
+    },
+    "end_ok": {
+      "type": "end",
+      "result": "partial",
+      "text": "조용하지만 꾸준히 재생 수가 오른다. 오래 사랑받을 곡이 될 것 같다.",
+      "effects": {
+        "fans": 90,
+        "fame": 1,
+        "stats": {
+          "Vc": 1
+        }
+      }
+    },
+    "end_soft": {
+      "type": "end",
+      "result": "partial",
+      "text": "첫날 반응은 아쉬웠지만, 곡 자체에 대한 평은 좋았다.",
+      "effects": {
+        "fans": 50,
+        "stats": {
+          "Vc": 1
+        }
+      }
+    },
+    "end_shelved": {
+      "type": "end",
+      "result": "fail",
+      "text": "이번 곡은 잠시 보류하기로 했다. 대신 {member}는 자기 목소리가 어디까지 가는지 조금 더 알게 됐다.",
+      "effects": {
+        "stats": {
+          "Vc": 1
+        },
+        "hp": 3
+      }
+    }
+  }
+}

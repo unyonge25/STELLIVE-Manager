@@ -26,7 +26,17 @@ import {
   getStockValue,
   getNetWorth,
 } from './state.js';
-import { getActivityById, getAvailableChoices } from './events.js';
+import { getActivityById, getAvailableChoices, getEventById, isStoryEvent } from './events.js';
+import {
+  getStoryRun,
+  getStoryNode,
+  getStoryChoices,
+  getStoryCheckChance,
+  getStoryParticipants,
+  canAdvanceStory,
+  canLeaveStory,
+  resolveStoryText,
+} from './story.js';
 import {
   OUTCOME,
   getHpState,
@@ -34,6 +44,7 @@ import {
   getEventParticipants,
   getEventTimeSlot,
   canChoose,
+  mergeDeltas,
 } from './actions.js';
 import {
   SHOP_ITEMS,
@@ -152,6 +163,7 @@ const TIME_SLOT_LABEL = { day: '낮', evening: '저녁', lateNight: '심야' };
 const OUTCOME_LABEL = {
   [OUTCOME.GREAT]: '대성공',
   [OUTCOME.SUCCESS]: '성공',
+  partial: '부분 성공',
   [OUTCOME.FAIL]: '실패',
 };
 
@@ -180,7 +192,9 @@ export function render(state, handlers, options = {}) {
       app.innerHTML = viewManager(state, viewMarket(state), options.notice);
       break;
     case GAME_PHASE.EVENT:
-      app.innerHTML = viewEvent(state);
+      app.innerHTML = state.storyRun ? viewStoryEvent(state) : viewEvent(state);
+      // 스토리는 장면이 아래로 쌓이므로 지금 장면이 보이게 스크롤한다.
+      if (state.storyRun) scrollToStoryNow();
       break;
     case GAME_PHASE.DAY_RESULT:
       app.innerHTML = viewDayResult(state);
@@ -213,6 +227,19 @@ function bindDelegation() {
         break;
       case 'choose':
         boundHandlers.onChoose(Number(button.dataset.choiceIndex));
+        break;
+      // 스토리 이벤트 진행
+      case 'storyNext':
+        boundHandlers.onStory({ type: 'continue' });
+        break;
+      case 'storyChoose':
+        boundHandlers.onStory({ type: 'choose', index: Number(button.dataset.choiceIndex) });
+        break;
+      case 'storyRoll':
+        boundHandlers.onStory({ type: 'roll' });
+        break;
+      case 'storyClose':
+        boundHandlers.onStoryClose();
         break;
       case 'back':
         boundHandlers.onBack();
@@ -266,12 +293,37 @@ function shortName(memberId) {
 }
 
 // {member} → 주인공 이름, {partners} → 파트너 이름
-function fillText(text, memberIds) {
+// 조사 짝: [받침 있을 때, 받침 없을 때]
+const JOSA_PAIRS = [['이었', '였'], ['으로', '로'], ['이', '가'], ['은', '는'], ['을', '를'], ['과', '와']];
+const JOSA_PATTERN = /\{(member|partners)\}(이었|으로|이|가|은|는|을|를|과|와|로|였)/g;
+
+// 마지막 글자에 받침이 있는지 (ㄹ 받침은 '로'와 함께 쓰므로 따로 알려준다)
+function finalConsonant(word) {
+  const code = word.charCodeAt(word.length - 1) - 0xac00;
+  if (code < 0 || code > 11171) return { has: false, rieul: false };
+  const jong = code % 28;
+  return { has: jong !== 0, rieul: jong === 8 };
+}
+
+// 이름 뒤 조사를 받침에 맞게 고른다: {member}가 → "아오쿠모 린이" / "아야츠노 유니가"
+function attachJosa(name, particle, nextChar) {
+  const pair = JOSA_PAIRS.find((item) => item.includes(particle));
+  if (!pair) return name + particle;
+  // '이' 뒤에 글자가 이어지면 조사가 아니라 서술어(이다 / 이고)일 수 있으니 그대로 둔다.
+  if (particle === '이' && /[가-힣]/.test(nextChar || '')) return name + particle;
+  const { has, rieul } = finalConsonant(name);
+  if (pair[0] === '으로') return name + (has && !rieul ? '으로' : '로');
+  return name + (has ? pair[0] : pair[1]);
+}
+
+export function fillText(text, memberIds) {
   const [hostId, ...partnerIds] = memberIds;
   const host = getMember(hostId);
+  const names = { member: host ? host.name : '', partners: partnerIds.map(shortName).join('·') };
   return text
-    .replaceAll('{member}', host ? host.name : '')
-    .replaceAll('{partners}', partnerIds.map(shortName).join('·'));
+    .replace(JOSA_PATTERN, (match, key, particle, offset, whole) => attachJosa(names[key], particle, whole[offset + match.length]))
+    .replaceAll('{member}', names.member)
+    .replaceAll('{partners}', names.partners);
 }
 
 // 스탯은 짧은 라벨(방송/게임/노래)로, 나머지는 기본 라벨로 보여준다.
@@ -544,16 +596,18 @@ function viewScheduleRow(member) {
   let badge = '';
   let detail = `<span class="schedule__activity"><span class="slot" aria-hidden="true">${activity.icon}</span>${activity.label}</span>`;
   let action = '<span class="schedule__state">자동 진행</span>';
+  // 스토리(멀티스텝) 이벤트는 표식을 따로 붙인다. (콜라보 파트너 칸은 주최 쪽 이벤트를 따른다)
+  const story = isStoryEvent(getEventById(entry.eventId));
 
   if (entry.kind === ENTRY_KIND.IMPORTANT) {
     modifier = ' schedule__row--important';
-    badge = '<span class="ribbon ribbon--important">중요</span>';
+    badge = `<span class="ribbon ribbon--important">${story ? '스토리' : '중요'}</span>`;
     action = entry.done
       ? doneState
-      : pillButton('처리하기', `data-action="openEvent" data-member-id="${member.id}"`, 'pill--small pill--important');
+      : pillButton(story ? '이야기 시작' : '처리하기', `data-action="openEvent" data-member-id="${member.id}"`, 'pill--small pill--important');
   } else if (entry.kind === ENTRY_KIND.COLLAB) {
     modifier = ' schedule__row--collab';
-    badge = '<span class="ribbon ribbon--collab">콜라보</span>';
+    badge = `<span class="ribbon ribbon--collab">${story ? '콜라보 스토리' : '콜라보'}</span>`;
     if (entry.collabHostId) {
       detail = `<span class="mark mark--collab">${shortName(entry.collabHostId)}와 콜라보</span>`;
       action = doneState;
@@ -603,7 +657,8 @@ function viewLastLogBanner(state) {
         <span class="banner__who">${log.memberIds.map((id) => avatar(id, 'xs')).join('')}${log.memberIds.map(shortName).join('·')}</span>
         <span class="banner__title">${log.title}</span> ${renderOutcome(log.check)}
       </p>
-      <p class="banner__choice">${fillText(log.choiceText, log.memberIds)}</p>
+      <p class="banner__choice">${fillText((log.story ? log.storyText : null) || log.choiceText || '', log.memberIds)}</p>
+      ${!log.story && log.storyText ? `<p class="result__story">${fillText(log.storyText, log.memberIds)}</p>` : ''}
       <div class="banner__deltas">${renderDeltas(log.deltas)}</div>
     </div>
   `;
@@ -921,6 +976,188 @@ function viewEvent(state) {
   `;
 }
 
+/* ===================== 스토리(멀티스텝) 이벤트 ===================== */
+
+const STORY_RESULT_LABEL = { success: '성공', partial: '부분 성공', fail: '실패', neutral: '마무리' };
+
+function scrollToStoryNow() {
+  const target = document.getElementById('story-now');
+  if (target && typeof target.scrollIntoView === 'function') {
+    const reduce = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    target.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+  }
+}
+
+// 이벤트 전체 판정 노드의 태그 (파트너 카드에서 강조 표시)
+function getStoryRelevantTraits(event) {
+  const traits = new Set();
+  Object.values(event.steps).forEach((node) => {
+    Object.keys(node.check?.traitBonus || {}).forEach((trait) => traits.add(trait));
+  });
+  return [...traits];
+}
+
+function beatDeltas(deltas) {
+  return deltas?.length ? `<div class="beat__deltas">${renderDeltas(deltas)}</div>` : '';
+}
+
+// 지나온 장면 하나
+function viewStoryBeat(beat, memberIds) {
+  const text = (value) => (value ? `<p class="beat__text">${fillText(value, memberIds)}</p>` : '');
+  switch (beat.type) {
+    case 'choice':
+      return `
+        <li class="beat beat--choice">
+          <p class="beat__text beat__text--prompt">${fillText(beat.text, memberIds)}</p>
+          <p class="beat__pick"><span class="beat__pick-label">선택</span>${fillText(beat.choiceText, memberIds)}</p>
+          ${text(beat.story)}
+          ${beatDeltas(beat.deltas)}
+        </li>`;
+    case 'check': {
+      const meta = VALUE_META[beat.stat];
+      return `
+        <li class="beat beat--check beat--${beat.outcome}">
+          ${text(beat.text)}
+          <p class="beat__roll">${meta ? icon(beat.stat) : ''}${meta?.full || ''} 판정 · 성공률 ${beat.chance}% ${renderOutcome({ outcome: beat.outcome })}</p>
+          ${text(beat.resultText)}
+          ${beatDeltas(beat.deltas)}
+        </li>`;
+    }
+    case 'end':
+      return '';
+    default:
+      return `<li class="beat beat--story">${text(beat.text)}${beatDeltas(beat.deltas)}</li>`;
+  }
+}
+
+// 지금 장면: 문장 + 조작 (계속 / 선택지 / 판정)
+function viewStoryNow(state, memberIds) {
+  const node = getStoryNode(state);
+  if (!node) return '';
+  const ready = canAdvanceStory(state);
+  const disabled = ready ? '' : 'disabled';
+  const text = fillText(resolveStoryText(node.text, state), memberIds);
+
+  if (node.type === 'story') {
+    return `
+      <li class="beat beat--now" id="story-now">
+        <p class="beat__text">${text}</p>
+        <div class="beat__actions">${pillButton('계속', `data-action="storyNext" ${disabled}`)}</div>
+      </li>`;
+  }
+
+  if (node.type === 'choice') {
+    const choices = getStoryChoices(state)
+      .map(({ choice, index }, order) => `
+        <button class="choice" data-action="storyChoose" data-choice-index="${index}" ${disabled}>
+          <span class="choice__num" aria-hidden="true">${order + 1}</span>
+          <span class="choice__text">${fillText(choice.text, memberIds)}</span>
+        </button>`)
+      .join('');
+    return `
+      <li class="beat beat--now" id="story-now">
+        <p class="beat__text beat__text--prompt">${text}</p>
+        <div class="choices">${choices}</div>
+      </li>`;
+  }
+
+  // 판정: 스탯 / 성공률을 보여주고 플레이어가 직접 굴린다.
+  const meta = VALUE_META[node.check.stat];
+  const chance = ready ? getStoryCheckChance(state) : null;
+  const tone = chance === null ? '' : chance >= 70 ? ' check--high' : chance >= 40 ? ' check--mid' : ' check--low';
+  return `
+    <li class="beat beat--now" id="story-now">
+      <p class="beat__text">${text}</p>
+      <div class="roll-card">
+        <span class="check${tone}">
+          ${icon(node.check.stat)}<span class="check__text">${meta.full} 판정 · 성공률 ${chance === null ? '—' : `${chance}%`}</span>
+          <span class="check__bar" aria-hidden="true"><span style="width:${chance ?? 0}%"></span></span>
+        </span>
+        ${pillButton('도전하기', `data-action="storyRoll" ${disabled}`)}
+      </div>
+    </li>`;
+}
+
+// 결말: 결과 + 이번 이벤트에서 바뀐 것 전체
+function viewStoryEnd(run, memberIds) {
+  const end = [...run.transcript].reverse().find((beat) => beat.type === 'end');
+  const result = run.result || 'neutral';
+  return `
+    <li class="beat beat--end beat--${result}" id="story-now">
+      <span class="tab-label">결말 · ${STORY_RESULT_LABEL[result]}</span>
+      <p class="beat__text">${fillText(end?.text || '', memberIds)}</p>
+      <p class="beat__sum-label">이번 이야기로 바뀐 것</p>
+      <div class="beat__deltas">${renderDeltas(mergeDeltas(run.deltas))}</div>
+      <div class="beat__actions">${pillButton('일정표로 돌아가기', 'data-action="storyClose"', 'pill--big')}</div>
+    </li>`;
+}
+
+function viewStoryEvent(state) {
+  const run = getStoryRun(state);
+  const event = getEventById(run.eventId);
+  const host = getMember(run.hostId);
+  if (!event || !host) return '<section class="screen"><p class="empty">이벤트 정보를 불러오지 못했습니다.</p></section>';
+
+  const participants = getStoryParticipants(state);
+  const memberIds = participants.map((member) => member.id);
+  const entry = getScheduleEntry(host.id);
+  const activity = entry ? getActivityById(entry.activityId) : null;
+  const timeSlot = getEventTimeSlot(event, host.id);
+  const choosingPartners = Boolean(event.collab) && !run.committed;
+
+  const kindMark = event.collab
+    ? '<span class="mark mark--collab">콜라보 스토리</span>'
+    : '<span class="mark mark--important">스토리 이벤트</span>';
+  const cast = participants
+    .map((member) => `<span class="cast__member">${avatar(member.id, 'xs')}${member.name}</span>`)
+    .join('');
+  const beats = run.transcript.map((beat) => viewStoryBeat(beat, memberIds)).join('');
+
+  return `
+    <section class="screen screen--event screen--story${event.collab ? ' screen--collab' : ''}" style="${memberStyle(host.id)}">
+      <div class="scene">
+        <div class="host-card" aria-hidden="true">
+          <div class="card__arch">
+            ${sparkle('card__star')}
+            <div class="card__plate">
+              <span class="schedule__name">${host.name}</span>
+              <span class="card__roman">${memberTheme(host.id).roman}</span>
+            </div>
+          </div>
+        </div>
+        <article class="sheet">
+          <span class="tab-label">DAY ${String(state.currentDay).padStart(2, '0')} · ${TIME_SLOT_LABEL[timeSlot] || ''}</span>
+          <div class="sheet__meta">
+            ${kindMark}
+            ${activity ? `<span class="sheet__activity">오늘 일정 · ${activity.label}</span>` : ''}
+          </div>
+          <h2 class="screen__title">${event.title}</h2>
+          <div class="cast"><span class="cast__label">등장</span>${cast}</div>
+          ${entry?.stockNews ? `<div class="event-card__news">${icon('news')}이 소식은 오늘 장 시작 때 이미 주가에 반영됐다 ${renderDeltas(entry.stockNews)}</div>` : ''}
+        </article>
+      </div>
+      ${choosingPartners ? viewStoryPartnerPicker(state, host, event) : ''}
+      ${choosingPartners && !canAdvanceStory(state) ? `<p class="notice">${icon('alert')}함께할 멤버를 먼저 골라야 한다.</p>` : ''}
+      <h3 class="section-title">이야기</h3>
+      <ol class="storyline">
+        ${beats}
+        ${run.finished ? viewStoryEnd(run, memberIds) : viewStoryNow(state, memberIds)}
+      </ol>
+      <div class="screen__foot">
+        ${canLeaveStory(state) && !run.finished
+          ? '<button class="btn btn--ghost" data-action="back">← 일정표로 돌아가기</button>'
+          : run.finished ? '' : '<p class="story-lock">이야기를 시작했다. 결말까지 진행해야 일정표로 돌아갈 수 있다.</p>'}
+      </div>
+    </section>
+  `;
+}
+
+function viewStoryPartnerPicker(state, host, event) {
+  // 기존 파트너 선택 화면을 그대로 쓰되, 강조 태그는 이벤트 전체 판정에서 가져온다.
+  const available = [{ choice: { check: { traitBonus: Object.fromEntries(getStoryRelevantTraits(event).map((trait) => [trait, 1])) } } }];
+  return viewPartnerPicker(state, host, event, available);
+}
+
 // 지금 보이는 선택지의 판정에 걸린 태그 (파트너 카드에서 강조 표시)
 function getRelevantTraits(available) {
   const traits = new Set();
@@ -992,7 +1229,8 @@ function viewLogItem(log) {
         <span class="result__event">${log.title}</span>
         ${renderOutcome(log.check)}
       </div>
-      <p class="result__choice">${fillText(log.choiceText, log.memberIds)}</p>
+      ${log.choiceText ? `<p class="result__choice">${log.story ? '<span class="result__path">선택</span>' : ''}${fillText(log.choiceText, log.memberIds)}</p>` : ''}
+      ${log.storyText ? `<p class="result__story">${fillText(log.storyText, log.memberIds)}</p>` : ''}
       <div class="result__deltas">${renderDeltas(log.deltas)}</div>
     </li>
   `;

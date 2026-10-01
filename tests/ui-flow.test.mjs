@@ -99,16 +99,64 @@ test('돈이 부족하면 매수 버튼이 실패 알림을 보여준다', () =>
   click('nav', { target: 'dayBoard' });
 });
 
+// 스토리 이벤트를 화면의 버튼만으로 결말까지 진행한다. 진행 중 화면 구성도 함께 확인한다.
+const storyChecks = { scenes: 0, choices: 0, rolls: 0, endings: 0, lockedBack: 0 };
+function playStoryByClicks() {
+  for (let step = 0; step < 80; step += 1) {
+    const page = html();
+    assert(page.includes('class="storyline"') && page.includes('id="story-now"'), '스토리 화면 구성 없음');
+    if (page.includes('data-action="storyClose"')) {
+      storyChecks.endings += 1;
+      assert(page.includes('이번 이야기로 바뀐 것'), '결말 요약 없음');
+      click('storyClose');
+      return;
+    }
+    if (S.getState().storyRun.committed) {
+      // 시작한 뒤에는 돌아가기 버튼이 없고, 눌러도 나가지지 않는다.
+      if (!page.includes('data-action="back"')) storyChecks.lockedBack += 1;
+      click('back');
+      assert(phase() === 'event', '진행 중 스토리에서 빠져나감');
+    }
+    const choice = page.match(/data-action="storyChoose" data-choice-index="(\d+)"/);
+    if (choice) {
+      storyChecks.choices += 1;
+      click('storyChoose', { choiceIndex: choice[1] });
+    } else if (page.includes('data-action="storyRoll"')) {
+      storyChecks.rolls += 1;
+      assert(/성공률 \d+%/.test(page), '판정 성공률 표시 없음');
+      click('storyRoll');
+    } else {
+      storyChecks.scenes += 1;
+      assert(page.includes('data-action="storyNext"'), '진행 버튼 없음');
+      click('storyNext');
+    }
+  }
+  throw new Error('스토리가 끝나지 않음');
+}
+
 let days = 0;
 let sawCollab = false;
 let sawWeek = false;
 let sawInvestResult = false;
-test('28일 진행: 중요 이벤트 / 콜라보를 버튼으로 처리하며 끝까지 간다', () => {
+let sawStory = 0;
+test('28일 진행: 중요 이벤트 / 콜라보 / 스토리 이벤트를 버튼으로 처리하며 끝까지 간다', () => {
   for (;;) {
     for (const entry of S.getPendingDecisions()) {
       if (entry.done) continue;
       click('openEvent', { memberId: entry.memberId });
       assert(phase() === 'event', `이벤트가 열리지 않음 (${phase()})`);
+      if (S.getState().storyRun) {
+        sawStory += 1;
+        if (S.getState().currentEvent.collab) {
+          sawCollab = true;
+          assert(/data-action="story[A-Za-z]+"[^>]*disabled/.test(html()), '파트너 선택 전 스토리가 진행 가능');
+          const partner = S.getState().members.find((m) => S.isSelectablePartner(m.id));
+          click('togglePartner', { memberId: partner.id });
+        }
+        playStoryByClicks();
+        assert(phase() === 'dayBoard', `스토리 후 일정표로 돌아오지 않음 (${phase()})`);
+        continue;
+      }
       if (S.getState().currentEvent.collab) {
         sawCollab = true;
         assert(/data-action="choose"[^>]*disabled/.test(html()), '파트너 선택 전 선택지가 열려 있음');
@@ -137,6 +185,15 @@ test('28일 진행: 중요 이벤트 / 콜라보를 버튼으로 처리하며 �
   assert(days === 28, `${days}일`);
   assert(sawCollab, '콜라보를 한 번도 못 봄');
   assert(sawInvestResult, '투자 결과 알림을 못 봄');
+});
+
+test('스토리 이벤트: 장면 → 선택 → 판정 → 결말이 화면에 차례로 나오고, 시작 후에는 나갈 수 없다', () => {
+  assert(sawStory > 0, '28일 동안 스토리 이벤트를 한 번도 못 봄');
+  assert(storyChecks.scenes > 0 && storyChecks.choices > 0 && storyChecks.rolls > 0, JSON.stringify(storyChecks));
+  assert(storyChecks.endings === sawStory, `결말 ${storyChecks.endings} / 스토리 ${sawStory}`);
+  assert(storyChecks.lockedBack > 0, '진행 중 돌아가기 버튼이 보임');
+  const storyLog = S.getState().logs.find((log) => log.story);
+  assert(storyLog && storyLog.storyText, '스토리 결과 기록 없음');
 });
 
 test('최종 결과: 등급 / 점수 내역 / 경영 성과(상점·투자·주식)가 표시된다', () => {

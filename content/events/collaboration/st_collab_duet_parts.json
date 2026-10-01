@@ -1,0 +1,292 @@
+{
+  "id": "st_collab_duet_parts",
+  "title": "화음 파트 나누기",
+  "category": "collaboration",
+  "description": "듀엣 제안(collab_003) 변형 A. 파트 분배 방식을 먼저 고르고, 녹음 판정이 아쉬우면 한 번 더 맞춰 볼 수 있다.",
+  "meta": {
+    "theme": "music_production",
+    "setting": "duet_part_split",
+    "conflict": "creative_block",
+    "resolution": "lesson_learned",
+    "activity": "sing",
+    "tone": "calm"
+  },
+  "collab": {
+    "min": 2,
+    "max": 3
+  },
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "cooldown": 2
+  },
+  "weight": 1,
+  "start": "split",
+  "steps": {
+    "split": {
+      "type": "choice",
+      "text": "{member}가 {partners}와 부르고 싶은 곡을 골랐다. 그런데 주선율을 누가 맡을지에서 막혔다. 둘 다 그 부분이 제일 좋다고 한다.",
+      "choices": [
+        {
+          "text": "정식 듀엣 커버로 녹음실을 잡는다",
+          "story": "녹음실을 하루 빌렸다. 비용이 든 만큼 파트 분배를 확실히 해야 한다.",
+          "effects": {
+            "money": -100000
+          },
+          "next": "studio"
+        },
+        {
+          "text": "주선율을 양보하고 화음을 맡는다",
+          "story": "{member}가 먼저 화음을 맡겠다고 했다. 쉬워 보이지만 화음은 남의 음을 끝까지 들어야 한다.",
+          "next": "harmony"
+        },
+        {
+          "text": "한 소절씩 번갈아 부르기로 한다",
+          "story": "서로 한 소절씩 주고받기로 했다. 공평하지만 이음새가 어색해질 수 있다.",
+          "next": "trade"
+        }
+      ]
+    },
+    "studio": {
+      "type": "check",
+      "text": "녹음실. 헤드폰 너머로 서로의 숨소리까지 들린다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 82,
+        "traitBonus": {
+          "cover": 10,
+          "perfectionist": 5,
+          "instrument": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "첫 테이크에서 소름 돋는 화음이 나왔다. 엔지니어가 그대로 쓰자고 했다.",
+          "effects": {
+            "fans": 60
+          },
+          "next": "end_studio_hit"
+        },
+        "success": {
+          "text": "몇 번의 테이크 끝에 두 목소리가 제자리를 찾았다.",
+          "next": "end_studio_hit"
+        },
+        "partial": {
+          "text": "개별 파트는 좋은데, 합치니 어딘가 어긋난다.",
+          "next": "retry"
+        },
+        "fail": {
+          "text": "서로 주선율을 고집하다 시간이 다 갔다.",
+          "next": "end_shelved"
+        }
+      }
+    },
+    "harmony": {
+      "type": "check",
+      "text": "{member}가 화음을 얹는다. 상대 음이 흔들리면 같이 흔들리지 않게 버텨야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 72,
+        "traitBonus": {
+          "cover": 5,
+          "instrument": 10,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "화음이 받쳐 주자 주선율이 더 빛났다. 상대가 '네 덕분'이라며 웃었다.",
+          "next": "end_support"
+        },
+        "partial": {
+          "text": "화음은 잘 얹었지만 몇 군데가 너무 튀었다.",
+          "next": "retry"
+        },
+        "fail": {
+          "text": "상대 음을 따라가다 화음이 주선율로 섞여 버렸다.",
+          "next": "end_shelved"
+        }
+      }
+    },
+    "trade": {
+      "type": "check",
+      "text": "한 소절씩 넘겨받는 순간마다 숨이 맞아야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 75,
+        "traitBonus": {
+          "chatter": 5,
+          "host": 10,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "주고받는 호흡이 대화처럼 들렸다. 연습 과정을 그대로 방송에 올리자는 말이 나왔다.",
+          "next": "end_support"
+        },
+        "partial": {
+          "text": "이음새마다 반 박자씩 밀렸다.",
+          "next": "retry"
+        },
+        "fail": {
+          "text": "서로 넘겨받을 타이밍을 계속 놓쳤다.",
+          "next": "end_shelved"
+        }
+      }
+    },
+    "retry": {
+      "type": "choice",
+      "text": "아쉬운 녹음본을 같이 들어 봤다. 어떻게 할까?",
+      "choices": [
+        {
+          "text": "어긋난 부분만 다시 맞춘다",
+          "effects": {
+            "hp": -4
+          },
+          "next": "retry_check"
+        },
+        {
+          "text": "지금 버전도 우리답다며 마무리한다",
+          "story": "완벽하진 않아도 지금의 두 목소리를 남기기로 했다.",
+          "next": "end_as_is"
+        }
+      ]
+    },
+    "retry_check": {
+      "type": "check",
+      "text": "어긋난 소절만 열 번째. 이번엔 서로의 음을 먼저 듣기로 했다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 74,
+        "traitBonus": {
+          "perfectionist": 10,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "열한 번째 테이크에서 드디어 맞았다. 둘 다 동시에 '이거다'라고 외쳤다.",
+          "effects": {
+            "stats": {
+              "Vc": 1
+            }
+          },
+          "next": "end_retry_fixed"
+        },
+        "partial": {
+          "text": "조금 나아졌다. 이 정도면 됐다고 서로를 다독였다.",
+          "next": "end_as_is"
+        },
+        "fail": {
+          "text": "붙잡을수록 둘 다 목이 지쳤다.",
+          "next": "end_retry_worn"
+        }
+      }
+    },
+    "end_studio_hit": {
+      "type": "end",
+      "result": "success",
+      "text": "정식 듀엣 커버가 완성됐다. 공개 첫날부터 '이 조합 정규 유닛 하자'는 댓글이 달렸다.",
+      "effects": {
+        "fans": 180,
+        "fame": 2,
+        "stats": {
+          "Vc": 1
+        },
+        "relationship": 4,
+        "hp": -7
+      }
+    },
+    "end_support": {
+      "type": "end",
+      "result": "success",
+      "text": "주선율을 고집하지 않은 덕분에 곡이 살았다. {member}는 '양보한 게 아니라 같이 만든 것'이라고 했다.",
+      "effects": {
+        "fans": 130,
+        "fame": 1,
+        "stats": {
+          "Vc": 1
+        },
+        "relationship": 4,
+        "hp": -4
+      }
+    },
+    "end_as_is": {
+      "type": "end",
+      "result": "partial",
+      "text": "거친 부분이 남은 듀엣이 공개됐다. 매끈하진 않아도 둘의 웃음소리가 담긴 버전이라는 평을 들었다.",
+      "effects": {
+        "fans": 90,
+        "relationship": 3,
+        "hp": -4
+      }
+    },
+    "end_shelved": {
+      "type": "end",
+      "result": "fail",
+      "text": "이번 듀엣은 보류됐다. 대신 둘 다 다음엔 파트 분배부터 정하고 시작하자는 교훈을 얻었다.",
+      "effects": {
+        "fans": 30,
+        "stats": {
+          "Vc": 1
+        },
+        "relationship": 1,
+        "hp": -5,
+        "memberFlags": {
+          "duetRetry": true
+        }
+      }
+    },
+    "end_retry_fixed": {
+      "type": "end",
+      "result": "success",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "어긋났던 소절을 끝까지 붙잡은 끝에 듀엣이 완성됐다. 엔지니어가 '처음 버전이랑 같은 곡 맞냐'며 웃었다. 다만 부스에 너무 오래 있었던 탓에 둘 다 목이 잠겨 한동안 고음은 쉬기로 했다."
+        },
+        {
+          "text": "어긋났던 소절을 끝까지 붙잡은 끝에 듀엣이 완성됐다. 그날 밤 노래 방송에서 먼저 들려주자 '이게 처음엔 어긋났었다고?'라는 채팅이 쏟아졌다. 다만 둘 다 목을 너무 써서 한동안 고음은 쉬기로 했다."
+        }
+      ],
+      "effects": {
+        "fans": 110,
+        "fame": 1,
+        "relationship": 4,
+        "hp": -3
+      }
+    },
+    "end_retry_worn": {
+      "type": "end",
+      "result": "partial",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "다시 맞출수록 목만 지쳐 듀엣 완성본은 다음으로 미뤘다. 대신 각자 따로 녹음한 파트는 좋다는 평을 들었고, 엔지니어가 '합치면 분명 좋을 것'이라며 파일을 남겨 뒀다."
+        },
+        {
+          "text": "다시 맞출수록 목만 지쳐 듀엣 완성본은 다음으로 미뤘다. 대신 노래 방송에서 각자 맡았던 파트를 따로 들려주자 '둘이 합치면 어떨지 궁금하다'는 채팅이 이어졌다."
+        }
+      ],
+      "effects": {
+        "fans": 60,
+        "relationship": 2,
+        "hp": -5,
+        "memberFlags": {
+          "duetRetry": true
+        }
+      }
+    }
+  },
+  "group": "collab_duet"
+}

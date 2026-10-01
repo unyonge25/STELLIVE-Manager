@@ -1,0 +1,166 @@
+{
+  "id": "st_collab_unit_reunion",
+  "title": "유닛 합방, 즉석 기획 회의",
+  "category": "collaboration",
+  "description": "유닛 합방(collab_006) 변형 B. 근황 토크 판정으로 시작하고, 아주 친한 사이면 즉석 기획 도박의 기회가 열린다.",
+  "meta": {
+    "theme": "collab_content",
+    "setting": "unit_reunion_talk",
+    "conflict": "big_opportunity",
+    "resolution": "risky_gamble",
+    "activity": "joint_stream",
+    "tone": "hype"
+  },
+  "collab": {
+    "min": 2,
+    "max": 3
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "minRelationship": 35,
+    "cooldown": 4
+  },
+  "weight": 1,
+  "start": "catch_up",
+  "steps": {
+    "catch_up": {
+      "type": "check",
+      "text": "{member}와 {partners}의 유닛 합방이 근황 토크로 시작했다. 동시 시청자 수가 계속 오른다. 첫 30분의 분위기가 오늘을 좌우한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 76,
+        "traitBonus": {
+          "chatter": 10,
+          "host": 5,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "근황 이야기만으로 채팅창이 쉴 새 없이 올라간다. 동시 시청자가 역대 최고를 찍었다.",
+          "effects": {
+            "fans": 40
+          },
+          "next": "closeness"
+        },
+        "partial": {
+          "text": "분위기는 좋지만 폭발적이진 않다.",
+          "next": "closeness"
+        },
+        "fail": {
+          "text": "근황 토크가 생각보다 빨리 바닥났다.",
+          "next": "end_short"
+        }
+      }
+    },
+    "closeness": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "partyMinRelationship": 50
+          },
+          "next": "bold_offer"
+        }
+      ],
+      "next": "safe_offer"
+    },
+    "bold_offer": {
+      "type": "choice",
+      "text": "채팅창에서 '지금 바로 유닛 신규 콘텐츠 기획 회의 해 달라'는 요청이 쏟아진다. 서로 눈빛만 봐도 통하는 지금이 기회다.",
+      "choices": [
+        {
+          "text": "생방송으로 즉석 기획 회의를 연다",
+          "story": "화이트보드를 띄우고 아이디어를 쏟아 내기 시작했다. 시청자들도 채팅으로 회의에 참여한다.",
+          "next": "meeting"
+        },
+        {
+          "text": "기대감만 남기고 오늘은 토크로 끝낸다",
+          "next": "end_tease"
+        }
+      ]
+    },
+    "safe_offer": {
+      "type": "choice",
+      "text": "채팅창에서 신규 콘텐츠 기획 요청이 들어온다. 하지만 아직 즉석으로 해낼 만큼 손발이 맞는지는 모르겠다.",
+      "choices": [
+        {
+          "text": "그래도 도전해 본다",
+          "story": "어색하게 화이트보드를 띄웠다. 의견이 엇갈릴 때마다 채팅창이 중재에 나선다.",
+          "effects": {
+            "hp": -3
+          },
+          "next": "meeting"
+        },
+        {
+          "text": "다음 방송 예고만 하고 마무리한다",
+          "next": "end_tease"
+        }
+      ]
+    },
+    "meeting": {
+      "type": "check",
+      "text": "즉석 기획 회의. 아이디어가 쏟아지지만 하나로 모아야 결론이 난다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 80,
+        "traitBonus": {
+          "brain": 10,
+          "host": 5,
+          "spontaneous": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "회의 끝에 유닛 신규 콘텐츠 이름까지 정해졌다. 채팅창에서 이름 짓기에 참여한 팬들이 환호했다.",
+          "next": "end_plan"
+        },
+        "partial": {
+          "text": "아이디어는 넘쳤지만 결론은 '다음에 정하자'였다.",
+          "next": "end_tease"
+        },
+        "fail": {
+          "text": "의견이 계속 엇갈리며 회의가 산으로 갔다.",
+          "next": "end_short"
+        }
+      }
+    },
+    "end_plan": {
+      "type": "end",
+      "result": "success",
+      "text": "생방송 기획 회의가 대성공이었다. 팬들과 함께 정한 콘텐츠라 벌써부터 기대가 크다.",
+      "effects": {
+        "fans": 190,
+        "fame": 2,
+        "relationship": 5,
+        "hp": -6,
+        "memberFlags": {
+          "unitReunionPromise": true
+        }
+      }
+    },
+    "end_tease": {
+      "type": "end",
+      "result": "partial",
+      "text": "구체적인 결론은 없었지만 '뭔가 준비 중'이라는 기대감은 확실히 남겼다.",
+      "effects": {
+        "fans": 110,
+        "relationship": 4,
+        "hp": -3
+      }
+    },
+    "end_short": {
+      "type": "end",
+      "result": "fail",
+      "text": "기대만큼 불타오르진 못했다. 그래도 방송이 끝나고 나눈 단톡방 대화는 방송보다 길었다.",
+      "effects": {
+        "fans": 60,
+        "relationship": 3,
+        "hp": -4
+      }
+    }
+  },
+  "group": "collab_unit"
+}

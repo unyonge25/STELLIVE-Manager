@@ -1,0 +1,202 @@
+{
+  "id": "st_growth_talk_workshop",
+  "title": "진행 워크숍 실습",
+  "category": "member",
+  "group": "growth_talk",
+  "description": "토크 워크숍(ev_s03) 변형 A. 워크숍 참가 또는 선배 방송 연구를 고르고, 워크숍에서는 즉석 진행 실습이 이어진다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "talk_workshop_class",
+    "conflict": "nervousness",
+    "resolution": "teamwork",
+    "activity": "talk",
+    "tone": "warm"
+  },
+  "conditions": {
+    "activityCategories": [
+      "talk"
+    ],
+    "cooldown": 6
+  },
+  "start": "pick",
+  "steps": {
+    "pick": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "anyTraits": [
+              "introvert"
+            ]
+          },
+          "text": "방송 진행 워크숍에 {member}를 보내 보자는 의견이 나왔다. 낯을 가리는 {member}는 '모르는 사람들 앞에서 연습하는 거냐'며 벌써 긴장한 눈치다."
+        },
+        {
+          "text": "방송 진행 워크숍에 {member}를 보내 보자는 의견이 나왔다. 방송 진행을 체계적으로 배울 기회다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "워크숍에 참가한다",
+          "conditions": {
+            "minMoney": 50000
+          },
+          "story": "워크숍 첫날. 다른 참가자들과 둘러앉자 강사가 바로 실습 과제를 냈다. '지금부터 3분, 즉석에서 진행해 보세요.'",
+          "effects": {
+            "money": -50000,
+            "hp": -2
+          },
+          "next": "class_task"
+        },
+        {
+          "text": "선배 방송을 보며 스스로 연구한다",
+          "story": "진행을 잘하는 선배들의 방송 다시보기를 모아, 질문 하나 던지는 타이밍까지 메모했다.",
+          "next": "study_check"
+        }
+      ]
+    },
+    "class_task": {
+      "type": "choice",
+      "text": "누가 먼저 실습할지 강사가 묻는다.",
+      "choices": [
+        {
+          "text": "자원해서 먼저 실습한다",
+          "story": "{member}가 손을 들었다. 심장이 쿵쾅거린다.",
+          "next": "class_check"
+        },
+        {
+          "text": "다른 참가자들의 실습을 보며 메모한다",
+          "story": "다른 사람들의 실수와 장점을 꼼꼼히 받아 적었다. 마지막 시간에 강사가 그 메모를 보고 칭찬했다.",
+          "next": "end_class_notes"
+        }
+      ]
+    },
+    "class_check": {
+      "type": "check",
+      "text": "3분 즉석 진행. 다른 참가자들이 시청자 역할을 하며 일부러 엉뚱한 질문을 던진다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 76,
+        "traitBonus": {
+          "host": 10,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "엉뚱한 질문까지 웃음으로 받아넘겼다. 참가자들이 박수를 쳤다.",
+          "next": "end_class_star"
+        },
+        "partial": {
+          "text": "흐름은 잘 잡았지만 한 질문에서 말이 막혔다.",
+          "next": "end_class_ok"
+        },
+        "fail": {
+          "text": "첫 질문부터 머리가 하얘졌다. 3분이 30분 같았다.",
+          "next": "end_class_freeze"
+        }
+      }
+    },
+    "study_check": {
+      "type": "check",
+      "text": "연구한 내용을 오늘 방송에서 바로 써 본다. 질문을 던지고, 채팅을 받고, 다시 이야기를 이어 간다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "brain": 10,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "선배에게 배운 질문 타이밍이 정확히 맞아떨어졌다. 채팅 참여가 확 늘었다.",
+          "next": "end_study_good"
+        },
+        "partial": {
+          "text": "몇 번은 통했고 몇 번은 어색했다.",
+          "next": "end_study_half"
+        },
+        "fail": {
+          "text": "흉내 내려다 원래 말투까지 어색해졌다.",
+          "next": "end_study_awkward"
+        }
+      }
+    },
+    "end_class_star": {
+      "type": "end",
+      "result": "success",
+      "text": "워크숍 마지막 날, 강사가 {member}를 모범 사례로 소개했다. 다음 방송부터 진행이 눈에 띄게 매끄러워졌다.",
+      "effects": {
+        "stats": {
+          "Bs": 3
+        },
+        "fans": 40
+      }
+    },
+    "end_class_notes": {
+      "type": "end",
+      "result": "success",
+      "text": "직접 나서진 않았지만 배운 건 많았다. 꼼꼼히 쓴 메모가 {member}만의 진행 노트가 됐다.",
+      "effects": {
+        "stats": {
+          "Bs": 3
+        }
+      }
+    },
+    "end_class_ok": {
+      "type": "end",
+      "result": "partial",
+      "text": "좋은 경험이었다. 막혔던 질문 유형은 따로 연습하기로 했다.",
+      "effects": {
+        "stats": {
+          "Bs": 2
+        }
+      }
+    },
+    "end_class_freeze": {
+      "type": "end",
+      "result": "fail",
+      "text": "실습은 엉망이었지만, 끝나고 다른 참가자들이 '처음엔 다 그렇다'며 다독여 줬다. {member}는 다음 기수 워크숍도 신청해 두었다.",
+      "effects": {
+        "stats": {
+          "Bs": 1
+        },
+        "memberFlags": {
+          "talkRetry": true
+        }
+      }
+    },
+    "end_study_good": {
+      "type": "end",
+      "result": "success",
+      "text": "혼자 연구한 보람이 있었다. 방송 후 '오늘 진행 왜 이렇게 좋냐'는 댓글이 달렸다.",
+      "effects": {
+        "stats": {
+          "Bs": 2
+        },
+        "fans": 30
+      }
+    },
+    "end_study_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "배운 것 중 절반은 내 것이 됐다. 나머지 절반은 내 말투에 맞게 다듬어야 한다.",
+      "effects": {
+        "stats": {
+          "Bs": 1
+        }
+      }
+    },
+    "end_study_awkward": {
+      "type": "end",
+      "result": "fail",
+      "text": "어색한 방송이었다. {member}는 '남의 방식보다 내 방식을 다듬자'며 다음엔 제대로 배워 보겠다고 했다.",
+      "effects": {
+        "memberFlags": {
+          "talkRetry": true
+        }
+      }
+    }
+  }
+}

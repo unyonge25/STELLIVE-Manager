@@ -1,0 +1,198 @@
+{
+  "id": "st_collab_invite_opening",
+  "title": "합방 오프닝 대참사",
+  "category": "collaboration",
+  "description": "합방 제안(collab_001) 변형 B. 오프닝부터 판정이 시작되고, 오늘 일정 종류에 따라 중간 장면이 갈린다.",
+  "meta": {
+    "theme": "broadcast_live",
+    "setting": "joint_stream_opening",
+    "conflict": "audience_reaction",
+    "resolution": "audience_help",
+    "activity": "joint_stream",
+    "tone": "comedic"
+  },
+  "collab": {
+    "min": 2,
+    "max": 3
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ]
+  },
+  "weight": 1,
+  "start": "opening",
+  "steps": {
+    "opening": {
+      "type": "check",
+      "text": "{member}가 합방 오프닝 인사를 하려는 순간, {partners}의 마이크가 동시에 켜지며 인사가 세 겹으로 겹쳤다. 채팅창은 '???'로 도배됐다. 첫 1분을 어떻게든 살려야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "host": 10,
+          "chatter": 5,
+          "spontaneous": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "{member}가 '방금 그거 오프닝 합창이었습니다'라고 받아치자 채팅창이 웃음으로 뒤집혔다.",
+          "effects": {
+            "fans": 30
+          },
+          "next": "route"
+        },
+        "partial": {
+          "text": "웃으며 넘어가긴 했지만, 몇몇 시청자는 '방송 사고냐'고 묻는다.",
+          "next": "route"
+        },
+        "fail": {
+          "text": "서로 먼저 말하라고 양보하다 정적이 흘렀다. 시작부터 분위기가 어색하다.",
+          "effects": {
+            "fans": -20
+          },
+          "next": "route"
+        }
+      }
+    },
+    "route": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "activityCategories": [
+              "game"
+            ]
+          },
+          "next": "game_scene"
+        }
+      ],
+      "next": "chat_scene"
+    },
+    "game_scene": {
+      "type": "choice",
+      "text": "게임을 켜자 채팅창이 둘로 갈렸다. '같이 협동해라' 파와 '서로 싸워라' 파.",
+      "choices": [
+        {
+          "text": "시청자 투표로 협동 / 대결을 정한다",
+          "story": "투표 결과는 근소한 차이로 '대결'. 채팅창의 응원 팀도 그대로 갈렸다.",
+          "next": "game_check"
+        },
+        {
+          "text": "협동하다가 몰래 배신하는 컨셉으로 간다",
+          "story": "{member}가 웃음을 참으며 협동하는 척을 시작했다. 채팅창만 그 계획을 알고 있다.",
+          "effects": {
+            "relationship": -1
+          },
+          "next": "game_check"
+        }
+      ]
+    },
+    "chat_scene": {
+      "type": "choice",
+      "text": "토크가 시작되자 채팅 질문이 쏟아진다. 다 받기에는 너무 많다.",
+      "choices": [
+        {
+          "text": "채팅 질문을 하나씩 뽑아 다 같이 답한다",
+          "story": "질문 룰렛을 돌리자 예상 못 한 질문이 줄줄이 나왔다.",
+          "next": "chat_check"
+        },
+        {
+          "text": "시청자들이 정한 주제로 즉석 토론을 한다",
+          "story": "'짜장 대 짬뽕' 같은 주제로 즉석 토론이 시작됐다. 서로 진지해서 더 웃기다.",
+          "next": "chat_check"
+        }
+      ]
+    },
+    "game_check": {
+      "type": "check",
+      "text": "게임이 한창이다. 시청자 반응을 챙기면서 플레이도 놓치지 않아야 한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 75,
+        "traitBonus": {
+          "competitive": 5,
+          "fps": 5,
+          "fighting": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "결정적인 순간마다 채팅창이 미리 알려 준 덕분에 명장면이 연달아 나왔다.",
+          "next": "end_crowd"
+        },
+        "partial": {
+          "text": "게임은 졌지만 채팅창과 함께 만든 드립이 하이라이트가 됐다.",
+          "next": "end_mixed"
+        },
+        "fail": {
+          "text": "게임에 집중하느라 채팅을 놓쳤다. 시청자들이 조금씩 빠져나갔다.",
+          "next": "end_lost"
+        }
+      }
+    },
+    "chat_check": {
+      "type": "check",
+      "text": "질문과 주제가 쉬지 않고 이어진다. 세 사람이 고르게 말할 수 있게 흐름을 나눠야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 75,
+        "traitBonus": {
+          "chatter": 10,
+          "host": 5,
+          "roleplay": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "채팅창이 던진 질문 하나가 오늘 최고의 에피소드를 끌어냈다.",
+          "next": "end_crowd"
+        },
+        "partial": {
+          "text": "재밌었지만 한 사람이 말을 거의 못 했다.",
+          "next": "end_mixed"
+        },
+        "fail": {
+          "text": "질문을 고르는 사이 흐름이 계속 끊겼다.",
+          "next": "end_lost"
+        }
+      }
+    },
+    "end_crowd": {
+      "type": "end",
+      "result": "success",
+      "text": "오프닝 사고로 시작한 합방이 '채팅창이 같이 만든 방송'으로 기억됐다. {partners}는 다음 합방 오프닝도 일부러 겹치자고 했다.",
+      "effects": {
+        "fans": 160,
+        "fame": 1,
+        "relationship": 3,
+        "hp": -6
+      }
+    },
+    "end_mixed": {
+      "type": "end",
+      "result": "partial",
+      "text": "웃긴 장면은 많았지만 정리가 안 된 방송이었다는 평도 있었다. 다음엔 오프닝 순서부터 정하기로 했다.",
+      "effects": {
+        "fans": 90,
+        "relationship": 2,
+        "hp": -6
+      }
+    },
+    "end_lost": {
+      "type": "end",
+      "result": "fail",
+      "text": "시청자 수는 오프닝 때가 가장 많았다. 방송이 끝난 뒤 다 같이 다시보기를 보며 어디서 놓쳤는지 짚어 봤다.",
+      "effects": {
+        "fans": 30,
+        "relationship": 1,
+        "hp": -6,
+        "stats": {
+          "Bs": 1
+        }
+      }
+    }
+  },
+  "group": "collab_invite"
+}

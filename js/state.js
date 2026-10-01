@@ -146,6 +146,12 @@ export function createInitialState(members) {
     flags: {},
     // 이벤트별 마지막 발생일 (cooldown 조건에 사용)
     eventHistory: {},
+    // 진행 중인 스토리(멀티스텝) 이벤트 (story.js). 없으면 null
+    storyRun: null,
+    // 끝난 스토리 이벤트의 결말 { [eventId]: 'success' | 'partial' | 'fail' | 'neutral' } — 후속 이벤트 조건(storyResult)
+    storyResults: {},
+    // 최근 스토리 이벤트 [{ id, day }] — 비슷한 구조의 스토리가 연달아 나오지 않게 한다
+    storyRecent: [],
     // 상점 업그레이드 레벨 { [itemId]: level }
     shop: { levels: {} },
     // 장기 투자: active = 진행 중, history = 결과가 나온 투자
@@ -362,4 +368,5 @@ export function endDay() {
   state.selectedMemberId = null;
   state.currentEvent = null;
   state.collabPartnerIds = [];
+  state.storyRun = null;
 }

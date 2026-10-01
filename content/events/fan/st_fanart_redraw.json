@@ -1,0 +1,379 @@
+{
+  "id": "st_fanart_redraw",
+  "title": "팬아트 즉석 따라 그리기",
+  "category": "fan",
+  "group": "fanart_stream",
+  "description": "팬아트 모음 방송 제안(ev_c02) 변형 B. 즉석 요청에 응하는 판정으로 시작하고, 결과에 따라 감상회 / 공모전 / 따라 그리기 대회 중 열리는 선택지가 달라진다.",
+  "meta": {
+    "theme": "fan_event",
+    "setting": "fanart_redraw_stream",
+    "conflict": "big_opportunity",
+    "resolution": "comeback_win",
+    "activity": "talk",
+    "tone": "hype"
+  },
+  "conditions": {
+    "activityCategories": [
+      "talk"
+    ],
+    "cooldown": 5
+  },
+  "start": "request",
+  "steps": {
+    "request": {
+      "type": "check",
+      "text": "저챗 도중 팬아트 이야기가 나오자 채팅창이 '그럼 직접 그려 줘!'로 뒤덮였다. 그림판을 켠 {member}가 팬아트 한 장을 따라 그리기 시작했다. 시청자들이 숨죽여 지켜본다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "chatter": 10,
+          "highTension": 5,
+          "spontaneous": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "그림 실력보다 해설이 웃겼다. '이 부분은 영혼으로 그렸습니다'라는 말에 채팅창이 터졌다.",
+          "next": "hype_options"
+        },
+        "partial": {
+          "text": "그림은 애매했지만 시청자 반응은 나쁘지 않다.",
+          "next": "mid_options"
+        },
+        "fail": {
+          "text": "그리다 보니 원본과 전혀 다른 생물이 됐다. 채팅창이 잠시 조용해졌다.",
+          "next": "low_options"
+        }
+      }
+    },
+    "hype_options": {
+      "type": "choice",
+      "text": "분위기가 최고조다. 이 기세를 어디로 이어 갈까?",
+      "choices": [
+        {
+          "text": "팬아트 감상 방송을 크게 연다",
+          "story": "그대로 팬아트 감상회로 넘어갔다. 방금 따라 그린 그림의 원작자도 채팅창에 와 있었다.",
+          "effects": {
+            "hp": -3
+          },
+          "next": "big_showcase"
+        },
+        {
+          "text": "팬아트 공모전을 열고 상품을 준비한다",
+          "story": "'다음 주는 공모전!' 상품을 걸자 채팅창이 출품 예고로 가득 찼다.",
+          "effects": {
+            "money": -120000
+          },
+          "next": "end_contest_launch"
+        },
+        {
+          "text": "시청자와 따라 그리기 대회를 연다",
+          "story": "시청자들도 같은 그림을 따라 그려 보내기로 했다. 즉석 대회가 시작됐다.",
+          "next": "redraw_contest"
+        }
+      ]
+    },
+    "mid_options": {
+      "type": "choice",
+      "text": "반응은 괜찮다. 조금만 더 끌어올리면 된다.",
+      "choices": [
+        {
+          "text": "팬아트 감상 방송을 크게 연다",
+          "story": "따라 그리기는 접고 진짜 팬아트를 감상하기로 했다.",
+          "effects": {
+            "hp": -3
+          },
+          "next": "mid_showcase"
+        },
+        {
+          "text": "팬아트 공모전을 열고 상품을 준비한다",
+          "story": "상품을 걸고 공모전을 공지했다. 따라 그린 그림은 '참가상' 예시로 걸었다.",
+          "effects": {
+            "money": -120000
+          },
+          "next": "end_contest_mid"
+        }
+      ]
+    },
+    "low_options": {
+      "type": "choice",
+      "text": "분위기가 살짝 식었다. 만회할 방법이 필요하다.",
+      "choices": [
+        {
+          "text": "팬아트 공모전을 열고 상품을 준비한다",
+          "story": "'제대로 된 그림은 여러분이 보내 주세요!' 상품까지 걸자 식었던 채팅창이 다시 달아올랐다.",
+          "effects": {
+            "money": -120000
+          },
+          "next": "end_contest_comeback"
+        },
+        {
+          "text": "팬아트 감상 방송으로 조용히 마무리한다",
+          "story": "따라 그린 그림은 내리고 팬아트를 한 장씩 띄웠다.",
+          "effects": {
+            "hp": -3
+          },
+          "next": "quiet_showcase"
+        }
+      ]
+    },
+    "big_showcase": {
+      "type": "check",
+      "text": "팬아트를 한 장씩 띄운다. 그림마다 진심을 담은 감상을 남겨야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "chatter": 10,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "따라 그리기의 웃음과 감상회의 감동이 한 방송에 다 담겼다.",
+          "next": "end_show_great"
+        },
+        "success": {
+          "text": "그림마다 정성스러운 감상이 이어졌다.",
+          "next": "end_show_good"
+        },
+        "partial": {
+          "text": "감상은 좋았지만 시간이 부족해 절반만 봤다.",
+          "next": "end_show_half"
+        },
+        "fail": {
+          "text": "들뜬 분위기에 감상이 대충 지나갔다는 아쉬움이 남았다.",
+          "next": "end_show_flat"
+        }
+      }
+    },
+    "redraw_contest": {
+      "type": "check",
+      "text": "시청자들이 보낸 따라 그리기 그림이 쏟아진다. 하나하나 소개하며 순위를 매겨야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "host": 10,
+          "spontaneous": 5,
+          "roleplay": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "소개할 때마다 웃음이 터졌다. 1등 그림은 원본보다 원본 같았다.",
+          "next": "end_redraw_hit"
+        },
+        "partial": {
+          "text": "재밌었지만 그림이 너무 많아 다 소개하지 못했다.",
+          "next": "end_redraw_half"
+        },
+        "fail": {
+          "text": "진행이 엉키며 누가 몇 등인지 아무도 모르게 됐다.",
+          "next": "end_redraw_mess"
+        }
+      }
+    },
+    "quiet_showcase": {
+      "type": "check",
+      "text": "식은 분위기를 다시 데워야 한다. 그림 한 장 한 장에 차분히 이야기를 붙인다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "calm": 10,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "차분한 감상이 오히려 분위기를 되살렸다.",
+          "next": "end_quiet_comeback"
+        },
+        "partial": {
+          "text": "분위기는 돌아왔지만 처음의 열기만큼은 아니었다.",
+          "next": "end_quiet_half"
+        },
+        "fail": {
+          "text": "끝까지 분위기를 되살리지 못했다.",
+          "next": "end_quiet_flat"
+        }
+      }
+    },
+    "end_contest_launch": {
+      "type": "end",
+      "result": "success",
+      "text": "즉석 따라 그리기에서 시작된 공모전에 출품작이 쏟아졌다. 공모전 방송은 그 주 가장 많이 본 클립이 됐다.",
+      "effects": {
+        "fans": 280,
+        "fame": 2,
+        "stockEffect": {
+          "ticker": "CLIP",
+          "percentage": 2
+        }
+      }
+    },
+    "end_contest_comeback": {
+      "type": "end",
+      "result": "success",
+      "text": "망한 그림이 오히려 공모전 홍보가 됐다. '그림은 우리가 그릴게'라는 팬들의 출품작이 넘쳐났다.",
+      "effects": {
+        "fans": 280,
+        "fame": 2,
+        "stockEffect": {
+          "ticker": "CLIP",
+          "percentage": 2
+        }
+      }
+    },
+    "end_show_great": {
+      "type": "end",
+      "result": "success",
+      "text": "웃음과 감동이 다 있는 방송이었다. 팬아트를 그리는 팬들이 눈에 띄게 늘었다.",
+      "effects": {
+        "fans": 260,
+        "fame": 2
+      }
+    },
+    "end_show_good": {
+      "type": "end",
+      "result": "success",
+      "text": "그림을 그린 팬들도, 보러 온 팬들도 만족한 방송이었다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1
+      }
+    },
+    "end_show_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "절반만 본 감상회. 나머지는 2부로 이어 가기로 했다. 기다리는 팬도, 아쉬워하는 팬도 있었다.",
+      "effects": {
+        "fans": 100
+      }
+    },
+    "end_show_flat": {
+      "type": "end",
+      "result": "fail",
+      "text": "아쉬운 감상회였다. 그래도 그림을 봐 준 것만으로 고맙다는 댓글이 남았다. {member}는 다음엔 제대로 준비해 오겠다고 했다.",
+      "effects": {
+        "fans": 60
+      }
+    },
+    "end_redraw_hit": {
+      "type": "end",
+      "result": "success",
+      "text": "'따라 그리기 대회'가 정기 코너가 됐다. 그림을 못 그려도 참여할 수 있다는 점이 팬들에게 통했다.",
+      "effects": {
+        "fans": 200,
+        "fame": 1
+      }
+    },
+    "end_redraw_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "웃음은 넘쳤지만 소개하지 못한 그림이 많았다. 다음 방송에서 이어서 보기로 했다.",
+      "effects": {
+        "fans": 110
+      }
+    },
+    "end_redraw_mess": {
+      "type": "end",
+      "result": "fail",
+      "text": "순위는 흐지부지됐지만 '그래서 1등 누구냐'는 채팅이 밈이 됐다. 다음 대회는 순위표부터 준비하기로 했다.",
+      "effects": {
+        "fans": 50
+      }
+    },
+    "end_quiet_comeback": {
+      "type": "end",
+      "result": "success",
+      "text": "식었던 방송이 따뜻하게 끝났다. 따라 그린 그림도 마지막에 '오늘의 반성작'으로 다시 등장해 웃음을 줬다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1
+      }
+    },
+    "end_quiet_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "분위기는 되살렸지만 큰 화제는 없었다. 팬들은 다음 감상회를 기다리겠다고 했다.",
+      "effects": {
+        "fans": 90
+      }
+    },
+    "mid_showcase": {
+      "type": "check",
+      "text": "애매했던 따라 그리기를 뒤로하고 진짜 팬아트를 띄운다. 분위기를 한 단계 끌어올려야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "chatter": 10,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "진짜 팬아트가 나오자 채팅창이 \"역시 원본이 최고\"로 뒤덮였다.",
+          "next": "end_mid_show_good"
+        },
+        "partial": {
+          "text": "분위기는 올라왔지만 따라 그리기의 여운이 조금 어색하게 남았다.",
+          "next": "end_mid_show_half"
+        },
+        "fail": {
+          "text": "두 가지를 섞으려다 둘 다 애매해졌다.",
+          "next": "end_mid_show_flat"
+        }
+      }
+    },
+    "end_contest_mid": {
+      "type": "end",
+      "result": "success",
+      "text": "참가상 예시로 걸린 {member}의 그림 덕분에 \"나도 낼 수 있겠다\"는 팬들이 몰렸다. 공모전 참여자 수가 예상을 훌쩍 넘었다.",
+      "effects": {
+        "fans": 260,
+        "fame": 2,
+        "stockEffect": {
+          "ticker": "CLIP",
+          "percentage": 2
+        }
+      }
+    },
+    "end_mid_show_good": {
+      "type": "end",
+      "result": "success",
+      "text": "어설픈 따라 그리기가 원작 팬아트를 더 빛나게 했다. 원작자들이 채팅창에서 서로 인사를 나눴다.",
+      "effects": {
+        "fans": 140,
+        "fame": 1
+      }
+    },
+    "end_mid_show_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "팬아트 감상은 좋았지만 방송의 색이 하나로 모이지 않았다. 다음엔 감상회만 따로 열기로 했다.",
+      "effects": {
+        "fans": 90
+      }
+    },
+    "end_mid_show_flat": {
+      "type": "end",
+      "result": "fail",
+      "text": "어정쩡하게 끝난 방송이었다. 그래도 그림을 소개받은 팬들은 고맙다는 댓글을 남겼다.",
+      "effects": {
+        "fans": 50
+      }
+    },
+    "end_quiet_flat": {
+      "type": "end",
+      "result": "fail",
+      "text": "식은 분위기는 끝까지 돌아오지 않았다. {member}는 \"다음엔 그림판은 숨겨 두겠다\"며 웃으며 방송을 마쳤다.",
+      "effects": {
+        "fans": 40
+      }
+    }
+  }
+}

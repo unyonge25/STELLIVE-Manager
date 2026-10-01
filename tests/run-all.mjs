@@ -19,7 +19,7 @@ console.log(`\n=== syntax check: ${jsFiles.length - syntaxErrors.length}/${jsFil
 if (syntaxErrors.length) failed += 1;
 
 // 2) 테스트 파일
-const suites = ['schedule.test.mjs', 'economy.test.mjs', 'simulation.test.mjs', 'ui-flow.test.mjs'];
+const suites = ['schedule.test.mjs', 'economy.test.mjs', 'simulation.test.mjs', 'story.test.mjs', 'story-group.test.mjs', 'choice-story.test.mjs', 'ui-flow.test.mjs'];
 for (const suite of suites) {
   console.log(`\n=== ${suite}`);
   const result = spawnSync(process.execPath, [`${testsDir}${suite}`], { cwd: root, encoding: 'utf8' });

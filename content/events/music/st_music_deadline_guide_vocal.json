@@ -1,0 +1,254 @@
+{
+  "id": "st_music_deadline_guide_vocal",
+  "title": "마감 전날의 가이드 녹음",
+  "category": "music",
+  "description": "지친 상태로 맞은 가이드 녹음 마감 전날. 원키 강행 / 키 낮추기 / 마감 연장 중 무엇에 걸지 정한다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "deadline_recording",
+    "conflict": "fatigue",
+    "resolution": "risky_gamble",
+    "activity": "recording",
+    "tone": "calm"
+  },
+  "conditions": {
+    "activity": [
+      "recording"
+    ],
+    "maxHp": 59,
+    "cooldown": 6
+  },
+  "traitWeights": {
+    "lowStamina": 1.5,
+    "nightOwl": 1.3,
+    "longStream": 1.3
+  },
+  "start": "intro",
+  "steps": {
+    "intro": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "anyTraits": [
+              "lowStamina"
+            ]
+          },
+          "text": "가이드 녹음 마감이 내일 아침이다. 체력이 쉽게 바닥나는 {member}에게 이번 주 일정은 처음부터 버거웠다. 목소리에 쇳소리가 섞인다."
+        },
+        {
+          "when": {
+            "anyTraits": [
+              "nightOwl"
+            ]
+          },
+          "text": "가이드 녹음 마감이 내일 아침이다. 밤이 익숙한 {member}지만, 며칠째 이어진 일정에 오늘은 목소리가 영 올라오지 않는다."
+        },
+        {
+          "text": "가이드 녹음 마감이 내일 아침이다. 며칠째 쉬지 못한 {member}의 목소리가 평소보다 반 톤 낮게 깔린다."
+        }
+      ],
+      "next": "plan"
+    },
+    "plan": {
+      "type": "choice",
+      "text": "녹음 부스 앞에서 {member}가 매니저를 쳐다본다. 어떻게 할까?",
+      "choices": [
+        {
+          "text": "원래 키 그대로 오늘 밤 끝낸다",
+          "story": "무리인 걸 알지만, 이번 곡은 원키가 아니면 의미가 없다고 {member}가 말했다.",
+          "effects": {
+            "hp": -6
+          },
+          "next": "push_first"
+        },
+        {
+          "text": "키를 한 단계 낮춰 안전하게 녹음한다",
+          "story": "곡의 인상은 조금 달라지겠지만 목은 지킬 수 있다.",
+          "next": "lowered"
+        },
+        {
+          "text": "마감 연장을 요청하고 오늘은 쉰다",
+          "story": "매니저가 제작진에게 전화를 걸었다. 연장이 될지는 상대의 답에 달렸다.",
+          "next": "extend"
+        }
+      ]
+    },
+    "push_first": {
+      "type": "check",
+      "text": "첫 번째 후렴. 곡에서 가장 높은 음이 다가온다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 80,
+        "traitBonus": {
+          "perfectionist": 10,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "고음이 걸렸다. 아직 한 번 더 남았다.",
+          "next": "push_second"
+        },
+        "partial": {
+          "text": "음은 냈지만 끝이 갈라졌다. 다음 후렴에서 만회해야 한다.",
+          "effects": {
+            "hp": -2
+          },
+          "next": "push_second"
+        },
+        "fail": {
+          "text": "고음에서 목이 막혔다. 더 밀어붙이면 안 된다는 신호다.",
+          "next": "end_strained"
+        }
+      }
+    },
+    "push_second": {
+      "type": "check",
+      "text": "마지막 후렴. 여기까지 왔으면 끝을 봐야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 84,
+        "traitBonus": {
+          "perfectionist": 10,
+          "longStream": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "마지막 고음까지 원키로 해냈다. 녹음실 밖에서 스태프가 조용히 박수를 쳤다.",
+          "next": "end_paid_off"
+        },
+        "partial": {
+          "text": "원키는 지켰지만 몇 군데는 보정이 필요할 것 같다.",
+          "next": "end_mixed"
+        },
+        "fail": {
+          "text": "끝내 마지막 고음이 나오지 않았다.",
+          "next": "end_strained"
+        }
+      }
+    },
+    "lowered": {
+      "type": "check",
+      "text": "한 키 낮춘 반주가 흐른다. 익숙하지 않은 높이에서 곡의 감정을 다시 찾아야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 70,
+        "traitBonus": {
+          "calm": 10,
+          "cover": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "낮춘 키가 오히려 곡에 새로운 색을 입혔다.",
+          "next": "end_new_color"
+        },
+        "partial": {
+          "text": "무난하게 끝났지만 원래 곡의 시원함은 줄었다.",
+          "next": "end_mixed"
+        },
+        "fail": {
+          "text": "낮은 키에서 감정이 잘 실리지 않았다.",
+          "next": "end_flat"
+        }
+      }
+    },
+    "extend": {
+      "type": "check",
+      "text": "제작진과의 통화. 사정을 설명하고 하루를 얻어 내야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 68,
+        "traitBonus": {
+          "brain": 10,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "제작진이 흔쾌히 이틀을 내줬다. {member}는 그날 밤 일찍 잠들었다.",
+          "next": "end_rested"
+        },
+        "partial": {
+          "text": "반나절만 연장됐다. 결국 키를 낮춰 오늘 녹음하기로 했다.",
+          "next": "lowered"
+        },
+        "fail": {
+          "text": "연장은 어렵다는 답이 돌아왔다. 결국 원키로 오늘 밤 끝내야 한다.",
+          "effects": {
+            "hp": -3
+          },
+          "next": "push_first"
+        }
+      }
+    },
+    "end_paid_off": {
+      "type": "end",
+      "result": "success",
+      "text": "무리한 도박이었지만 결과물은 확실했다. 다만 다음 날 {member}는 하루 종일 말을 아꼈다.",
+      "effects": {
+        "fans": 120,
+        "fame": 1,
+        "stats": {
+          "Vc": 1
+        },
+        "hp": -3
+      }
+    },
+    "end_new_color": {
+      "type": "end",
+      "result": "success",
+      "text": "가이드 녹음을 들은 작곡가가 아예 이 키로 가자고 했다. 쉬어 가는 선택이 새 길을 열었다.",
+      "effects": {
+        "fans": 100,
+        "stats": {
+          "Vc": 1
+        },
+        "hp": 3
+      }
+    },
+    "end_rested": {
+      "type": "end",
+      "result": "neutral",
+      "text": "녹음은 미뤄졌지만 목도, 곡도 지켰다. 이틀 뒤 녹음은 놀라울 만큼 순조로웠다.",
+      "effects": {
+        "fans": 30,
+        "hp": 12
+      }
+    },
+    "end_mixed": {
+      "type": "end",
+      "result": "partial",
+      "text": "결과물은 나쁘지 않다. 보정 작업에 시간이 더 들겠지만 마감은 지켰다.",
+      "effects": {
+        "fans": 60,
+        "hp": -2
+      }
+    },
+    "end_flat": {
+      "type": "end",
+      "result": "fail",
+      "text": "마감은 지켰지만 결과물이 마음에 들지 않았다. {member}는 컨디션이 돌아오면 다시 녹음하겠다고 메모를 남겼다.",
+      "effects": {
+        "fans": 20,
+        "memberFlags": {
+          "guideRetake": true
+        }
+      }
+    },
+    "end_strained": {
+      "type": "end",
+      "result": "fail",
+      "text": "녹음은 중단됐다. 며칠은 목을 쉬게 해야 한다. 무리하지 말라는 팬들의 메시지가 쏟아졌다.",
+      "effects": {
+        "fans": 10,
+        "hp": -4,
+        "memberFlags": {
+          "guideRetake": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,299 @@
+{
+  "id": "st_music_cover_battle",
+  "title": "커버 배틀 합방",
+  "category": "music",
+  "description": "파트너와 같은 곡을 각자 편곡해 부르고 시청자 투표로 승부한다. 곡 선택과 막판 앵콜이 승부를 가른다.",
+  "meta": {
+    "theme": "collab_content",
+    "setting": "cover_battle_stream",
+    "conflict": "rivalry",
+    "resolution": "clutch_moment",
+    "activity": "sing",
+    "tone": "hype"
+  },
+  "collab": {
+    "min": 2,
+    "max": 3
+  },
+  "conditions": {
+    "activity": [
+      "sing"
+    ],
+    "cooldown": 7
+  },
+  "traitWeights": {
+    "competitive": 1.4,
+    "cover": 1.3
+  },
+  "start": "intro",
+  "steps": {
+    "intro": {
+      "type": "story",
+      "text": "{member}와 {partners}가 같은 곡을 각자 편곡해 부르고, 시청자 투표로 승자를 정하는 '커버 배틀'을 열었다. 진 쪽은 다음 방송에서 이긴 쪽의 신청곡을 불러야 한다.",
+      "next": "mood"
+    },
+    "mood": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "partyMinRelationship": 40
+          },
+          "next": "banter"
+        }
+      ],
+      "next": "stiff"
+    },
+    "banter": {
+      "type": "story",
+      "text": "평소 친한 사이답게 시작부터 서로 놀리기 바쁘다. 채팅창은 벌써 응원 팀이 갈렸다.",
+      "effects": {
+        "fans": 20
+      },
+      "next": "song_pick"
+    },
+    "stiff": {
+      "type": "story",
+      "text": "아직 서먹한 사이라 첫인사부터 조심스럽다. 승부욕을 드러내도 될지 서로 눈치를 본다.",
+      "next": "song_pick"
+    },
+    "song_pick": {
+      "type": "choice",
+      "text": "어떤 곡으로 붙을까?",
+      "choices": [
+        {
+          "text": "고음이 몰아치는 곡으로 정면 승부",
+          "story": "한 소절만 삐끗해도 바로 티가 나는 곡이다. 서로 웃고 있지만 눈은 웃고 있지 않다.",
+          "next": "round_power"
+        },
+        {
+          "text": "분위기로 승부하는 잔잔한 곡",
+          "story": "기술보다 감정 전달이 중요한 곡이다. 누가 더 듣는 사람의 마음을 건드리느냐의 싸움이다.",
+          "next": "round_mood"
+        },
+        {
+          "text": "서로의 파트를 바꿔 부른다",
+          "story": "평소 상대가 부르던 스타일로 불러야 한다. 웃음과 실수가 예약된 선택이다.",
+          "effects": {
+            "relationship": 2
+          },
+          "next": "round_swap"
+        }
+      ]
+    },
+    "round_power": {
+      "type": "check",
+      "text": "1라운드. {member}가 먼저 무대에 올랐다. 마지막 고음이 승부를 가른다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 82,
+        "traitBonus": {
+          "competitive": 10,
+          "perfectionist": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "고음이 정확히 꽂혔다. 투표 그래프가 {member} 쪽으로 기울었다.",
+          "next": "final_lead"
+        },
+        "partial": {
+          "text": "고음은 냈지만 음색이 조금 갈라졌다. 표가 팽팽하다.",
+          "next": "final_close"
+        },
+        "fail": {
+          "text": "마지막 고음에서 음이 뒤집혔다. 그 순간 투표가 확 갈렸다.",
+          "next": "end_lost"
+        }
+      }
+    },
+    "round_mood": {
+      "type": "check",
+      "text": "조명을 낮추고 첫 소절을 불렀다. 채팅 속도가 눈에 띄게 느려진다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 74,
+        "traitBonus": {
+          "calm": 10,
+          "cover": 5,
+          "instrument": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "마지막 소절이 끝나자 채팅창이 한동안 조용했다. 그리고 투표가 쏟아졌다.",
+          "next": "final_lead"
+        },
+        "partial": {
+          "text": "잔잔하게 잘 불렀지만 상대도 만만치 않았다. 표가 팽팽하다.",
+          "next": "final_close"
+        },
+        "fail": {
+          "text": "감정을 너무 눌렀는지 밋밋하다는 반응이 나왔다.",
+          "next": "end_lost"
+        }
+      }
+    },
+    "round_swap": {
+      "type": "check",
+      "text": "상대의 말투와 창법을 흉내 내며 부르기 시작하자 채팅창이 폭소로 뒤덮였다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "roleplay": 10,
+          "highTension": 5,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "성대모사 수준의 재현에 상대도 웃음을 참지 못했다.",
+          "next": "end_swap_hit"
+        },
+        "partial": {
+          "text": "웃기긴 했지만 노래가 자꾸 끊겼다. 표가 팽팽하다.",
+          "next": "final_close"
+        },
+        "fail": {
+          "text": "흉내가 선을 살짝 넘었다. 웃음 뒤로 어색한 공기가 남았다.",
+          "next": "end_awkward"
+        }
+      }
+    },
+    "final_lead": {
+      "type": "choice",
+      "text": "투표 마감 1분 전. 우세하지만 아직 뒤집힐 수 있다.",
+      "choices": [
+        {
+          "text": "앵콜 한 소절로 쐐기를 박는다",
+          "next": "encore"
+        },
+        {
+          "text": "상대에게 먼저 박수를 보낸다",
+          "story": "{member}가 먼저 상대의 무대를 칭찬했다. 채팅창에 '훈훈하다'가 줄줄이 올라온다.",
+          "effects": {
+            "relationship": 2
+          },
+          "next": "end_won_graceful"
+        }
+      ]
+    },
+    "final_close": {
+      "type": "choice",
+      "text": "투표 마감 1분 전. 표 차이는 단 몇 표다.",
+      "choices": [
+        {
+          "text": "마지막 앵콜로 승부를 건다",
+          "next": "encore"
+        },
+        {
+          "text": "다 같이 합창으로 마무리하자고 제안한다",
+          "story": "배틀을 합창으로 바꾸자는 제안에 상대가 잠시 망설이다 웃었다.",
+          "effects": {
+            "relationship": 3
+          },
+          "next": "end_chorus"
+        }
+      ]
+    },
+    "encore": {
+      "type": "check",
+      "text": "앵콜 한 소절. 준비 없이 부르는 마지막 한 방이다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 80,
+        "traitBonus": {
+          "highTension": 10,
+          "spontaneous": 5,
+          "competitive": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "마지막 한 소절이 투표를 끝냈다.",
+          "next": "end_won"
+        },
+        "partial": {
+          "text": "앵콜은 좋았지만 상대 팬들의 막판 투표도 거셌다. 결과는 동점.",
+          "next": "end_draw"
+        },
+        "fail": {
+          "text": "욕심을 낸 앵콜에서 가사를 놓쳤다.",
+          "next": "end_lost"
+        }
+      }
+    },
+    "end_won": {
+      "type": "end",
+      "result": "success",
+      "text": "커버 배틀 승리. 약속대로 다음 방송의 신청곡은 {member}가 정하게 됐다. 벌써 2차전 날짜를 잡자는 말이 나온다.",
+      "effects": {
+        "fans": 180,
+        "fame": 1,
+        "relationship": 2
+      }
+    },
+    "end_won_graceful": {
+      "type": "end",
+      "result": "success",
+      "text": "승리는 {member}의 것이었지만, 박수를 보낸 장면이 더 많이 회자됐다. 이 조합의 다음 합방을 기다린다는 댓글이 줄을 이었다.",
+      "effects": {
+        "fans": 160,
+        "fame": 1,
+        "relationship": 3
+      }
+    },
+    "end_swap_hit": {
+      "type": "end",
+      "result": "success",
+      "text": "서로 바꿔 부른 무대가 '오늘의 하이라이트'로 클립이 됐다. 승패는 아무도 기억하지 않았다.",
+      "effects": {
+        "fans": 190,
+        "relationship": 4
+      }
+    },
+    "end_chorus": {
+      "type": "end",
+      "result": "partial",
+      "text": "승부는 무승부로 끝났지만 즉석 합창이 의외의 명장면이 됐다. 다만 '결판은 내야지'라는 아쉬운 목소리도 남았다.",
+      "effects": {
+        "fans": 120,
+        "relationship": 3
+      }
+    },
+    "end_draw": {
+      "type": "end",
+      "result": "partial",
+      "text": "동점이다. 재대결을 원하는 채팅이 쏟아졌고, 다 같이 한 달 안에 2라운드를 하기로 약속했다.",
+      "effects": {
+        "fans": 110,
+        "relationship": 2,
+        "memberFlags": {
+          "coverBattleRematch": true
+        }
+      }
+    },
+    "end_lost": {
+      "type": "end",
+      "result": "fail",
+      "text": "패배. 약속대로 {member}는 다음 방송에서 상대의 신청곡을 부르게 됐다. '복수는 다음 배틀에서'라는 한마디에 시청자들이 더 신났다.",
+      "effects": {
+        "fans": 50,
+        "relationship": 1,
+        "memberFlags": {
+          "coverBattleRematch": true
+        }
+      }
+    },
+    "end_awkward": {
+      "type": "end",
+      "result": "fail",
+      "text": "어색한 공기는 방송이 끝날 때까지 완전히 풀리지 않았다. 방송 후 {member}가 먼저 사과 메시지를 보냈다.",
+      "effects": {
+        "fans": 30,
+        "relationship": -2
+      }
+    }
+  }
+}

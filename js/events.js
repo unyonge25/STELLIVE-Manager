@@ -1,8 +1,12 @@
 // events.js — 일정/이벤트 데이터 + 조건 판정 + 후보 선정 + 하루 일정 계획
 // effects 는 "정의"만 하고, 실제 적용은 actions.js 가 담당한다.
 
-import { ENTRY_KIND, HP_RULES, WEEK_LENGTH } from './state.js';
+import { ENTRY_KIND, HP_RULES, WEEK_LENGTH, STAT_KEYS, getRelationship } from './state.js';
 import { EXTRA_EVENTS } from './events-content.js';
+import { STORY_EVENTS } from './story-content.js';
+import { isStoryEvent, validateStoryCollection } from './story-schema.js';
+import { MEMBERS, TRAITS } from './members.js';
+import { STOCKS, INVESTMENTS } from './economy-data.js';
 
 /* ===================== 일반 일정 (자동 진행) ===================== */
 
@@ -57,6 +61,10 @@ export function getActivityById(id) {
 //  - outcomes: { great, success, fail } — 판정 결과에 따라 추가로 적용되는 효과
 //  - conditions: 이벤트와 같은 조건 키. 맞지 않는 선택지는 목록에서 숨긴다.
 //  - fallback: true — 조건에 맞는 선택지가 하나도 없을 때 대신 보여줄 선택지
+//  - story: (선택) 선택 직후 보여줄 이야기
+//  - outcomeStories: (선택, check 가 있을 때만) { great, success, fail } 판정 결과별 이야기.
+//      great 이 없으면 success 이야기를 쓰고, success / fail 은 없으면 아무것도 보여주지 않는다.
+//    두 필드는 결과 기록(log.storyText)에 "story + 결과 이야기" 순서로 담긴다. 없으면 기존과 똑같다.
 // 텍스트의 {member} 는 이벤트 주인공, {partners} 는 콜라보 파트너 이름으로 바뀐다.
 export const EVENTS = [
   {
@@ -289,7 +297,7 @@ export const EVENTS = [
       '{member}에게 오늘 같이 방송하자는 이야기가 나왔다. 누구와 함께할지, 어떤 방송으로 꾸릴지 정해야 한다.',
     collab: { min: 2, max: 3 },
     conditions: { activityCategories: ['broadcast'] },
-    weight: 1,
+    weight: 0,
     choices: [
       {
         // 어느 방송 날에나 어울리는 기본 선택지 (조건에 맞는 선택지가 없을 때의 대체 선택지)
@@ -359,7 +367,7 @@ export const EVENTS = [
     collab: { min: 2, max: 3 },
     timeSlot: 'lateNight',
     conditions: { activityCategories: ['horror'], cooldown: 3 },
-    weight: 1,
+    weight: 0,
     choices: [
       {
         text: '불 끄고 끝까지 클리어한다',
@@ -390,7 +398,7 @@ export const EVENTS = [
       '{member}가 노래 작업을 하던 중, 이 곡은 혼자보다 여럿이 부르면 더 좋겠다는 생각이 들었다. 누구와 함께 부를지 정해야 한다.',
     collab: { min: 2, max: 3 },
     conditions: { activityCategories: ['music'], cooldown: 2 },
-    weight: 1,
+    weight: 0,
     choices: [
       {
         text: '정식 듀엣 커버로 함께 녹음한다',
@@ -428,6 +436,46 @@ export const EVENTS = [
 
 // 확장 이벤트 (멤버 개인 / 공통 / 콜라보 / 체인 / 주간 / 경제 이벤트)는 events-content.js 에 있다.
 EVENTS.push(...EXTRA_EVENTS);
+
+export { isStoryEvent };
+
+/* ===================== 선택지 결과 이야기 (story / outcomeStories) 검사 ===================== */
+
+// 문장 하나의 규칙: 비어 있지 않은 문자열, 길이 제한, HTML 태그 금지, 치환어는 {member} / {partners} 만.
+export const CHOICE_STORY_RULES = { maxLength: 300, outcomes: ['great', 'success', 'fail'], placeholders: ['member', 'partners'] };
+
+// 문제가 없으면 null, 있으면 이유 문자열
+export function checkChoiceStoryText(text) {
+  if (typeof text !== 'string' || text.trim().length === 0) return '비어 있지 않은 문자열이어야 한다';
+  if (text.length > CHOICE_STORY_RULES.maxLength) return `${CHOICE_STORY_RULES.maxLength}자 이하여야 한다`;
+  if (/<[a-z/!?]/i.test(text)) return 'HTML 태그를 쓸 수 없다';
+  const unknown = (text.match(/\{[^}]*\}/g) || []).filter((token) => !CHOICE_STORY_RULES.placeholders.includes(token.slice(1, -1)));
+  if (unknown.length > 0) return `알 수 없는 치환어 ${unknown.join(', ')}`;
+  return null;
+}
+
+// 선택지 하나의 story / outcomeStories 형식 오류 목록 (필드가 없으면 빈 배열)
+export function validateChoiceStories(choice) {
+  const errors = [];
+  if (choice.story !== undefined) {
+    const problem = checkChoiceStoryText(choice.story);
+    if (problem) errors.push(`story: ${problem}`);
+  }
+  if (choice.outcomeStories !== undefined) {
+    const stories = choice.outcomeStories;
+    if (stories === null || typeof stories !== 'object' || Array.isArray(stories)) {
+      errors.push('outcomeStories: { great, success, fail } 객체여야 한다');
+    } else {
+      if (!choice.check) errors.push('outcomeStories: 판정(check)이 없는 선택지에는 쓸 수 없다');
+      Object.entries(stories).forEach(([key, text]) => {
+        if (!CHOICE_STORY_RULES.outcomes.includes(key)) errors.push(`outcomeStories: 알 수 없는 결과 "${key}"`);
+        const problem = checkChoiceStoryText(text);
+        if (problem) errors.push(`outcomeStories.${key}: ${problem}`);
+      });
+    }
+  }
+  return errors;
+}
 
 export function getEventById(id) {
   return EVENTS.find((event) => event.id === id) || null;
@@ -468,8 +516,9 @@ export const CONDITION_CHECKS = {
   memberFlags: ({ member }, flags) => flags.every((flag) => Boolean(member.flags[flag])),
   blockedMemberFlags: ({ member }, flags) => flags.every((flag) => !member.flags[flag]),
   // 마지막 발생 후 N일이 지나야 다시 등장
+  // group 이 있으면 같은 group 전체의 마지막 발생일을 쓴다. (변형끼리 쿨다운 공유)
   cooldown: ({ state, event }, days) => {
-    const lastDay = state.eventHistory[event.id];
+    const lastDay = getLastEventDay(state, event);
     return lastDay === undefined || state.currentDay - lastDay >= days;
   },
 
@@ -514,10 +563,31 @@ export const CONDITION_CHECKS = {
   // 상점 레벨: { itemId: level } — 모두 만족해야 한다
   minShopLevel: ({ state }, levels) =>
     Object.entries(levels).every(([id, level]) => (state.shop.levels[id] || 0) >= level),
+
+  /* ---------- 스토리 이벤트용 (진행 중 상황에 따라 문장 / 분기를 바꿀 때) ---------- */
+  // 주인공 HP 하한
+  minHp: ({ member }, value) => member.hp >= value,
+  // 참여 멤버(주인공 + 파트너) 사이의 평균 관계도. 참여자가 1명이면 통과하지 않는다.
+  partyMinRelationship: ({ members }, value) => {
+    const party = members || [];
+    const values = [];
+    party.forEach((memberA, index) => party.slice(index + 1).forEach((memberB) => values.push(getRelationship(memberA.id, memberB.id))));
+    return values.length > 0 && values.reduce((sum, rel) => sum + rel, 0) / values.length >= value;
+  },
+  // 참여 멤버 중에 이 멤버가 있을 때 (id 또는 id 배열 중 하나)
+  withMember: ({ member, members }, value) => {
+    const ids = Array.isArray(value) ? value : [value];
+    return (members || [member]).some((item) => ids.includes(item.id));
+  },
+  // 이전 스토리 이벤트의 결말: { id, result: 'success' | ['success', 'partial'] }
+  storyResult: ({ state }, { id, result }) => {
+    const results = Array.isArray(result) ? result : [result];
+    return results.includes(state.storyResults?.[id]);
+  },
 };
 
 // 이벤트와 선택지가 같은 조건 맵을 쓴다. ctx.event 는 cooldown 등에서 쓰는 소속 이벤트.
-function meetsConditions(conditions, ctx) {
+export function meetsConditions(conditions, ctx) {
   return Object.entries(conditions || {}).every(([key, value]) => {
     const check = CONDITION_CHECKS[key];
     // 맵에 등록되지 않은 조건 키는 통과(무시)시킨다.
@@ -526,13 +596,110 @@ function meetsConditions(conditions, ctx) {
   });
 }
 
+/* ===================== 스토리(멀티스텝) 이벤트 불러오기 ===================== */
+
+// 검증에 쓰는 허용 목록. 개발 도구(tools/events.mjs)도 같은 값을 쓴다.
+export function buildStoryContext() {
+  return {
+    memberIds: MEMBERS.map((member) => member.id),
+    statKeys: STAT_KEYS,
+    traitIds: Object.keys(TRAITS),
+    activityCategories: Object.keys(ACTIVITY_CATEGORIES),
+    activityIds: ACTIVITIES.map((activity) => activity.id),
+    conditionKeys: Object.keys(CONDITION_CHECKS),
+    tickers: STOCKS.map((stock) => stock.ticker),
+    investmentIds: INVESTMENTS.map((investment) => investment.id),
+    knownEventIds: EVENTS.filter((event) => !isStoryEvent(event)).map((event) => event.id),
+  };
+}
+
+// 스토리 이벤트는 js/story-content.js (tools/events.mjs build 로 생성)에서 온다.
+// 빌드 도구가 이미 검증했지만, 파일을 직접 고친 경우에 대비해 런타임에서도 다시 검증한다.
+// 오류가 있는 이벤트는 게임에 넣지 않고 REJECTED_STORY_EVENTS 에 이유와 함께 남긴다. (게임은 멈추지 않는다)
+export function filterValidStoryEvents(events) {
+  const list = Array.isArray(events) ? events : [];
+  const { results } = validateStoryCollection(list, buildStoryContext());
+  const accepted = [];
+  const rejected = [];
+  list.forEach((event) => {
+    const { errors } = results.get(event);
+    if (errors.length > 0) rejected.push({ id: event?.id, errors });
+    else accepted.push(event);
+  });
+  return { accepted, rejected };
+}
+
+const loadedStories = filterValidStoryEvents(STORY_EVENTS);
+export const REJECTED_STORY_EVENTS = loadedStories.rejected;
+if (REJECTED_STORY_EVENTS.length > 0 && typeof console !== 'undefined') {
+  console.warn(`[story] 검증에 실패한 이벤트 ${REJECTED_STORY_EVENTS.length}개를 제외했다.`, REJECTED_STORY_EVENTS);
+}
+EVENTS.push(...loadedStories.accepted);
+
 /* ===================== 후보 선정 ===================== */
+
+// 스토리 다양성: 최근에 본 스토리와 구조(meta)가 겹칠수록 등장 확률을 낮춘다.
+//  - recentMemory: 최근 몇 개의 스토리를 기억할지
+//  - sameSignature: theme + conflict + resolution 이 모두 같을 때 배수
+//  - sameThemeConflict / sameTheme: 일부만 같을 때 배수
+//  - minFactor: 아무리 겹쳐도 이 아래로는 내리지 않는다
+export const STORY_DIVERSITY = { recentMemory: 10, sameSignature: 0.3, sameThemeConflict: 0.55, sameTheme: 0.8, minFactor: 0.15 };
+
+export function getStoryDiversityFactor(event, state) {
+  if (!isStoryEvent(event) || !state?.storyRecent?.length) return 1;
+  const meta = event.meta || {};
+  let factor = 1;
+  state.storyRecent.slice(-STORY_DIVERSITY.recentMemory).forEach(({ id }) => {
+    const other = getEventById(id)?.meta;
+    if (!other) return;
+    if (other.theme !== meta.theme) return;
+    if (other.conflict === meta.conflict && other.resolution === meta.resolution) factor *= STORY_DIVERSITY.sameSignature;
+    else if (other.conflict === meta.conflict) factor *= STORY_DIVERSITY.sameThemeConflict;
+    else factor *= STORY_DIVERSITY.sameTheme;
+  });
+  return Math.max(factor, STORY_DIVERSITY.minFactor);
+}
+
+// 스토리 group: 같은 상황의 변형끼리 묶는다. (story-schema 의 group 필드)
+//  - blockDays: 같은 group 이 마지막으로 나온 뒤 이 일수 이내(포함)에는 후보에서 뺀다.
+//  - fadeDays / fadeFactor: 그 뒤 fadeDays 일 동안은 등장 가중치에 fadeFactor 를 곱한다.
+//  - 같은 날 같은 group 은 하나만 배정한다.
+// group 이 없는 이벤트에는 아무 영향이 없다.
+export const STORY_GROUP_RULES = { blockDays: 7, fadeDays: 7, fadeFactor: 0.4 };
+
+// 마지막 발생일: group 이 있으면 같은 group 중 가장 최근, 없으면 그 이벤트 자신
+export function getLastEventDay(state, event) {
+  if (!event?.group) return state.eventHistory[event.id];
+  let last;
+  EVENTS.forEach((item) => {
+    if (item.group !== event.group) return;
+    const day = state.eventHistory[item.id];
+    if (day !== undefined && (last === undefined || day > last)) last = day;
+  });
+  return last;
+}
+
+export function isStoryGroupBlocked(event, state) {
+  if (!event?.group || !state) return false;
+  const last = getLastEventDay(state, event);
+  return last !== undefined && state.currentDay - last <= STORY_GROUP_RULES.blockDays;
+}
+
+export function getStoryGroupFactor(event, state) {
+  if (!event?.group || !state) return 1;
+  const last = getLastEventDay(state, event);
+  if (last === undefined) return 1;
+  const since = state.currentDay - last;
+  const fadeUntil = STORY_GROUP_RULES.blockDays + STORY_GROUP_RULES.fadeDays;
+  return since > STORY_GROUP_RULES.blockDays && since <= fadeUntil ? STORY_GROUP_RULES.fadeFactor : 1;
+}
 
 // 가중치:
 //  - traitWeights: 멤버가 가진 태그마다 배수를 곱한다.
 //  - activityWeights: 오늘 일정이 가진 카테고리마다 배수를 곱한다. (우선 등장)
+//  - 스토리 이벤트는 최근 스토리와 겹치는 정도(getStoryDiversityFactor)를 곱한다.
 // weight 가 0 이면 후보에서 빠진다.
-function getEventWeight(event, member, activity = null) {
+function getEventWeight(event, member, activity = null, state = null) {
   let weight = event.weight ?? 1;
   Object.entries(event.traitWeights || {}).forEach(([trait, multiplier]) => {
     if (hasTrait(member, trait)) weight *= multiplier;
@@ -540,21 +707,26 @@ function getEventWeight(event, member, activity = null) {
   Object.entries(event.activityWeights || {}).forEach(([category, multiplier]) => {
     if (hasActivityCategory(activity, category)) weight *= multiplier;
   });
-  return weight;
+  return weight * getStoryDiversityFactor(event, state) * getStoryGroupFactor(event, state);
 }
 
 // 후보 수집:
 //  - memberId 가 있으면 그 멤버일 때만 후보가 된다.
 //  - collab 이벤트는 콜라보 자리에서만, 일반 이벤트는 중요 이벤트 자리에서만 후보가 된다.
 //  - conditions 를 통과해야 후보에 포함된다.
-export function collectCandidates(member, state, { activity = null, collab = false } = {}) {
+//  - excludeStory: 스토리 이벤트는 후보에서 뺀다 (하루 스토리 수 제한)
+//  - excludeGroups: 이 group 들은 후보에서 뺀다 (같은 날 같은 group 중복 방지)
+//  - 최근에 나온 group 은 후보에서 뺀다 (STORY_GROUP_RULES.blockDays)
+export function collectCandidates(member, state, { activity = null, collab = false, excludeStory = false, excludeGroups = null } = {}) {
   return EVENTS.filter((event) => {
     if (event.memberId && event.memberId !== member.id) return false;
     if (Boolean(event.collab) !== collab) return false;
+    if (excludeStory && isStoryEvent(event)) return false;
+    if (event.group && (excludeGroups?.has(event.group) || isStoryGroupBlocked(event, state))) return false;
     // once: 게임 전체에서 한 번만 등장
     if (event.once && state.eventHistory[event.id] !== undefined) return false;
-    if (getEventWeight(event, member, activity) <= 0) return false;
-    return meetsConditions(event.conditions, { state, member, activity, event });
+    if (getEventWeight(event, member, activity, state) <= 0) return false;
+    return meetsConditions(event.conditions, { state, member, members: [member], activity, event });
   });
 }
 
@@ -573,7 +745,7 @@ function pickWeighted(items, getWeight) {
 export function pickEventForMember(member, state, options = {}) {
   const candidates = collectCandidates(member, state, options);
   if (candidates.length === 0) return null;
-  return pickWeighted(candidates, (event) => getEventWeight(event, member, options.activity));
+  return pickWeighted(candidates, (event) => getEventWeight(event, member, options.activity, state));
 }
 
 /* ===================== 선택지 필터 ===================== */
@@ -585,8 +757,10 @@ export function getAvailableChoices(event, state, memberId) {
   const member = state.members.find((item) => item.id === memberId) || null;
   const entry = state.schedule.find((item) => item.memberId === memberId);
   const activity = entry ? getActivityById(entry.activityId) : null;
-  const ctx = { state, member, activity, event };
+  const ctx = { state, member, members: member ? [member] : [], activity, event };
 
+  // 스토리 이벤트는 선택지가 노드 안에 있다. (story.js 의 getStoryChoices)
+  if (!Array.isArray(event.choices)) return [];
   const indexed = event.choices.map((choice, index) => ({ choice, index }));
   const valid = indexed.filter(({ choice }) => meetsConditions(choice.conditions, ctx));
   if (valid.length > 0) return valid;
@@ -612,6 +786,8 @@ export const DAY_RULES = {
   collabChance: 0.6,
   traitActivityWeight: 3,
   restActivityWeight: 0.3,
+  // 스토리(멀티스텝) 이벤트는 하루에 이 수까지만 (한 이벤트가 여러 단계라 하루가 길어지지 않게)
+  maxStoryPerDay: 4,
 };
 
 // 멤버 태그와 겹치는 일정일수록 잘 배정된다. 탈진 상태면 휴방이 배정된다.
@@ -680,13 +856,28 @@ export function planDay(state) {
     })
     .filter(Boolean);
 
+  // 같은 이벤트, 또는 같은 group 의 이벤트는 하루에 하나만
+  const sameSlot = (a, b) => a.id === b.id || (Boolean(a.group) && a.group === b.group);
   const uniqueOptions = (list) =>
-    list.filter((option, index) => list.findIndex((item) => item.event.id === option.event.id) === index);
+    list.filter((option, index) => list.findIndex((item) => sameSlot(item.event, option.event)) === index);
+
+  // 스토리 이벤트 수 제한: forced 로 이미 배정된 스토리도 센다.
+  const storyCount = () =>
+    schedule.filter((entry) => entry.eventId && isStoryEvent(getEventById(entry.eventId))).length;
+  const limitStories = (list) => {
+    let stories = storyCount();
+    return list.filter(({ event }) => {
+      if (!isStoryEvent(event)) return true;
+      if (stories >= DAY_RULES.maxStoryPerDay) return false;
+      stories += 1;
+      return true;
+    });
+  };
 
   const slots = Math.max(0, DAY_RULES.maxImportant - forcedCount);
-  let promoted = uniqueOptions(shuffle(options.filter((option) => Math.random() < option.chance))).slice(0, slots);
+  let promoted = limitStories(uniqueOptions(shuffle(options.filter((option) => Math.random() < option.chance)))).slice(0, slots);
   if (forcedCount + promoted.length < DAY_RULES.minImportant && options.length > 0) {
-    promoted = uniqueOptions(shuffle(options)).slice(0, DAY_RULES.minImportant - forcedCount);
+    promoted = limitStories(uniqueOptions(shuffle(options))).slice(0, DAY_RULES.minImportant - forcedCount);
   }
   promoted.forEach(({ entry, event }) => promote(entry, event));
 
@@ -694,11 +885,16 @@ export function planDay(state) {
   //    파트너는 자동으로 정하지 않고, 이벤트 화면에서 플레이어가 고른다.
   if (Math.random() < DAY_RULES.collabChance) {
     const hosts = shuffle(schedule.filter((entry) => entry.kind === ENTRY_KIND.ROUTINE));
+    const excludeStory = storyCount() >= DAY_RULES.maxStoryPerDay;
+    // 오늘 이미 배정된 group 은 콜라보 후보에서 뺀다.
+    const excludeGroups = new Set(
+      schedule.map((entry) => entry.eventId && getEventById(entry.eventId)?.group).filter(Boolean),
+    );
     for (const entry of hosts) {
       const member = state.members.find((item) => item.id === entry.memberId);
       // 주인공의 오늘 일정에 어울리는 콜라보만 후보가 된다. (휴방이면 후보 없음)
       const activity = getActivityById(entry.activityId);
-      const event = pickEventForMember(member, state, { activity, collab: true });
+      const event = pickEventForMember(member, state, { activity, collab: true, excludeStory, excludeGroups });
       if (event) {
         entry.kind = ENTRY_KIND.COLLAB;
         entry.eventId = event.id;

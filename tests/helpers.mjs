@@ -10,6 +10,7 @@ export const A = await import(js('actions.js'));
 export const X = await import(js('economy.js'));
 export const D = await import(js('economy-data.js'));
 export const END = await import(js('ending.js'));
+export const ST = await import(js('story.js'));
 
 /* ---------- 작은 테스트 러너 ---------- */
 
@@ -57,6 +58,20 @@ export function startDay(state) {
 
 const randomPick = (list) => list[Math.floor(Math.random() * list.length)];
 
+// 진행 중인 스토리 이벤트를 결말까지 진행한다. (선택지는 pickChoice 로, 판정은 rng 로)
+export function playStory(state, { pickChoice = randomPick, rng = Math.random } = {}) {
+  for (let step = 0; step < 80 && !state.storyRun.finished; step += 1) {
+    const node = ST.getStoryNode(state);
+    let action;
+    if (node.type === 'story') action = { type: 'continue' };
+    else if (node.type === 'check') action = { type: 'roll' };
+    else action = { type: 'choose', index: pickChoice(ST.getStoryChoices(state)).index };
+    if (!ST.advanceStory(state, action, rng)) throw new Error(`스토리 진행 실패: ${state.storyRun.eventId}@${state.storyRun.stepId}`);
+  }
+  if (!state.storyRun.finished) throw new Error(`스토리가 끝나지 않음: ${state.storyRun.eventId}`);
+  return state.storyRun;
+}
+
 // 오늘의 중요 이벤트 / 콜라보를 모두 처리한다.
 export function resolveDecisions(state, { pickChoice = randomPick, pickPartnerCount = () => 1 + Math.floor(Math.random() * 2) } = {}) {
   let resolved = 0;
@@ -71,10 +86,17 @@ export function resolveDecisions(state, { pickChoice = randomPick, pickPartnerCo
       const count = Math.min(pickPartnerCount(), event.collab.max - 1, candidates.length);
       S.setCollabPartners(candidates.slice(0, Math.max(count, event.collab.min - 1)));
     }
-    const available = E.getAvailableChoices(event, state, entry.memberId);
-    if (available.length === 0) throw new Error(`선택지 0개: ${event.id}`);
-    const log = A.resolveChoice(state, pickChoice(available).choice);
-    if (!log) throw new Error(`처리 실패: ${event.id}`);
+    if (E.isStoryEvent(event)) {
+      // 스토리 이벤트: 시작 → 결말까지 진행
+      ST.startStory(state, event, entry.memberId);
+      playStory(state, { pickChoice });
+      ST.clearStory(state);
+    } else {
+      const available = E.getAvailableChoices(event, state, entry.memberId);
+      if (available.length === 0) throw new Error(`선택지 0개: ${event.id}`);
+      const log = A.resolveChoice(state, pickChoice(available).choice);
+      if (!log) throw new Error(`처리 실패: ${event.id}`);
+    }
     S.setCurrentEvent(null);
     S.setSelectedMember(null);
     S.setCollabPartners([]);

@@ -1,0 +1,173 @@
+{
+  "id": "st_broadcast_screen_freeze",
+  "title": "화면이 멈췄다",
+  "category": "broadcast",
+  "description": "방송 도중 화면이 멈추고 음성만 나온다. 대처 방식에 따라 사고가 명장면이 될 수도 있다.",
+  "meta": {
+    "theme": "broadcast_incident",
+    "setting": "live_stream",
+    "conflict": "technical_trouble",
+    "resolution": "audience_help",
+    "activity": "broadcast",
+    "tone": "comedic"
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "cooldown": 7
+  },
+  "weight": 1,
+  "start": "intro",
+  "steps": {
+    "intro": {
+      "type": "story",
+      "text": "{member}의 방송이 한창 무르익은 순간, 화면이 멈추고 음성만 흘러나오기 시작했다. 채팅창은 '화면 멈춤'으로 도배됐다.",
+      "next": "mood"
+    },
+    "mood": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "maxHp": 59
+          },
+          "next": "tired"
+        }
+      ],
+      "next": "react"
+    },
+    "tired": {
+      "type": "story",
+      "text": "하필 피로가 쌓인 날이다. {member}의 목소리에 당황과 지친 기색이 함께 묻어난다.",
+      "next": "react"
+    },
+    "react": {
+      "type": "choice",
+      "text": "어떻게 대처할까?",
+      "choices": [
+        {
+          "text": "음성만으로 라디오 방송처럼 이어간다",
+          "story": "{member}가 '지금부터는 라디오입니다'라고 선언했다. 채팅창에 웃음이 터졌다.",
+          "next": "radio"
+        },
+        {
+          "text": "시청자들에게 해결법을 물어보며 같이 고친다",
+          "story": "설정 화면을 하나씩 읽어 주며 시청자들과 함께 원인을 찾기 시작했다.",
+          "next": "fix_live"
+        },
+        {
+          "text": "잠시 방송을 끊고 재시작한다",
+          "story": "공지를 남기고 방송을 껐다. 채팅창의 열기도 함께 식었다.",
+          "effects": {
+            "fans": -10
+          },
+          "next": "end_restart"
+        }
+      ]
+    },
+    "radio": {
+      "type": "check",
+      "text": "화면 없이 목소리만으로 시청자를 붙잡아야 한다. 말이 끊기는 순간 다들 떠난다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "chatter": 10,
+          "host": 5,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "사연 읽기와 즉석 퀴즈로 30분을 꽉 채웠다. 화면이 돌아오자 다들 오히려 아쉬워했다.",
+          "next": "end_radio_hit"
+        },
+        "partial": {
+          "text": "몇 번 말이 끊겼지만 시청자들이 채팅으로 빈틈을 채워 줬다.",
+          "next": "end_radio_ok"
+        },
+        "fail": {
+          "text": "어색한 정적이 몇 번 흘렀다. 시청자 수가 조금씩 줄어든다.",
+          "next": "end_awkward"
+        }
+      }
+    },
+    "fix_live": {
+      "type": "check",
+      "text": "'인코더 설정 바꿔 보세요', '케이블 확인!' 채팅창이 순식간에 기술 지원 센터가 됐다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 68,
+        "traitBonus": {
+          "brain": 10,
+          "calm": 5,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "한 시청자의 조언대로 설정 하나를 바꾸자 화면이 돌아왔다. 채팅창에 환호가 쏟아졌다.",
+          "next": "end_fixed"
+        },
+        "partial": {
+          "text": "원인은 못 찾았지만 같이 고민하는 과정 자체가 하나의 콘텐츠가 됐다.",
+          "next": "end_radio_ok"
+        },
+        "fail": {
+          "text": "이것저것 만지다 방송이 아예 꺼져 버렸다.",
+          "next": "end_restart"
+        }
+      }
+    },
+    "end_radio_hit": {
+      "type": "end",
+      "result": "success",
+      "text": "'화면 없는 방송이 더 재밌다'는 클립이 퍼졌다. 사고가 명장면이 된 날이다.",
+      "effects": {
+        "fans": 130,
+        "fame": 1,
+        "stats": {
+          "Bs": 1
+        }
+      }
+    },
+    "end_fixed": {
+      "type": "end",
+      "result": "success",
+      "text": "문제를 해결해 준 시청자에게 {member}가 공개적으로 감사 인사를 전했다. 채널 분위기가 한층 끈끈해졌다.",
+      "effects": {
+        "fans": 110,
+        "fame": 1,
+        "stats": {
+          "Bs": 1
+        }
+      }
+    },
+    "end_radio_ok": {
+      "type": "end",
+      "result": "partial",
+      "text": "완벽한 대처는 아니었지만, 사고를 웃으며 넘긴 방송으로 기억됐다.",
+      "effects": {
+        "fans": 60
+      }
+    },
+    "end_awkward": {
+      "type": "end",
+      "result": "fail",
+      "text": "화면이 돌아왔을 때 시청자는 절반으로 줄어 있었다. 다음에는 비상용 콘텐츠를 준비해 두기로 했다.",
+      "effects": {
+        "fans": 10,
+        "hp": -3
+      }
+    },
+    "end_restart": {
+      "type": "end",
+      "result": "neutral",
+      "text": "10분 뒤 재시작한 방송은 평소처럼 흘러갔다. 큰 사고는 없었지만 특별한 일도 없었다.",
+      "effects": {
+        "fans": 10
+      }
+    }
+  }
+}

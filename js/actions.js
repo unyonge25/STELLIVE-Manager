@@ -9,6 +9,7 @@ import {
   ENTRY_KIND,
   LOG_KIND,
   getMember,
+  getState,
   addLog,
   markMemberCompleted,
   getScheduleEntry,
@@ -16,7 +17,7 @@ import {
   setRelationship,
   recordEventHistory,
 } from './state.js';
-import { getActivityById, getEventById } from './events.js';
+import { getActivityById, getEventById, checkChoiceStoryText } from './events.js';
 import { getInvestment, getShopTotal } from './economy-data.js';
 import { applyStockEffect, getDueInvestments, startInvestment } from './economy.js';
 
@@ -248,7 +249,7 @@ function deltaIdentity(delta) {
   return [delta.key, (delta.owners || []).join('|'), delta.ticker || '', delta.team ? 'team' : '', delta.investmentId || ''].join('/');
 }
 
-function mergeDeltas(deltas) {
+export function mergeDeltas(deltas) {
   const merged = [];
   deltas.forEach((delta) => {
     const identity = deltaIdentity(delta);
@@ -259,7 +260,7 @@ function mergeDeltas(deltas) {
   return merged.filter((delta) => delta.delta !== 0);
 }
 
-function scaleEffects(effects, keys, factor) {
+export function scaleEffects(effects, keys, factor) {
   if (!effects) return effects;
   const scaled = { ...effects };
   keys.forEach((key) => {
@@ -370,19 +371,50 @@ export function resolveChoice(state, choice) {
   // 이벤트 자체의 stockEffect 는 선택과 무관한 '소식'이라 아침 장 시작 때 이미 반영됐다.
   // (applyScheduledStockEffects — 이벤트를 미리 보고 주식을 사는 선행매매를 막는다)
 
-  const hostEntry = getScheduleEntry(host.id);
+  // 선택지 결과 이야기: 있을 때만 기록에 붙인다. (없으면 기존 기록과 완전히 같다)
+  const storyText = getChoiceStoryText(choice, check?.outcome);
   const log = {
-    day: state.currentDay,
-    kind: event.collab ? ENTRY_KIND.COLLAB : ENTRY_KIND.IMPORTANT,
-    memberIds: members.map((member) => member.id),
-    title: event.title,
+    ...eventLogBase(event, members),
     choiceText: choice.text,
-    categories: getActivityById(hostEntry?.activityId)?.categories || [],
+    ...(storyText ? { storyText } : {}),
     check,
     deltas: mergeDeltas(deltas),
   };
   addLog(log);
+  completeEvent(event, members);
 
+  return log;
+}
+
+// 선택 직후 이야기(story) + 판정 결과 이야기(outcomeStories[outcome]).
+// great 이 없으면 success 이야기를 쓰고, success / fail 은 대체하지 않는다. 형식이 잘못된 문장은 건너뛴다.
+// 치환어({member} / {partners})는 그대로 두고, 화면에 그릴 때 바꾼다. (스토리 이벤트 기록과 같은 방식)
+export function getChoiceStoryText(choice, outcome = null) {
+  const parts = [];
+  if (choice.story !== undefined && !checkChoiceStoryText(choice.story)) parts.push(choice.story);
+  const stories = choice.outcomeStories;
+  if (outcome && stories && typeof stories === 'object') {
+    const text = outcome === OUTCOME.GREAT ? stories.great ?? stories.success : stories[outcome];
+    if (text !== undefined && !checkChoiceStoryText(text)) parts.push(text);
+  }
+  return parts.join(' ');
+}
+
+// 중요 이벤트 / 콜라보 로그의 공통 부분 (스토리 이벤트도 같은 형식으로 남긴다)
+export function eventLogBase(event, members) {
+  const hostEntry = getScheduleEntry(members[0].id);
+  return {
+    day: getState().currentDay,
+    kind: event.collab ? ENTRY_KIND.COLLAB : ENTRY_KIND.IMPORTANT,
+    memberIds: members.map((member) => member.id),
+    title: event.title,
+    categories: getActivityById(hostEntry?.activityId)?.categories || [],
+  };
+}
+
+// 이벤트가 끝났을 때: 일정 완료 표시 + 콜라보 기록 + 발생 기록
+export function completeEvent(event, members) {
+  const [host, ...partners] = members;
   // 콜라보 주최 멤버는 누구와 함께했는지 기록한다. (일정표 표시 / 저장용)
   markMemberCompleted(host.id, event.collab ? { collabPartnerIds: partners.map((partner) => partner.id) } : {});
   // 콜라보 파트너는 원래 일정 대신 콜라보에 참여한 것으로 처리한다.
@@ -390,8 +422,6 @@ export function resolveChoice(state, choice) {
     markMemberCompleted(partner.id, { kind: ENTRY_KIND.COLLAB, collabHostId: host.id, eventId: event.id }),
   );
   recordEventHistory(event.id);
-
-  return log;
 }
 
 /* ===================== 시장 소식 (이벤트 stockEffect) ===================== */

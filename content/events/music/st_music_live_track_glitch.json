@@ -1,0 +1,233 @@
+{
+  "id": "st_music_live_track_glitch",
+  "title": "반주가 멈춘 라이브",
+  "category": "music",
+  "description": "노래 방송 도중 반주 파일이 깨졌다. 첫 대응 뒤 아카펠라 / 직접 연주 / 곡 교체 중 하나로 수습한다.",
+  "meta": {
+    "theme": "music_live",
+    "setting": "singing_stream",
+    "conflict": "technical_trouble",
+    "resolution": "compromise",
+    "activity": "sing",
+    "tone": "tense"
+  },
+  "conditions": {
+    "activity": [
+      "sing"
+    ],
+    "cooldown": 8
+  },
+  "traitWeights": {
+    "calm": 1.5,
+    "host": 1.3,
+    "unlucky": 1.3
+  },
+  "start": "intro",
+  "steps": {
+    "intro": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "anyTraits": [
+              "unlucky"
+            ]
+          },
+          "text": "{member}의 노래 방송 세 번째 곡. 후렴 직전, 반주가 '지지직' 소리를 내며 멈췄다. 채팅창에는 벌써 '역시 오늘도'라는 반응이 올라온다. 이런 일이 꼭 {member}에게만 생기는 것 같다."
+        },
+        {
+          "text": "{member}의 노래 방송 세 번째 곡. 후렴 직전, 반주가 '지지직' 소리를 내며 멈췄다. 화면에는 노래를 이어 가려던 {member}의 입 모양만 남았다."
+        }
+      ],
+      "next": "first_beat"
+    },
+    "first_beat": {
+      "type": "check",
+      "text": "정적이 3초를 넘기면 방송 사고가 된다. 우선 지금 이 순간부터 어떻게든 넘겨야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "calm": 10,
+          "host": 5,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "{member}가 웃으며 '방금 그거 연출이에요'라고 받아쳤다. 채팅창이 웃음으로 바뀌며 시간을 벌었다.",
+          "next": "decide"
+        },
+        "partial": {
+          "text": "말은 이어 갔지만 목소리가 살짝 떨렸다. 채팅창이 걱정 반 응원 반으로 술렁인다.",
+          "next": "decide"
+        },
+        "fail": {
+          "text": "당황한 침묵이 길어졌다. 시청자 몇 명이 '방송 터졌나?'라며 나가기 시작했다.",
+          "effects": {
+            "fans": -20
+          },
+          "next": "shaken"
+        }
+      }
+    },
+    "shaken": {
+      "type": "story",
+      "text": "{member}가 물을 한 모금 마시고 깊게 숨을 골랐다. 여기서 방송을 끝낼 수는 없다.",
+      "effects": {
+        "hp": -3
+      },
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "반주 파일은 다시 열리지 않는다. 남은 곡을 어떻게 이어 갈까?",
+      "choices": [
+        {
+          "text": "반주 없이 아카펠라로 끝까지 부른다",
+          "story": "기댈 것 없이 목소리 하나로 버텨야 한다. {member}가 마이크를 고쳐 잡았다.",
+          "effects": {
+            "hp": -4
+          },
+          "next": "acapella"
+        },
+        {
+          "text": "직접 악기를 꺼내 반주를 친다",
+          "conditions": {
+            "anyTraits": [
+              "instrument"
+            ]
+          },
+          "story": "{member}가 방 한쪽의 악기를 끌어왔다. 조율할 시간은 없다.",
+          "next": "self_play"
+        },
+        {
+          "text": "반주가 살아 있는 다른 곡으로 바꾼다",
+          "story": "원래 계획은 접고, 무난하게 부를 수 있는 곡으로 순서를 바꿨다. 아쉬워하는 채팅도 보인다.",
+          "next": "end_swap"
+        }
+      ]
+    },
+    "acapella": {
+      "type": "check",
+      "text": "첫 소절. 음을 잡아 줄 반주가 없다. 키가 조금만 흔들려도 그대로 드러난다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 82,
+        "traitBonus": {
+          "perfectionist": 5,
+          "cover": 5,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "흔들림 없는 음정이 끝까지 이어졌다. 채팅창이 한동안 아무 말 없이 듣기만 했다.",
+          "effects": {
+            "fans": 40
+          },
+          "next": "end_acapella"
+        },
+        "success": {
+          "text": "마지막 음까지 키를 지켜 냈다.",
+          "next": "end_acapella"
+        },
+        "partial": {
+          "text": "후렴에서 음이 반 키 내려갔지만 {member}는 끝까지 멈추지 않았다.",
+          "next": "end_patched"
+        },
+        "fail": {
+          "text": "중간에 음을 놓쳐 곡을 멈췄다. {member}가 멋쩍게 웃으며 사과했다.",
+          "next": "end_cut"
+        }
+      }
+    },
+    "self_play": {
+      "type": "check",
+      "text": "손가락은 반주를, 목은 멜로디를 맡는다. 한 번도 연습해 본 적 없는 조합이다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 74,
+        "traitBonus": {
+          "instrument": 15,
+          "spontaneous": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "삐걱대던 첫 마디가 지나자 연주와 노래가 한 호흡이 됐다.",
+          "next": "end_selfplay"
+        },
+        "partial": {
+          "text": "몇 번 코드를 놓쳤지만 오히려 라이브다운 맛이 났다.",
+          "next": "end_patched"
+        },
+        "fail": {
+          "text": "연주에 신경 쓰다가 가사를 통째로 잊었다.",
+          "next": "end_cut"
+        }
+      }
+    },
+    "end_acapella": {
+      "type": "end",
+      "result": "success",
+      "text": "방송이 끝난 뒤 '반주가 없어서 더 좋았다'는 클립이 돌기 시작했다. {member}는 다음 노래 방송부터 백업 반주를 꼭 챙기겠다고 했다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1,
+        "stats": {
+          "Vc": 1
+        },
+        "memberFlags": {
+          "backupTrackRoutine": true
+        }
+      }
+    },
+    "end_selfplay": {
+      "type": "end",
+      "result": "success",
+      "text": "즉석 연주 버전이 원곡보다 낫다는 반응까지 나왔다. 악기 방송을 따로 해 달라는 요청이 쏟아졌다.",
+      "effects": {
+        "fans": 160,
+        "fame": 1,
+        "stats": {
+          "Vc": 1
+        },
+        "memberFlags": {
+          "backupTrackRoutine": true
+        }
+      }
+    },
+    "end_patched": {
+      "type": "end",
+      "result": "partial",
+      "text": "완벽하진 않았지만 사고를 끝까지 수습했다. '오늘 방송 레전드'라는 칭찬과 '음정은 아쉬웠다'는 평이 반반이었다.",
+      "effects": {
+        "fans": 90,
+        "hp": -2
+      }
+    },
+    "end_swap": {
+      "type": "end",
+      "result": "partial",
+      "text": "방송은 무사히 끝났다. 다만 기다리던 곡을 못 들은 시청자들의 아쉬움이 남았고, {member}는 그 곡을 다음 방송 첫 곡으로 부르겠다고 약속했다.",
+      "effects": {
+        "fans": 60
+      }
+    },
+    "end_cut": {
+      "type": "end",
+      "result": "fail",
+      "text": "곡은 중간에 끝났다. 방송을 마친 {member}는 한참 동안 반주 백업 폴더를 정리했다. 다음엔 같은 일로 멈추지 않겠다며.",
+      "effects": {
+        "fans": 20,
+        "stats": {
+          "Bs": 1
+        },
+        "memberFlags": {
+          "backupTrackRoutine": true
+        }
+      }
+    }
+  }
+}

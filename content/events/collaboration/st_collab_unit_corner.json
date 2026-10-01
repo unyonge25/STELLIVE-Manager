@@ -1,0 +1,155 @@
+{
+  "id": "st_collab_unit_corner",
+  "title": "유닛 합방 코너 기획",
+  "category": "collaboration",
+  "description": "유닛 합방(collab_006) 변형 A. 오랜만의 유닛 합방에서 코너를 고르고, 판정 뒤 마무리 방식을 한 번 더 고른다.",
+  "meta": {
+    "theme": "collab_content",
+    "setting": "unit_corner_show",
+    "conflict": "high_expectations",
+    "resolution": "teamwork",
+    "activity": "joint_stream",
+    "tone": "warm"
+  },
+  "collab": {
+    "min": 2,
+    "max": 3
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "minRelationship": 35,
+    "cooldown": 4
+  },
+  "weight": 1,
+  "start": "corner",
+  "steps": {
+    "corner": {
+      "type": "choice",
+      "text": "오랜만에 {member}와 {partners}가 모였다. 예고만 올렸는데 대기실 시청자가 평소의 두 배다. 기대가 큰 만큼 코너를 잘 골라야 한다.",
+      "choices": [
+        {
+          "text": "서로의 매력을 소개하는 코너",
+          "story": "서로에 대해 시청자가 모를 법한 매력을 하나씩 소개하기로 했다.",
+          "next": "show"
+        },
+        {
+          "text": "옛날 방송 다시보기 코너",
+          "story": "처음 같이 했던 방송을 같이 보기로 했다. 시작 1분 만에 다들 얼굴이 빨개졌다.",
+          "next": "show"
+        },
+        {
+          "text": "유닛 퀴즈 대결",
+          "story": "'서로에 대해 얼마나 아는가' 퀴즈가 시작됐다. 오답 하나에 서운함이 쌓인다.",
+          "next": "show"
+        }
+      ]
+    },
+    "show": {
+      "type": "check",
+      "text": "코너가 한창이다. 오래 기다린 팬들이 만족할 만큼 합을 보여 줘야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 80,
+        "traitBonus": {
+          "host": 10,
+          "roleplay": 5,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "서로 말을 끝내기도 전에 받아치는 호흡이 이어졌다. 채팅창은 '역시 이 조합'이었다.",
+          "effects": {
+            "fans": 60
+          },
+          "next": "closing"
+        },
+        "success": {
+          "text": "오랜만인데도 호흡이 금방 돌아왔다.",
+          "next": "closing"
+        },
+        "partial": {
+          "text": "재밌었지만 예전만큼 매끄럽진 않았다. 다들 그걸 느꼈다.",
+          "next": "end_half"
+        },
+        "fail": {
+          "text": "오랜만이라 그런지 서로 말이 계속 겹쳤다.",
+          "next": "end_rusty"
+        }
+      }
+    },
+    "closing": {
+      "type": "choice",
+      "text": "방송 막바지. 어떻게 마무리할까?",
+      "choices": [
+        {
+          "text": "다 같이 유닛 곡 한 소절을 부른다",
+          "story": "반주가 흐르자 채팅창이 숨을 죽였다.",
+          "effects": {
+            "hp": -2
+          },
+          "next": "end_song"
+        },
+        {
+          "text": "다음 유닛 합방 날짜를 그 자리에서 정한다",
+          "story": "달력을 띄워 놓고 다음 날짜를 정했다. 채팅창에 '약속했다'가 쏟아졌다.",
+          "next": "end_promise"
+        }
+      ]
+    },
+    "end_song": {
+      "type": "end",
+      "result": "success",
+      "text": "마지막 한 소절이 오늘 방송의 전부를 말해 줬다. 오래 기다린 팬들의 '고맙다'는 채팅이 끝없이 올라왔다.",
+      "effects": {
+        "fans": 200,
+        "fame": 2,
+        "relationship": 5,
+        "hp": -6
+      }
+    },
+    "end_promise": {
+      "type": "end",
+      "result": "success",
+      "text": "다음 유닛 합방 날짜가 공개됐다. 오늘보다 다음이 더 기대된다는 댓글이 가장 많았다.",
+      "effects": {
+        "fans": 170,
+        "fame": 1,
+        "relationship": 5,
+        "hp": -4,
+        "memberFlags": {
+          "unitReunionPromise": true
+        }
+      }
+    },
+    "end_rusty": {
+      "type": "end",
+      "result": "fail",
+      "text": "오랜만의 유닛 합방은 조금 삐걱거렸다. 방송 후 다 같이 '다음엔 더 자주 모이자'고 약속했다.",
+      "effects": {
+        "fans": 70,
+        "relationship": 3,
+        "hp": -6,
+        "memberFlags": {
+          "unitReunionPromise": true
+        }
+      }
+    },
+    "end_half": {
+      "type": "end",
+      "result": "partial",
+      "text": "오랜만의 유닛 합방은 반가움이 컸지만 호흡은 예전 같지 않았다. 그래도 '이 조합이 다시 모인 것만으로 좋다'는 채팅이 많았다.",
+      "effects": {
+        "fans": 120,
+        "relationship": 4,
+        "hp": -6,
+        "memberFlags": {
+          "unitReunionPromise": true
+        }
+      }
+    }
+  },
+  "group": "collab_unit"
+}

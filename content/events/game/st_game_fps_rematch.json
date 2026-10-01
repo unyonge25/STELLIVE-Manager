@@ -1,0 +1,189 @@
+{
+  "id": "st_game_fps_rematch",
+  "title": "복수전 제안",
+  "category": "game",
+  "description": "FPS 대회에서 아쉽게 물러난 멤버에게 다시 기회가 왔다. (대회 후속 이벤트)",
+  "meta": {
+    "theme": "game_tournament",
+    "setting": "fps_showmatch",
+    "conflict": "rivalry",
+    "resolution": "clutch_moment",
+    "activity": "fps",
+    "tone": "tense"
+  },
+  "conditions": {
+    "memberFlags": [
+      "fpsCupRematch"
+    ],
+    "afterEventId": {
+      "id": "st_game_fps_cup",
+      "minDays": 3
+    },
+    "blockedActivityCategories": [
+      "rest",
+      "music"
+    ]
+  },
+  "weight": 2,
+  "urgent": true,
+  "once": true,
+  "start": "intro",
+  "steps": {
+    "intro": {
+      "type": "story",
+      "text": "지난 대회에서 {member}를 꺾었던 팀이 방송에서 쇼매치를 제안해 왔다. 채팅창은 벌써 '복수전'이라는 단어로 가득하다.",
+      "next": "prep"
+    },
+    "prep": {
+      "type": "choice",
+      "text": "이번엔 어떻게 준비할까?",
+      "choices": [
+        {
+          "text": "지난 경기 영상을 보며 상대 습관을 분석한다",
+          "story": "상대가 곤란할 때마다 같은 자리로 도망친다는 걸 알아냈다.",
+          "effects": {
+            "hp": -4
+          },
+          "next": "match_analyzed"
+        },
+        {
+          "text": "하루 동안 전문 코치에게 코칭을 받는다",
+          "story": "코치는 {member}의 에임보다 판단 속도를 먼저 고쳤다.",
+          "effects": {
+            "money": -50000,
+            "stats": {
+              "Ga": 1
+            }
+          },
+          "next": "match_coached"
+        },
+        {
+          "text": "준비 없이 그날의 감으로 붙는다",
+          "next": "match_raw"
+        }
+      ]
+    },
+    "match_analyzed": {
+      "type": "check",
+      "text": "쇼매치 당일. 스코어는 동률, 마지막 라운드가 시작됐다. 분석해 둔 그 자리로 상대가 움직이기 시작한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 76,
+        "traitBonus": {
+          "brain": 10,
+          "fps": 5,
+          "competitive": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "예상한 자리에서 정확히 상대를 잡아냈다. 복수 성공이다.",
+          "next": "end_revenge"
+        },
+        "partial": {
+          "text": "읽기는 맞았지만 한 발이 빗나갔다. 연장까지 간 끝에 비겼다.",
+          "next": "end_draw"
+        },
+        "fail": {
+          "text": "상대도 지난 경기를 분석해 왔다. 습관을 바꾼 상대에게 허를 찔렸다.",
+          "next": "end_lost"
+        }
+      }
+    },
+    "match_coached": {
+      "type": "check",
+      "text": "쇼매치 당일. 코칭받은 대로 한 박자 빠르게 판단하려 애쓴다. 마지막 라운드가 {member}의 손에 걸렸다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 72,
+        "traitBonus": {
+          "diligent": 10,
+          "fps": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "지난 대회와는 완전히 다른 움직임이었다. 상대 해설진마저 감탄했다.",
+          "effects": {
+            "fans": 40
+          },
+          "next": "end_revenge"
+        },
+        "success": {
+          "text": "배운 대로 움직였고, 결과가 따라왔다. 복수 성공이다.",
+          "next": "end_revenge"
+        },
+        "partial": {
+          "text": "아직 몸에 덜 익은 판단이 한 번 흔들렸다. 아슬아슬하게 비겼다.",
+          "next": "end_draw"
+        },
+        "fail": {
+          "text": "새로 배운 것과 원래 습관이 부딪혔다. 이번에도 상대가 한 수 위였다.",
+          "next": "end_lost"
+        }
+      }
+    },
+    "match_raw": {
+      "type": "check",
+      "text": "쇼매치 당일. 준비는 없지만 기세는 있다. {member}가 첫 라운드부터 몸을 던진다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 84,
+        "traitBonus": {
+          "spontaneous": 10,
+          "highTension": 5,
+          "competitive": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "기세가 계산을 이겼다. 상대가 당황하는 사이 경기가 끝났다.",
+          "next": "end_revenge"
+        },
+        "partial": {
+          "text": "기세로 절반은 가져왔지만 나머지 절반은 상대의 준비가 이겼다.",
+          "next": "end_draw"
+        },
+        "fail": {
+          "text": "준비한 팀과 준비하지 않은 팀의 차이는 분명했다.",
+          "next": "end_lost"
+        }
+      }
+    },
+    "end_revenge": {
+      "type": "end",
+      "result": "success",
+      "text": "복수전 승리. 경기 후 두 팀은 서로 다음 대회에서 다시 보자며 웃었다. 이 쇼매치는 이번 달 가장 많이 돌려 본 영상이 됐다.",
+      "effects": {
+        "fans": 160,
+        "fame": 1,
+        "memberFlags": {
+          "fpsCupRematch": false
+        }
+      }
+    },
+    "end_draw": {
+      "type": "end",
+      "result": "partial",
+      "text": "무승부. 결판을 내지 못한 게 오히려 다음 경기에 대한 기대를 키웠다.",
+      "effects": {
+        "fans": 80,
+        "fame": 1,
+        "memberFlags": {
+          "fpsCupRematch": false
+        }
+      }
+    },
+    "end_lost": {
+      "type": "end",
+      "result": "fail",
+      "text": "또 졌다. 그래도 {member}는 '세 번째는 무조건 이긴다'며 끝까지 웃었고, 시청자들은 그 모습에 박수를 보냈다.",
+      "effects": {
+        "fans": 40,
+        "memberFlags": {
+          "fpsCupRematch": false
+        }
+      }
+    }
+  }
+}

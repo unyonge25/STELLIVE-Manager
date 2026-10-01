@@ -1,0 +1,204 @@
+{
+  "id": "st_collab_host_cuesheet",
+  "title": "합방 진행자의 큐시트",
+  "category": "collaboration",
+  "description": "3기 합방 진행 맡기(pe_shibuki_2) 변형 A. 진행 방식을 고르고, 판정 결과에 따라 여유 있는 / 빠듯한 시간 초과 상황을 처리한다.",
+  "meta": {
+    "theme": "broadcast_live",
+    "setting": "host_cue_sheet",
+    "conflict": "time_pressure",
+    "resolution": "steady_success",
+    "activity": "joint_stream",
+    "tone": "calm"
+  },
+  "memberId": "shibuki",
+  "collab": {
+    "min": 2,
+    "max": 3
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "cooldown": 5
+  },
+  "weight": 2,
+  "start": "style",
+  "steps": {
+    "style": {
+      "type": "choice",
+      "text": "오늘 합방의 진행은 {member}의 몫이다. 큐시트를 들고 {partners}를 기다리는데, 방송 시간은 정해져 있고 하고 싶은 건 많다.",
+      "choices": [
+        {
+          "text": "코너를 짜서 체계적으로 진행한다",
+          "story": "{member}가 코너별 시간을 분 단위로 나눴다. 계획대로만 가면 완벽하다.",
+          "next": "structured"
+        },
+        {
+          "text": "자유롭게 수다를 떨게 두고 흐름만 잡는다",
+          "story": "큐시트는 접어 두고 대화가 흘러가는 대로 두기로 했다. 대신 시간 확인은 {member}가 맡는다.",
+          "next": "freeflow"
+        }
+      ]
+    },
+    "structured": {
+      "type": "check",
+      "text": "코너가 하나씩 넘어간다. 시청자 질문과 출연자의 반응을 동시에 챙겨야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 76,
+        "traitBonus": {
+          "host": 15,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "코너 전환이 물 흐르듯 이어졌다. '진행 장인'이라는 채팅이 줄줄이 올라왔다.",
+          "effects": {
+            "fans": 60
+          },
+          "next": "overtime"
+        },
+        "success": {
+          "text": "계획대로 흘러갔다. 다만 마지막 코너 시간이 빠듯하다.",
+          "next": "overtime"
+        },
+        "partial": {
+          "text": "한 코너가 예상보다 길어졌다. 남은 시간이 부족하다.",
+          "next": "overtime_tight"
+        },
+        "fail": {
+          "text": "첫 코너부터 시간이 밀리며 큐시트가 무너졌다.",
+          "next": "end_overrun"
+        }
+      }
+    },
+    "freeflow": {
+      "type": "check",
+      "text": "대화가 사방으로 튄다. 웃음은 많은데, 방송 시간도 빠르게 흘러간다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "chatter": 10,
+          "highTension": 5,
+          "host": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "흐름을 놓치지 않으면서도 모두가 편하게 떠들었다.",
+          "next": "overtime"
+        },
+        "partial": {
+          "text": "재밌었지만 준비한 이야기의 절반도 못 했다.",
+          "next": "overtime_tight"
+        },
+        "fail": {
+          "text": "수다가 끝없이 이어지며 진행이 사라졌다.",
+          "next": "end_overrun"
+        }
+      }
+    },
+    "overtime": {
+      "type": "choice",
+      "text": "방송 종료 5분 전. 남은 코너가 하나 있다.",
+      "choices": [
+        {
+          "text": "아쉽지만 정시에 깔끔하게 끝낸다",
+          "story": "{member}가 '이건 다음 합방 숙제로'라며 정리했다.",
+          "next": "end_clean"
+        },
+        {
+          "text": "시청자 투표로 연장 여부를 정한다",
+          "story": "투표 결과는 압도적인 '연장'. 20분이 더 이어졌다.",
+          "effects": {
+            "hp": -3
+          },
+          "next": "end_extended"
+        }
+      ]
+    },
+    "end_clean": {
+      "type": "end",
+      "result": "success",
+      "text": "정시에 깔끔하게 끝난 합방. '진행이 편안했다'는 후기가 가장 많았다. 출연자들도 다음 진행을 {member}에게 맡기겠다고 했다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1,
+        "relationship": 4,
+        "hp": -5,
+        "stats": {
+          "Bs": 1
+        }
+      }
+    },
+    "end_extended": {
+      "type": "end",
+      "result": "partial",
+      "text": "연장전까지 다 보여 줬다. 시청자들은 만족했지만 출연자들은 다음 날 목이 쉬었다.",
+      "effects": {
+        "fans": 130,
+        "relationship": 3,
+        "hp": -5
+      }
+    },
+    "end_overrun": {
+      "type": "end",
+      "result": "fail",
+      "text": "진행이 엉키며 준비한 코너 대부분을 못 했다. {member}는 다음 진행 때 큐시트를 반으로 줄이겠다고 다짐했다.",
+      "effects": {
+        "fans": 50,
+        "relationship": 2,
+        "hp": -5,
+        "memberFlags": {
+          "hostRetry": true
+        }
+      }
+    },
+    "overtime_tight": {
+      "type": "choice",
+      "text": "방송 종료 5분 전. 앞에서 시간이 밀려 남은 코너가 아직 두 개다.",
+      "choices": [
+        {
+          "text": "아쉽지만 정시에 깔끔하게 끝낸다",
+          "story": "{member}가 '남은 건 다음 합방 숙제로'라며 정리했다. 준비한 코너 절반이 그대로 남았다.",
+          "next": "end_cut_corners"
+        },
+        {
+          "text": "시청자 투표로 연장 여부를 정한다",
+          "story": "투표 결과는 '연장'. 밀린 코너 두 개를 다 하느라 40분이 더 이어졌다.",
+          "effects": {
+            "hp": -3
+          },
+          "next": "end_long_overtime"
+        }
+      ]
+    },
+    "end_cut_corners": {
+      "type": "end",
+      "result": "partial",
+      "text": "정시에 끝낸 덕에 마무리는 깔끔했고 '편하게 봤다'는 후기도 있었다. 다만 예고했던 코너가 빠져 '그 코너 기다렸는데'라는 아쉬움도 적지 않았다.",
+      "effects": {
+        "fans": 100,
+        "relationship": 3,
+        "hp": -5
+      }
+    },
+    "end_long_overtime": {
+      "type": "end",
+      "result": "partial",
+      "text": "밀린 코너까지 다 보여 주자 끝까지 남은 시청자들은 만족했다. 하지만 방송이 늘어지며 중간에 나간 사람도 많았고, 출연자들은 녹초가 됐다. {member}는 다음엔 큐시트를 조금 줄이겠다고 했다.",
+      "effects": {
+        "fans": 110,
+        "relationship": 2,
+        "hp": -5,
+        "memberFlags": {
+          "hostRetry": true
+        }
+      }
+    }
+  },
+  "group": "collab_host"
+}

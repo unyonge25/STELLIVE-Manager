@@ -1,0 +1,183 @@
+{
+  "id": "st_collab_rhythm_hardest",
+  "title": "최고 난이도 정면 승부",
+  "category": "collaboration",
+  "description": "리듬게임 대결(collab_005) 변형 A. 첫 곡 판정에서 밀리면 두 번째 곡 선택으로 만회해야 한다.",
+  "meta": {
+    "theme": "game_content",
+    "setting": "rhythm_versus_hardest",
+    "conflict": "early_disadvantage",
+    "resolution": "clutch_moment",
+    "activity": "rhythm",
+    "tone": "hype"
+  },
+  "collab": {
+    "min": 2,
+    "max": 3
+  },
+  "conditions": {
+    "activityCategories": [
+      "rhythm"
+    ],
+    "cooldown": 3
+  },
+  "weight": 2,
+  "start": "first_song",
+  "steps": {
+    "first_song": {
+      "type": "check",
+      "text": "{member}가 {partners}에게 리듬게임 정면 승부를 걸었다. 첫 곡부터 최고 난이도. 노트가 쏟아진다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 78,
+        "traitBonus": {
+          "rhythm": 15,
+          "competitive": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "풀콤보. 채팅창이 '사람 손 맞냐'로 도배됐다.",
+          "effects": {
+            "fans": 40
+          },
+          "next": "lead_pick"
+        },
+        "success": {
+          "text": "첫 곡은 {member}의 근소한 승리.",
+          "next": "lead_pick"
+        },
+        "partial": {
+          "text": "점수 차이는 아주 작다. 상대가 살짝 앞섰다.",
+          "next": "behind_pick"
+        },
+        "fail": {
+          "text": "첫 곡에서 크게 졌다. 상대가 여유롭게 손을 흔든다.",
+          "next": "behind_pick"
+        }
+      }
+    },
+    "lead_pick": {
+      "type": "choice",
+      "text": "앞서고 있다. 두 번째 곡 선택권은 {member}에게 있다.",
+      "choices": [
+        {
+          "text": "자신 있는 곡으로 굳히기에 들어간다",
+          "next": "second_safe"
+        },
+        {
+          "text": "상대의 주종목 곡으로 정정당당하게 붙는다",
+          "story": "채팅창에 '멋있다'가 쏟아졌다. 동시에 '자만이다'도.",
+          "next": "second_bold"
+        }
+      ]
+    },
+    "behind_pick": {
+      "type": "choice",
+      "text": "밀리고 있다. 두 번째 곡에서 역전하지 못하면 끝이다.",
+      "choices": [
+        {
+          "text": "아무도 안 해 본 신곡으로 운에 맡긴다",
+          "story": "둘 다 처음 보는 채보다. 실력보다 순발력 싸움이 된다.",
+          "next": "second_bold"
+        },
+        {
+          "text": "가장 많이 연습한 곡으로 만회를 노린다",
+          "next": "second_safe"
+        }
+      ]
+    },
+    "second_safe": {
+      "type": "check",
+      "text": "익숙한 곡이다. 실수만 안 하면 된다. 하지만 긴장하면 익숙한 곡이 제일 무섭다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 74,
+        "traitBonus": {
+          "rhythm": 10,
+          "diligent": 5,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "흔들림 없이 끝까지 쳤다. 최종 점수가 뒤집혔다.",
+          "next": "end_victory"
+        },
+        "partial": {
+          "text": "마지막 구간에서 한 번 미스. 최종 결과는 동점이다.",
+          "next": "end_tie"
+        },
+        "fail": {
+          "text": "익숙한 곡에서 손이 꼬였다.",
+          "next": "end_defeat"
+        }
+      }
+    },
+    "second_bold": {
+      "type": "check",
+      "text": "처음 보는 노트 배치가 쏟아진다. 마지막 10초가 승부처다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 82,
+        "traitBonus": {
+          "rhythm": 15,
+          "spontaneous": 5,
+          "competitive": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "마지막 10초, 연타를 전부 받아냈다. 채팅창이 폭발했다.",
+          "next": "end_victory"
+        },
+        "partial": {
+          "text": "막판에 따라붙었지만 아주 조금 모자랐다. 결과는 동점.",
+          "next": "end_tie"
+        },
+        "fail": {
+          "text": "처음 보는 채보에 손이 따라가지 못했다.",
+          "next": "end_defeat"
+        }
+      }
+    },
+    "end_victory": {
+      "type": "end",
+      "result": "success",
+      "text": "리듬게임 대결 승리. 진 쪽은 '다음엔 내 곡으로 붙자'며 재대결을 신청했다.",
+      "effects": {
+        "fans": 170,
+        "fame": 1,
+        "relationship": 3,
+        "hp": -6
+      }
+    },
+    "end_tie": {
+      "type": "end",
+      "result": "partial",
+      "text": "동점이다. 승부를 가리지 못한 채 방송이 끝났고, 채팅창은 연장전을 외쳤다.",
+      "effects": {
+        "fans": 110,
+        "relationship": 3,
+        "hp": -6,
+        "memberFlags": {
+          "rhythmRematch": true
+        }
+      }
+    },
+    "end_defeat": {
+      "type": "end",
+      "result": "fail",
+      "text": "패배. {member}는 방송을 끄기 직전까지 같은 곡을 연습했다. 그 장면이 오히려 응원을 받았다.",
+      "effects": {
+        "fans": 60,
+        "relationship": -1,
+        "hp": -6,
+        "memberFlags": {
+          "rhythmRematch": true
+        }
+      }
+    }
+  },
+  "group": "collab_rhythm"
+}

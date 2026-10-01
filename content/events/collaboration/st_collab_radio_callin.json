@@ -1,0 +1,179 @@
+{
+  "id": "st_collab_radio_callin",
+  "title": "라디오 합방, 예고 없는 전화 연결",
+  "category": "collaboration",
+  "description": "듀오 라디오 방송(collab_004) 변형 B. 시청자 전화 연결 돌발 상황 판정으로 시작해, 결과에 따라 다른 선택과 두 번째 판정이 이어진다.",
+  "meta": {
+    "theme": "broadcast_live",
+    "setting": "radio_call_in",
+    "conflict": "unexpected_guest",
+    "resolution": "clutch_moment",
+    "activity": "talk",
+    "tone": "tense"
+  },
+  "collab": {
+    "min": 2,
+    "max": 2
+  },
+  "conditions": {
+    "activityCategories": [
+      "talk"
+    ],
+    "cooldown": 3
+  },
+  "weight": 1,
+  "start": "call",
+  "steps": {
+    "call": {
+      "type": "check",
+      "text": "{member}와 {partners}의 라디오 합방 중, 시청자 음성 연결 코너에 예정에 없던 청취자가 먼저 연결됐다. 긴장한 목소리로 말을 시작했다가 갑자기 말이 막혔다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "host": 10,
+          "calm": 5,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "{member}가 천천히 질문을 던지며 청취자의 긴장을 풀었다.",
+          "next": "after_good"
+        },
+        "partial": {
+          "text": "대화는 이어졌지만 서로 말이 계속 겹친다.",
+          "next": "after_rough"
+        },
+        "fail": {
+          "text": "정적이 길어지며 연결이 끊겼다. 채팅창이 술렁인다.",
+          "effects": {
+            "fans": -20
+          },
+          "next": "after_rough"
+        }
+      }
+    },
+    "after_good": {
+      "type": "choice",
+      "text": "청취자가 사실 오늘 생일이라고 수줍게 말했다.",
+      "choices": [
+        {
+          "text": "즉석에서 둘이 생일 축하 노래를 부른다",
+          "story": "{member}가 박자를 세자 {partners}가 화음을 얹었다.",
+          "next": "finale_song"
+        },
+        {
+          "text": "생일 기념 사연을 즉석 라디오극으로 만든다",
+          "story": "청취자의 하루를 주인공으로 한 짧은 라디오극이 시작됐다.",
+          "next": "finale_drama"
+        }
+      ]
+    },
+    "after_rough": {
+      "type": "choice",
+      "text": "분위기가 가라앉았다. 남은 방송 시간은 20분.",
+      "choices": [
+        {
+          "text": "다시 연결을 시도해 끝까지 들어 준다",
+          "story": "다시 연결된 청취자가 아까 못한 말을 천천히 꺼냈다.",
+          "next": "finale_drama"
+        },
+        {
+          "text": "다음 코너로 넘어가 분위기를 바꾼다",
+          "story": "준비한 퀴즈 코너로 넘어갔다. 아까 일이 마음에 걸리긴 한다.",
+          "next": "end_moved_on"
+        }
+      ]
+    },
+    "finale_song": {
+      "type": "check",
+      "text": "준비 없이 부르는 생일 축하 노래. 둘의 호흡이 맞아야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 70,
+        "traitBonus": {
+          "cover": 5,
+          "instrument": 5,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "마지막 '생일 축하합니다'에서 청취자가 울먹였다.",
+          "next": "end_birthday"
+        },
+        "partial": {
+          "text": "박자는 엉망이었지만 그래서 더 따뜻했다.",
+          "next": "end_birthday_messy"
+        },
+        "fail": {
+          "text": "가사를 서로 다르게 불러 웃음만 남았다.",
+          "next": "end_birthday_messy"
+        }
+      }
+    },
+    "finale_drama": {
+      "type": "check",
+      "text": "즉석 라디오극. 대본 없이 둘이 번갈아 장면을 이어 가야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 76,
+        "traitBonus": {
+          "roleplay": 10,
+          "spontaneous": 5,
+          "host": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "마지막 장면에서 청취자가 '오늘 최고의 하루'라고 말했다.",
+          "next": "end_birthday"
+        },
+        "partial": {
+          "text": "줄거리는 엉뚱하게 흘렀지만 청취자는 즐거워했다.",
+          "next": "end_birthday_messy"
+        },
+        "fail": {
+          "text": "이야기가 산으로 가며 수습하지 못했다.",
+          "next": "end_moved_on"
+        }
+      }
+    },
+    "end_birthday": {
+      "type": "end",
+      "result": "success",
+      "text": "예고 없는 전화 한 통이 오늘 방송의 주인공이 됐다. 클립 제목은 '라디오가 선물한 생일'.",
+      "effects": {
+        "fans": 160,
+        "fame": 1,
+        "relationship": 5,
+        "hp": -4
+      }
+    },
+    "end_birthday_messy": {
+      "type": "end",
+      "result": "partial",
+      "text": "어설펐지만 진심은 전해졌다. 청취자는 나중에 '평생 기억할 것 같다'는 메시지를 보냈다.",
+      "effects": {
+        "fans": 100,
+        "relationship": 4,
+        "hp": -4
+      }
+    },
+    "end_moved_on": {
+      "type": "end",
+      "result": "fail",
+      "text": "방송은 무사히 끝났지만 아까 끊긴 연결이 계속 마음에 걸린다. {member}는 다음 회차에 그 청취자를 다시 초대하기로 했다.",
+      "effects": {
+        "fans": 40,
+        "relationship": 2,
+        "hp": -3,
+        "memberFlags": {
+          "radioRegular": true
+        }
+      }
+    }
+  },
+  "group": "collab_radio"
+}
