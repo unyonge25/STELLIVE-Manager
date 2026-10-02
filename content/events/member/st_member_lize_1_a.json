@@ -1,0 +1,118 @@
+{
+  "id": "st_member_lize_1_a",
+  "title": "한 채팅창에 섞인 레이드",
+  "category": "member",
+  "group": "personal_lize_1",
+  "description": "심야 잡담의 종착역(pe_lize_1) 변형 A. 여러 방송에서 넘어온 시청자들이 한 채팅창에 섞인 새벽, 길게 이야기할지 정리할지 고른다.",
+  "meta": {
+    "theme": "broadcast_live",
+    "setting": "late_night_raid_terminal",
+    "conflict": "unexpected_guest",
+    "resolution": "audience_help",
+    "activity": "late_talk",
+    "tone": "calm"
+  },
+  "memberId": "lize",
+  "conditions": {
+    "activityCategories": [
+      "talk",
+      "broadcast"
+    ],
+    "cooldown": 4
+  },
+  "weight": 2,
+  "start": "raids",
+  "steps": {
+    "raids": {
+      "type": "story",
+      "text": "다른 멤버들의 방송이 끝난 새벽, 레이드가 하나둘 {member}의 방송으로 모여든다. 여러 방송에서 넘어온 시청자들이 한 채팅창에 섞였다.",
+      "next": "host"
+    },
+    "host": {
+      "type": "choice",
+      "text": "모여든 시청자들과 어떻게 새벽을 보낼까?",
+      "choices": [
+        {
+          "text": "모인 시청자들과 길게 이야기를 나눈다",
+          "effects": {
+            "hp": -6
+          },
+          "story": "{member}가 넘어온 시청자들에게 원래 보던 방송 이야기를 하나씩 묻기 시작했다.",
+          "next": "night_check"
+        },
+        {
+          "text": "적당한 시간에 인사하고 마무리한다",
+          "story": "{member}가 넘어온 시청자들에게 인사를 건네고 마무리 시간을 정했다.",
+          "next": "wrap_end"
+        }
+      ]
+    },
+    "night_check": {
+      "type": "check",
+      "text": "서로 다른 방송에서 온 시청자들의 이야기를 한데 엮어야 한다. 새벽 감성이 오히려 도움이 될 수도 있다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "chatter": 10,
+          "nightOwl": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 각 방송의 이야기를 이어 붙이자 채팅창이 \"오늘 방송 총정리\"처럼 흘러갔다.",
+          "effects": {
+            "fans": 120,
+            "fame": 1
+          },
+          "next": "night_full"
+        },
+        "success": {
+          "text": "넘어온 시청자들이 자기가 본 방송 이야기를 꺼내며 대화가 끝없이 이어졌다.",
+          "next": "night_full"
+        },
+        "partial": {
+          "text": "대화는 이어졌지만 채팅이 너무 빨라 몇몇 이야기는 놓쳤다.",
+          "next": "night_busy"
+        },
+        "fail": {
+          "text": "서로 다른 분위기의 시청자들이 섞이며 대화의 방향을 잡지 못했다.",
+          "next": "night_scattered"
+        }
+      }
+    },
+    "night_full": {
+      "type": "end",
+      "text": "새벽 잡담이 \"하루의 종착역\"이라는 이름으로 불리기 시작했다. 넘어온 시청자 중 상당수가 그대로 팔로우를 눌렀다.",
+      "effects": {
+        "fans": 180,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "night_busy": {
+      "type": "end",
+      "text": "즐거운 새벽이었지만 놓친 이야기가 아쉬웠다. 다시보기에서 그 부분을 찾아보는 팬들이 있었다.",
+      "effects": {
+        "fans": 120
+      },
+      "result": "partial"
+    },
+    "night_scattered": {
+      "type": "end",
+      "text": "대화가 흩어진 채 방송을 마쳤다. {member}는 다음엔 주제를 하나 정해 두겠다고 했고, 남은 팬들은 주제 후보를 보내왔다.",
+      "effects": {
+        "fans": 70
+      },
+      "result": "fail"
+    },
+    "wrap_end": {
+      "type": "end",
+      "text": "적당한 시간에 깔끔하게 마무리했다. 넘어온 시청자들도 기분 좋게 인사를 남기고 떠났다.",
+      "effects": {
+        "fans": 90
+      },
+      "result": "success"
+    }
+  }
+}

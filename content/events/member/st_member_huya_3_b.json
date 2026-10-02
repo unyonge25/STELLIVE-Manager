@@ -1,0 +1,139 @@
+{
+  "id": "st_member_huya_3_b",
+  "title": "두 배로 늘어난 인사 채팅",
+  "category": "member",
+  "group": "personal_huya_3",
+  "description": "처음 보는 시청자들(pe_huya_3) 변형 B. 방송 시작부터 바로 방식을 정하고, 낯선 시청자들과의 첫 대화를 이끌어 간다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "first_timer_greeting",
+    "conflict": "audience_reaction",
+    "resolution": "lesson_learned",
+    "activity": "talk_stream",
+    "tone": "calm"
+  },
+  "memberId": "huya",
+  "conditions": {
+    "activityCategories": [
+      "talk",
+      "broadcast"
+    ],
+    "minFans": 3000,
+    "cooldown": 6
+  },
+  "start": "opening",
+  "steps": {
+    "opening": {
+      "type": "choice",
+      "text": "방송 시작 10분 만에 처음 온 시청자가 평소의 두 배를 넘었다. 인사 채팅이 쏟아지자 {member}가 잠깐 말을 고른다.",
+      "choices": [
+        {
+          "text": "긴장을 솔직하게 말하고 천천히 대화한다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "{member}가 크게 숨을 한 번 쉬고, 인사 채팅을 천천히 읽기 시작했다.",
+          "next": "greet_story"
+        },
+        {
+          "text": "게임 화면 위주로 진행한다",
+          "conditions": {
+            "activityCategories": [
+              "game"
+            ]
+          },
+          "story": "{member}가 인사를 짧게 하고 게임 화면으로 넘어갔다.",
+          "next": "screen_story"
+        },
+        {
+          "text": "말수를 줄이고 준비한 코너 위주로 진행한다",
+          "conditions": {
+            "blockedActivityCategories": [
+              "game"
+            ]
+          },
+          "story": "{member}가 인사를 짧게 하고 준비한 코너로 넘어갔다.",
+          "next": "screen_story"
+        }
+      ]
+    },
+    "greet_story": {
+      "type": "story",
+      "text": "인사를 읽던 중, 처음 온 시청자 한 명이 \"어디서부터 보면 돼요?\"라고 물었다. 다른 처음 온 시청자들도 같은 질문을 이어 올렸다.",
+      "next": "greet_check"
+    },
+    "greet_check": {
+      "type": "check",
+      "text": "이 질문에 어떻게 답하느냐가 오늘 처음 온 사람들의 첫인상이 된다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "calm": 10
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 자기 방송을 처음 보는 사람을 위한 짧은 소개를 즉석에서 해 냈다. 기존 팬들이 추천 클립을 줄줄이 달았다.",
+          "effects": {
+            "fans": 100,
+            "fame": 2
+          },
+          "next": "greet_regulars"
+        },
+        "success": {
+          "text": "천천히, 하지만 또박또박 방송을 소개했다. 처음 온 시청자들이 고개를 끄덕이는 이모티콘을 남겼다.",
+          "next": "greet_regulars"
+        },
+        "partial": {
+          "text": "소개는 했지만 말이 자꾸 엉켰다. 기존 팬들이 대신 설명을 보태 줬다.",
+          "next": "greet_some"
+        },
+        "fail": {
+          "text": "질문이 몰리자 무엇부터 답할지 몰라 한참 머뭇거렸다.",
+          "next": "greet_awkward"
+        }
+      }
+    },
+    "greet_regulars": {
+      "type": "end",
+      "text": "처음 온 시청자를 위한 소개 장면이 고정 클립이 됐다. 낯선 사람 앞에서도 차분히 해낸 하루였다.",
+      "effects": {
+        "fans": 160,
+        "stats": {
+          "Bs": 1
+        }
+      },
+      "result": "success"
+    },
+    "greet_some": {
+      "type": "end",
+      "text": "팬들의 도움으로 첫인상은 지켰다. {member}는 다음엔 직접 소개 자료를 만들어 두겠다고 했다.",
+      "effects": {
+        "fans": 100
+      },
+      "result": "partial"
+    },
+    "greet_awkward": {
+      "type": "end",
+      "text": "어색한 순간이 길었지만, 방송이 끝난 뒤 {member}가 짧은 소개 글을 따로 올렸다. 처음 온 시청자 몇몇이 그 글에 인사를 남겼다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "screen_story": {
+      "type": "story",
+      "text": "화면에 집중하자 목소리가 다시 안정됐다. 다만 처음 온 시청자들과 이야기할 틈은 많지 않았다.",
+      "next": "screen_end"
+    },
+    "screen_end": {
+      "type": "end",
+      "text": "무난하게 끝난 방송이었다. 처음 온 시청자 중 일부는 다음 방송 알림을 켜 두었다.",
+      "effects": {
+        "fans": 80
+      },
+      "result": "success"
+    }
+  }
+}

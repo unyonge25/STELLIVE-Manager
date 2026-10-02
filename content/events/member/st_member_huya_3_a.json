@@ -1,0 +1,146 @@
+{
+  "id": "st_member_huya_3_a",
+  "title": "클립을 보고 온 사람들",
+  "category": "member",
+  "group": "personal_huya_3",
+  "description": "처음 보는 시청자들(pe_huya_3) 변형 A. 클립을 보고 처음 온 사람이 몰린 날, 긴장을 털어놓을지 화면 위주로 갈지 고른다.",
+  "meta": {
+    "theme": "fan_event",
+    "setting": "newcomer_flood_stream",
+    "conflict": "nervousness",
+    "resolution": "audience_help",
+    "activity": "talk_stream",
+    "tone": "warm"
+  },
+  "memberId": "huya",
+  "conditions": {
+    "activityCategories": [
+      "talk",
+      "broadcast"
+    ],
+    "minFans": 3000,
+    "cooldown": 6
+  },
+  "start": "crowd",
+  "steps": {
+    "crowd": {
+      "type": "story",
+      "text": "처음 보는 닉네임이 채팅창을 빠르게 채운다. 클립을 보고 왔다는 시청자가 유난히 많은 날이다. 사람이 많아지자 낯가림이 있는 {member}의 목소리가 조금씩 작아졌다.",
+      "next": "respond"
+    },
+    "respond": {
+      "type": "choice",
+      "text": "어떻게 이어 갈까?",
+      "choices": [
+        {
+          "text": "긴장을 솔직하게 말하고 천천히 대화한다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "{member}가 \"사실 지금 조금 긴장돼요\"라고 털어놓았다.",
+          "next": "talk_check"
+        },
+        {
+          "text": "게임 화면 위주로 진행한다",
+          "conditions": {
+            "activityCategories": [
+              "game"
+            ]
+          },
+          "story": "{member}가 게임 화면을 크게 띄우고 플레이에 집중했다.",
+          "next": "screen_end"
+        },
+        {
+          "text": "말수를 줄이고 준비한 코너 위주로 진행한다",
+          "conditions": {
+            "blockedActivityCategories": [
+              "game"
+            ]
+          },
+          "story": "{member}가 미리 준비해 둔 코너 화면을 띄우고 차분히 진행했다.",
+          "next": "screen_end"
+        }
+      ]
+    },
+    "talk_check": {
+      "type": "check",
+      "text": "긴장했다는 말에 채팅 속도가 잠깐 느려졌다. 이제 천천히 대화를 이어 갈 차례다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "calm": 10
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "처음 온 시청자들이 하나둘 자기소개를 하기 시작했다. {member}가 이름을 하나하나 읽으며 편안하게 웃었다.",
+          "effects": {
+            "fans": 100,
+            "fame": 2
+          },
+          "next": "talk_open"
+        },
+        "success": {
+          "text": "천천히 주고받는 대화에 {member}의 목소리가 점점 안정됐다.",
+          "next": "talk_open"
+        },
+        "partial": {
+          "text": "대화는 이어졌지만 중간중간 말이 끊겼다. 기존 팬들이 대신 분위기를 띄워 줬다.",
+          "next": "talk_slow"
+        },
+        "fail": {
+          "text": "긴장이 쉽게 풀리지 않아 대화가 자꾸 끊겼다.",
+          "next": "talk_freeze"
+        }
+      }
+    },
+    "talk_open": {
+      "type": "end",
+      "text": "\"긴장한다고 말해 줘서 오히려 편했다\"는 처음 온 시청자의 채팅이 마지막을 장식했다. 단골이 될 사람이 많아 보였다.",
+      "effects": {
+        "fans": 160,
+        "stats": {
+          "Bs": 1
+        }
+      },
+      "result": "success"
+    },
+    "talk_slow": {
+      "type": "end",
+      "text": "분위기는 따뜻했지만 처음 온 시청자 일부는 금방 떠났다. 그래도 남은 사람들과의 대화는 오래 기억될 것 같다.",
+      "effects": {
+        "fans": 100
+      },
+      "result": "partial"
+    },
+    "talk_freeze": {
+      "type": "end",
+      "text": "방송은 조용히 끝났다. 다음 날 {member}가 짧은 감사 글을 올리자, 처음 온 시청자 몇몇이 \"다음에도 올게요\"라고 답했다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "screen_end": {
+      "type": "end",
+      "text": [
+        {
+          "when": {
+            "activityCategories": [
+              "game"
+            ]
+          },
+          "text": "게임에 집중하자 목소리도 안정됐다. 처음 온 시청자들은 플레이를 구경하며 조용히 머물렀다."
+        },
+        {
+          "text": "준비한 코너 덕분에 흐름이 끊기지 않았다. 처음 온 시청자들도 코너를 따라 조용히 머물렀다."
+        }
+      ],
+      "effects": {
+        "fans": 80
+      },
+      "result": "success"
+    }
+  }
+}

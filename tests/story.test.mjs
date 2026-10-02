@@ -82,12 +82,29 @@ test('샘플은 서로 다른 유형(게임 대회 / 음악 / 방송 돌발 / �
   assert(themes.size >= 6, `theme ${themes.size}종`);
 });
 
-test('모든 샘플이 부분성공 결과를 가진 판정을 포함하고, 결말이 2종류 이상이다', () => {
+// 판정(check) 노드 없이 만든 스토리 이벤트 허용 목록.
+// 원본 1-step 이벤트에 판정이 없어(pe_hina_1) 그 성격을 유지한 변형만 넣는다. 결말 2종류 이상 규칙은 그대로 적용된다.
+const NO_CHECK_ALLOWED = ['st_member_hina_1_a', 'st_member_hina_1_b'];
+
+test('판정이 있는 샘플은 부분성공 결과를 가진 판정을 포함하고, 판정 없는 샘플은 허용 목록에만 있으며, 모두 결말이 2종류 이상이다', () => {
+  const problems = [];
   storyEvents.forEach((event) => {
     const nodes = Object.values(event.steps);
-    assert(nodes.some((node) => node.type === 'check' && node.outcomes.partial), `${event.id}: partial 없음`);
-    assert(new Set(nodes.filter((node) => node.type === 'end').map((node) => node.result)).size >= 2, `${event.id}: 결말 1종`);
+    const checks = nodes.filter((node) => node.type === 'check');
+    if (checks.length === 0) {
+      if (!NO_CHECK_ALLOWED.includes(event.id)) problems.push(`${event.id}: 판정 없음 (허용 목록에 없다)`);
+    } else if (!checks.some((node) => node.outcomes.partial)) {
+      problems.push(`${event.id}: partial 없음`);
+    }
+    if (new Set(nodes.filter((node) => node.type === 'end').map((node) => node.result)).size < 2) problems.push(`${event.id}: 결말 1종`);
   });
+  // 허용 목록이 낡거나 의미가 없어지지 않게: 실제로 있는 이벤트여야 하고, 판정 노드가 없어야 한다.
+  NO_CHECK_ALLOWED.forEach((id) => {
+    const event = storyEvents.find((item) => item.id === id);
+    if (!event) problems.push(`허용 목록의 ${id}: 존재하지 않는 스토리 이벤트`);
+    else if (Object.values(event.steps).some((node) => node.type === 'check')) problems.push(`허용 목록의 ${id}: 판정 노드가 있다 (목록에서 빼야 한다)`);
+  });
+  assert(problems.length === 0, problems.join(' | '));
 });
 
 test('개발 도구 validate 가 콘텐츠 폴더 전체를 통과시킨다 (종료 코드 0)', () => {

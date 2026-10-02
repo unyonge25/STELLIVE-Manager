@@ -1,0 +1,122 @@
+{
+  "id": "st_member_yuni_1_b",
+  "title": "시청자 제보가 몰린 일요일",
+  "category": "member",
+  "group": "personal_yuni_1",
+  "description": "일요일 아침 뉴스 방송(pe_yuni_1) 변형 B. 제보가 평소의 세 배로 몰린 날, 원고 방향을 먼저 정하고 방송 중 정정 소동을 넘긴다.",
+  "meta": {
+    "theme": "fan_event",
+    "setting": "sunday_viewer_tip_corner",
+    "conflict": "audience_reaction",
+    "resolution": "audience_help",
+    "activity": "news_corner",
+    "tone": "comedic"
+  },
+  "memberId": "yuni",
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "dayOfWeek": 7,
+    "cooldown": 6
+  },
+  "weight": 1.5,
+  "start": "plan",
+  "steps": {
+    "plan": {
+      "type": "choice",
+      "text": "일요일 뉴스 코너를 앞두고, 이번 주에는 시청자 제보가 평소의 세 배나 들어왔다. {member}가 원고 방향을 정해야 한다.",
+      "choices": [
+        {
+          "text": "멤버들 소식까지 꼼꼼히 준비한다",
+          "effects": {
+            "hp": -4
+          },
+          "story": "제보를 하나하나 확인해 멤버별 코너를 만들었다. 원고가 평소보다 두 배는 두꺼워졌다.",
+          "next": "tip_story"
+        },
+        {
+          "text": "가볍게 근황 위주로 진행한다",
+          "story": "제보는 다음 주로 넘기고, 이번 주는 근황 위주로 가볍게 가기로 했다.",
+          "next": "light_story"
+        }
+      ]
+    },
+    "tip_story": {
+      "type": "story",
+      "text": "방송 중반, 제보 하나가 사실과 조금 다르다는 채팅이 올라왔다. 채팅창이 \"속보 정정\"을 외치며 술렁인다.",
+      "next": "tip_check"
+    },
+    "tip_check": {
+      "type": "check",
+      "text": "잘못 들어온 제보를 어떻게 다루느냐에 따라 오늘 뉴스의 인상이 갈린다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 75,
+        "traitBonus": {
+          "chatter": 10
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 즉석에서 \"정정 보도\" 코너를 만들어 제보자와 함께 사실을 바로잡자 채팅창이 박수로 가득 찼다.",
+          "effects": {
+            "fans": 110,
+            "fame": 1
+          },
+          "next": "tip_fixed"
+        },
+        "success": {
+          "text": "{member}가 침착하게 정정하고 다음 소식으로 넘어갔다. 오히려 꼼꼼하다는 반응이 많았다.",
+          "next": "tip_fixed"
+        },
+        "partial": {
+          "text": "정정은 했지만 설명이 길어져 뒤쪽 소식 몇 개를 다음 주로 미뤘다.",
+          "next": "tip_half"
+        },
+        "fail": {
+          "text": "정정하는 사이 다른 제보까지 섞이며 순서가 꼬였다.",
+          "next": "tip_confused"
+        }
+      }
+    },
+    "tip_fixed": {
+      "type": "end",
+      "text": "제보 코너는 \"시청자와 같이 만드는 뉴스\"라는 별명을 얻었다. 다음 주 제보가 벌써 들어오기 시작했다.",
+      "effects": {
+        "fans": 170,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "tip_half": {
+      "type": "end",
+      "text": "다 전하지 못한 소식은 다음 주 예고가 됐다. 다만 오늘 소식을 기다린 제보자 몇몇은 아쉬워했다.",
+      "effects": {
+        "fans": 100
+      },
+      "result": "partial"
+    },
+    "tip_confused": {
+      "type": "end",
+      "text": "꼬인 순서는 방송 끝까지 웃음거리가 됐다. {member}는 다음 주부터 제보 확인 시간을 따로 잡겠다고 했고, 팬들은 \"그래도 재밌었다\"며 응원했다.",
+      "effects": {
+        "fans": 50
+      },
+      "result": "fail"
+    },
+    "light_story": {
+      "type": "story",
+      "text": "근황 위주로 진행하자 채팅창이 \"이번 주 근황\"이라는 즉석 코너 제목을 붙여 줬다.",
+      "next": "light_end"
+    },
+    "light_end": {
+      "type": "end",
+      "text": "가볍게 끝낸 뉴스 코너에 \"일요일 아침엔 이 정도가 딱 좋다\"는 반응이 이어졌다.",
+      "effects": {
+        "fans": 90
+      },
+      "result": "success"
+    }
+  }
+}

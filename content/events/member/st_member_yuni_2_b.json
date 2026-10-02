@@ -1,0 +1,148 @@
+{
+  "id": "st_member_yuni_2_b",
+  "title": "리플레이 속 세 번의 실수",
+  "category": "member",
+  "group": "personal_yuni_2",
+  "description": "승부욕 발동(pe_yuni_2) 변형 B. 연습 방식을 먼저 정한 뒤, 리플레이에서 찾은 같은 실수를 고치는 특훈과 집중 연습이 따로 이어진다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "replay_review_session",
+    "conflict": "high_expectations",
+    "resolution": "lesson_learned",
+    "activity": "game_practice",
+    "tone": "tense"
+  },
+  "memberId": "yuni",
+  "conditions": {
+    "activityCategories": [
+      "game"
+    ],
+    "cooldown": 5
+  },
+  "weight": 1.5,
+  "start": "decide",
+  "steps": {
+    "decide": {
+      "type": "choice",
+      "text": "패배가 분했던 {member}가 리플레이를 켠 채 선언했다. 오늘은 이길 때까지 연습한다. 남은 건 연습 방식이다.",
+      "choices": [
+        {
+          "text": "밤새 특훈 방송을 한다",
+          "effects": {
+            "hp": -10
+          },
+          "story": "\"밤새 간다.\" 연습 방송 제목이 바뀌자 채팅창이 응원 이모티콘으로 가득 찼다.",
+          "next": "review_story"
+        },
+        {
+          "text": "정해진 시간만 집중해서 연습한다",
+          "effects": {
+            "hp": -4
+          },
+          "story": "{member}가 연습 시간을 딱 정해 두고 집중하기로 했다.",
+          "next": "focus_story"
+        }
+      ]
+    },
+    "review_story": {
+      "type": "story",
+      "text": "리플레이를 다시 보던 {member}가 같은 실수를 세 번 반복한 장면을 찾아냈다. 특훈은 그 장면을 고치는 데서 시작됐다.",
+      "next": "drill_check"
+    },
+    "drill_check": {
+      "type": "check",
+      "text": "같은 상황을 수십 번 반복한 끝에 실전 같은 연습 판이 시작됐다. 세 번의 실수를 이번엔 피할 수 있을까?",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 82,
+        "traitBonus": {
+          "competitive": 10,
+          "fps": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "세 장면을 모두 완벽하게 넘긴 {member}가 판까지 압도적으로 가져왔다.",
+          "effects": {
+            "fans": 130,
+            "fame": 2,
+            "stats": {
+              "Ga": 1
+            }
+          },
+          "next": "drill_fixed"
+        },
+        "success": {
+          "text": "두 번째 장면에서 손이 먼저 반응했다. 몸에 익은 연습이 판을 바꿨다.",
+          "next": "drill_fixed"
+        },
+        "partial": {
+          "text": "실수 두 개는 고쳤지만 마지막 하나가 또 나왔다.",
+          "next": "drill_almost"
+        },
+        "fail": {
+          "text": "긴장한 탓에 연습한 장면에서 오히려 같은 실수가 나왔다.",
+          "next": "drill_stuck"
+        }
+      }
+    },
+    "drill_fixed": {
+      "type": "end",
+      "text": "\"같은 실수는 두 번 안 한다\"는 말을 증명한 연습 방송이었다. 새벽까지 남은 시청자들이 박수로 마무리했다.",
+      "effects": {
+        "fans": 170,
+        "stats": {
+          "Ga": 1
+        },
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "success"
+    },
+    "drill_almost": {
+      "type": "end",
+      "text": "하나가 남았지만 연습 노트에는 고친 두 장면이 굵게 적혔다. 피곤은 컸지만 소득도 분명했다.",
+      "effects": {
+        "fans": 110,
+        "stats": {
+          "Ga": 1
+        },
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "partial"
+    },
+    "drill_stuck": {
+      "type": "end",
+      "text": "{member}가 그 장면만 따로 잘라 다음 연습 과제로 남겼다. 팬들은 \"다음엔 된다\"며 그 장면에 응원 댓글을 달았다.",
+      "effects": {
+        "fans": 60,
+        "stats": {
+          "Ga": 1
+        },
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "fail"
+    },
+    "focus_story": {
+      "type": "story",
+      "text": "정해진 시간 안에서 {member}가 실수 장면 하나만 골라 반복했다. 채팅창도 덩달아 조용히 집중했다.",
+      "next": "focus_end"
+    },
+    "focus_end": {
+      "type": "end",
+      "text": "짧고 굵은 연습으로 약점 하나를 지웠다. 체력도 아끼고 실력도 챙긴 하루였다.",
+      "effects": {
+        "fans": 70,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    }
+  }
+}

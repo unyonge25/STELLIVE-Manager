@@ -560,7 +560,7 @@ export const EXTRA_EVENTS = [
     description: '주말 아침, {member}가 한 주의 소식을 전하는 뉴스 형식 방송을 준비하고 있다.',
     memberId: 'yuni',
     conditions: { ...BROADCAST, dayOfWeek: 7, cooldown: 6 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '멤버들 소식까지 꼼꼼히 준비한다',
@@ -577,7 +577,7 @@ export const EXTRA_EVENTS = [
     description: '패배가 분했던 {member}가 오늘은 이길 때까지 연습하겠다고 선언했다.',
     memberId: 'yuni',
     conditions: { activityCategories: ['game'], cooldown: 5 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '밤새 특훈 방송을 한다',
@@ -596,7 +596,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 아무도 모르는 인디게임을 찾아냈다며 눈을 반짝인다.',
     memberId: 'huya',
     conditions: { activityCategories: ['game'], cooldown: 4 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '끝까지 파고드는 방송을 한다',
@@ -613,7 +613,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 오늘은 최고 난이도 곡에 도전해 보겠다고 한다.',
     memberId: 'huya',
     conditions: { activityCategories: ['rhythm', 'music'], cooldown: 5 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '풀콤보가 나올 때까지 도전한다',
@@ -630,6 +630,7 @@ export const EXTRA_EVENTS = [
     description: '처음 온 시청자가 많은 날, 사람이 많아지면 긴장하는 {member}의 목소리가 작아진다.',
     memberId: 'huya',
     conditions: { activityCategories: ['talk', 'broadcast'], minFans: 3000, cooldown: 6 },
+    weight: 0,
     choices: [
       {
         text: '긴장을 솔직하게 말하고 천천히 대화한다',
@@ -648,7 +649,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 공지도 없이 방송을 켰다. 알림을 본 팬들이 빠르게 모여든다.',
     memberId: 'hina',
     conditions: { ...BROADCAST, cooldown: 4 },
-    weight: 2,
+    weight: 0,
     choices: [
       { text: '기세를 몰아 장시간 방송으로 간다', effects: { fans: 220, fame: 1, hp: -12, memberFlags: { stayedUpLate: true } } },
       { text: '짧고 굵게 즐기고 마무리한다', effects: { fans: 110, hp: -4 } },
@@ -660,7 +661,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 오늘은 피아노를 치며 노래하고 싶다고 한다.',
     memberId: 'hina',
     conditions: { activityCategories: ['music'], cooldown: 5 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '연주와 노래를 함께 하는 라이브',
@@ -679,7 +680,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 게임 도중 갑자기 상황극을 시작했다. 채팅창이 들썩인다.',
     memberId: 'mashiro',
     conditions: { activityCategories: ['horror', 'talk'], cooldown: 4 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '상황극을 방송의 메인으로 키운다',
@@ -696,7 +697,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 우쿨렐레를 꺼내 들자 신청곡이 줄을 잇는다.',
     memberId: 'mashiro',
     conditions: { activityCategories: ['music'], cooldown: 5 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '장르를 가리지 않고 받아 연주한다',
@@ -715,7 +716,7 @@ export const EXTRA_EVENTS = [
     description: '다른 멤버들의 방송이 끝난 새벽, 레이드가 하나둘 {member}의 방송으로 모여든다.',
     memberId: 'lize',
     conditions: { activityCategories: ['talk', 'broadcast'], cooldown: 4 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '모인 시청자들과 길게 이야기를 나눈다',

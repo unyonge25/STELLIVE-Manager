@@ -1,0 +1,106 @@
+{
+  "id": "st_member_hina_1_b",
+  "title": "즉흥 아이디어 하나로",
+  "category": "member",
+  "group": "personal_hina_1",
+  "description": "예고 없는 게릴라 방송(pe_hina_1) 변형 B. 판정 없이, 방송 길이를 먼저 정하고 장시간으로 가면 마무리 방식을 한 번 더 고른다.",
+  "meta": {
+    "theme": "content_production",
+    "setting": "spontaneous_idea_stream",
+    "conflict": "time_pressure",
+    "resolution": "compromise",
+    "activity": "surprise_stream",
+    "tone": "comedic"
+  },
+  "memberId": "hina",
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "cooldown": 4
+  },
+  "weight": 2,
+  "start": "idea",
+  "steps": {
+    "idea": {
+      "type": "choice",
+      "text": "방송 예정이 없던 날, {member}에게 즉흥 아이디어가 떠올랐다. 공지 없이 바로 방송을 켜기로 했다. 얼마나 길게 할까?",
+      "choices": [
+        {
+          "text": "기세를 몰아 장시간 방송으로 간다",
+          "effects": {
+            "hp": -12
+          },
+          "story": "아이디어 하나로 시작한 방송이 곧 다음 아이디어로, 또 다음 아이디어로 이어졌다.",
+          "next": "idea_story"
+        },
+        {
+          "text": "짧고 굵게 즐기고 마무리한다",
+          "effects": {
+            "hp": -4
+          },
+          "story": "{member}가 아이디어 하나만 딱 보여 주고 끝내기로 했다.",
+          "next": "quick_story"
+        }
+      ]
+    },
+    "idea_story": {
+      "type": "story",
+      "text": "알림을 늦게 본 팬들까지 몰려오며 방송이 점점 길어진다. 새벽이 가까워지자 마무리를 어떻게 할지 정해야 한다.",
+      "next": "wrap"
+    },
+    "wrap": {
+      "type": "choice",
+      "text": "긴 방송의 마지막을 어떻게 장식할까?",
+      "choices": [
+        {
+          "text": "끝까지 팬들과 수다로 마무리한다",
+          "story": "{member}가 화면을 끄고 채팅만 띄운 채 남은 시간을 이야기로 채웠다.",
+          "next": "wrap_talk"
+        },
+        {
+          "text": "오늘의 명장면 투표로 마무리한다",
+          "story": "{member}가 오늘 방송의 명장면 후보를 띄우고 투표창을 열었다.",
+          "next": "wrap_vote"
+        }
+      ]
+    },
+    "wrap_talk": {
+      "type": "end",
+      "text": "새벽 수다로 끝난 게릴라 방송이 그날 가장 긴 방송이 됐다. 대신 {member}의 회복은 오늘 밤 더딜 것이다.",
+      "effects": {
+        "fans": 220,
+        "fame": 1,
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "success"
+    },
+    "wrap_vote": {
+      "type": "end",
+      "text": "명장면 투표가 깔끔한 마무리가 됐다. 다만 투표 결과를 두고 채팅창이 한참 시끌벅적해서, 예정보다 조금 더 늦게 끝났다.",
+      "effects": {
+        "fans": 200,
+        "fame": 1,
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "partial"
+    },
+    "quick_story": {
+      "type": "story",
+      "text": "아이디어 하나를 보여 주는 데 딱 40분. 짧은 만큼 알찬 방송이었다.",
+      "next": "quick_end"
+    },
+    "quick_end": {
+      "type": "end",
+      "text": "\"이런 즉흥 방송 자주 해 줘\"라는 요청이 이어졌다. 짧았지만 존재감은 확실했다.",
+      "effects": {
+        "fans": 110
+      },
+      "result": "success"
+    }
+  }
+}

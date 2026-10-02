@@ -1,0 +1,194 @@
+{
+  "id": "st_member_hina_2_b",
+  "title": "정해지지 않는 편곡",
+  "category": "member",
+  "group": "personal_hina_2",
+  "description": "피아노 라이브(pe_hina_2) 변형 B. 편곡을 고민하는 장면에서 시작해 일정에 맞는 진행을 고르고, 즉흥 편곡으로 곡을 완성해 낸다.",
+  "meta": {
+    "theme": "music_production",
+    "setting": "piano_arrangement_desk",
+    "conflict": "creative_block",
+    "resolution": "compromise",
+    "activity": "piano_singing",
+    "tone": "calm"
+  },
+  "memberId": "hina",
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "cooldown": 5
+  },
+  "weight": 2,
+  "start": "tune",
+  "steps": {
+    "tune": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "녹음실에서 {member}가 오랜만에 피아노 앞에 앉았다. 손이 기억하는 곡은 많은데, 오늘 담을 곡의 편곡이 좀처럼 정해지지 않는다."
+        },
+        {
+          "text": "노래 방송을 앞두고 {member}가 오랜만에 피아노 앞에 앉았다. 손이 기억하는 곡은 많은데, 오늘 부를 곡의 편곡이 좀처럼 정해지지 않는다."
+        }
+      ],
+      "next": "mode"
+    },
+    "mode": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "next": "rec_choice"
+        }
+      ],
+      "next": "live_choice"
+    },
+    "live_choice": {
+      "type": "choice",
+      "text": "편곡이 덜 정해진 채 방송 시간이 됐다. 오늘 방송을 어떻게 꾸릴까?",
+      "choices": [
+        {
+          "text": "연주와 노래를 함께 하는 라이브",
+          "effects": {
+            "hp": -5
+          },
+          "story": "{member}가 \"만들면서 부를게요\"라며 건반에 손을 올렸다.",
+          "next": "arrange_check"
+        },
+        {
+          "text": "연주 위주의 잔잔한 방송",
+          "effects": {
+            "hp": -2
+          },
+          "story": "{member}가 편곡 고민은 잠시 내려놓고 손이 기억하는 곡들을 이어 치기로 했다.",
+          "next": "calm_end"
+        }
+      ]
+    },
+    "rec_choice": {
+      "type": "choice",
+      "text": "편곡이 덜 정해진 채 녹음 시간이 됐다. 오늘 녹음을 어떻게 할까?",
+      "choices": [
+        {
+          "text": "연주와 노래를 한 번에 녹음한다",
+          "effects": {
+            "hp": -5
+          },
+          "story": "{member}가 정해진 부분까지만 악보를 놓고 녹음을 시작했다.",
+          "next": "arrange_check"
+        },
+        {
+          "text": "연주 트랙만 차분히 녹음한다",
+          "effects": {
+            "hp": -2
+          },
+          "story": "{member}가 노래는 미루고 손에 익은 곡의 피아노 트랙만 녹음하기로 했다.",
+          "next": "calm_end"
+        }
+      ]
+    },
+    "arrange_check": {
+      "type": "check",
+      "text": "정해지지 않은 후렴 부분이 다가온다. 즉흥으로 편곡을 채워야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 78,
+        "traitBonus": {
+          "instrument": 15
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "즉흥으로 바꾼 후렴이 원래 생각했던 편곡보다 좋았다. {member} 스스로도 놀란 얼굴이었다.",
+          "effects": {
+            "fans": 130,
+            "fame": 2,
+            "stats": {
+              "Vc": 1
+            }
+          },
+          "next": "arrange_found"
+        },
+        "success": {
+          "text": "몇 번 손을 바꿔 쳐 본 끝에 후렴의 편곡이 자리를 잡았다.",
+          "next": "arrange_found"
+        },
+        "partial": {
+          "text": "후렴은 채웠지만 마지막 마디의 편곡은 끝내 마음에 들지 않았다.",
+          "next": "arrange_half"
+        },
+        "fail": {
+          "text": "즉흥 편곡이 잘 풀리지 않아 같은 부분을 여러 번 멈췄다.",
+          "next": "arrange_stuck"
+        }
+      }
+    },
+    "arrange_found": {
+      "type": "end",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "즉흥으로 완성한 편곡이 그대로 녹음됐다. 공개된 짧은 영상에 \"이 편곡 정식으로 내 달라\"는 댓글이 이어졌다."
+        },
+        {
+          "text": "즉흥으로 완성된 편곡에 채팅창이 감탄으로 가득 찼다. \"편곡 과정까지 본 게 행운\"이라는 반응이 많았다."
+        }
+      ],
+      "effects": {
+        "fans": 190,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "arrange_half": {
+      "type": "end",
+      "text": "곡은 완성했지만 마지막 마디는 다음에 다시 다듬기로 했다. 고민하는 과정을 흥미롭게 본 사람들도 있었다.",
+      "effects": {
+        "fans": 130
+      },
+      "result": "partial"
+    },
+    "arrange_stuck": {
+      "type": "end",
+      "text": "편곡은 다음으로 미뤘다. {member}는 막힌 부분을 악보에 표시해 두었고, 팬들은 완성본을 기다리겠다고 했다.",
+      "effects": {
+        "fans": 70
+      },
+      "result": "fail"
+    },
+    "calm_end": {
+      "type": "end",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "손이 기억하는 곡들로 피아노 트랙을 녹음했다. 잔잔한 트랙은 나중에 짧은 영상으로 올라가 조용히 사랑받았다."
+        },
+        {
+          "text": "손이 기억하는 곡들을 잔잔하게 이어 쳤다. \"작업할 때 틀어 놓기 좋다\"는 반응이 많았다."
+        }
+      ],
+      "effects": {
+        "fans": 110
+      },
+      "result": "success"
+    }
+  }
+}

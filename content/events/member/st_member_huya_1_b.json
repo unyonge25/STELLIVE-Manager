@@ -1,0 +1,128 @@
+{
+  "id": "st_member_huya_1_b",
+  "title": "제작자가 보고 있다",
+  "category": "member",
+  "group": "personal_huya_1",
+  "description": "숨은 인디게임 발굴(pe_huya_1) 변형 B. 플레이 방식을 먼저 정한 뒤, 제작자가 방송을 보고 있다는 사실을 알게 된 순간을 넘긴다.",
+  "meta": {
+    "theme": "content_production",
+    "setting": "indie_dev_watching",
+    "conflict": "nervousness",
+    "resolution": "quiet_growth",
+    "activity": "indie_game",
+    "tone": "calm"
+  },
+  "memberId": "huya",
+  "conditions": {
+    "activityCategories": [
+      "game"
+    ],
+    "cooldown": 4
+  },
+  "weight": 2,
+  "start": "plan",
+  "steps": {
+    "plan": {
+      "type": "choice",
+      "text": "{member}가 발굴한 인디게임을 방송에서 해 보기로 했다. 오늘은 이 게임 하나를 깊게 볼지, 비슷한 게임들과 함께 볼지 정해야 한다.",
+      "choices": [
+        {
+          "text": "끝까지 파고드는 방송을 한다",
+          "effects": {
+            "hp": -5
+          },
+          "story": "{member}가 게임 설명을 꼼꼼히 읽고 첫 화면으로 들어갔다.",
+          "next": "dev_story"
+        },
+        {
+          "text": "여러 게임을 짧게 맛만 본다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "{member}가 비슷한 분위기의 인디게임 세 개를 나란히 띄웠다.",
+          "next": "sampler_story"
+        }
+      ]
+    },
+    "dev_story": {
+      "type": "story",
+      "text": "엔딩이 가까워졌을 때, 채팅창에 게임 제작자라는 닉네임이 나타났다. 낯가림이 있는 {member}의 목소리가 잠깐 작아졌다.",
+      "next": "dev_check"
+    },
+    "dev_check": {
+      "type": "check",
+      "text": "제작자 앞에서 마지막 구간을 해내야 한다. 긴장을 누르고 손에 집중할 수 있을까?",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 72,
+        "traitBonus": {
+          "indie": 15
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 마지막 구간을 막힘없이 넘기자 제작자가 \"이렇게 깨는 걸 처음 본다\"고 남겼다.",
+          "effects": {
+            "fans": 100,
+            "fame": 1,
+            "stockEffect": {
+              "ticker": "PXLG",
+              "percentage": 2
+            }
+          },
+          "next": "dev_ending"
+        },
+        "success": {
+          "text": "잠깐 긴장했지만 손은 흔들리지 않았다. 엔딩 크레딧이 올라가자 제작자가 감사 인사를 남겼다.",
+          "next": "dev_ending"
+        },
+        "partial": {
+          "text": "엔딩은 봤지만 마지막 구간에서 여러 번 넘어졌다. 제작자가 웃으며 힌트를 보냈다.",
+          "next": "dev_credit"
+        },
+        "fail": {
+          "text": "긴장한 탓에 같은 구간에서 계속 막혔다. 엔딩은 다음 방송으로 미뤘다.",
+          "next": "dev_lost"
+        }
+      }
+    },
+    "dev_ending": {
+      "type": "end",
+      "text": "제작자의 감사 인사가 담긴 장면이 클립으로 돌았다. 작은 인디게임과 {member}의 이름이 함께 알려졌다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "dev_credit": {
+      "type": "end",
+      "text": "제작자의 힌트로 엔딩을 본 장면은 훈훈했다. 다만 플레이 자체는 아쉬웠다는 반응도 있었다.",
+      "effects": {
+        "fans": 100
+      },
+      "result": "partial"
+    },
+    "dev_lost": {
+      "type": "end",
+      "text": "엔딩은 못 봤지만 제작자가 \"다음 방송도 기다리겠다\"고 남겼다. {member}는 그 말을 고정 채팅으로 걸어 두었다.",
+      "effects": {
+        "fans": 50
+      },
+      "result": "fail"
+    },
+    "sampler_story": {
+      "type": "story",
+      "text": "세 게임을 번갈아 하던 중, 한 게임에서 예상치 못한 버그가 터져 채팅창이 웃음바다가 됐다.",
+      "next": "sampler_end"
+    },
+    "sampler_end": {
+      "type": "end",
+      "text": "버그 장면까지 포함해 세 게임의 매력이 골고루 전해졌다. 다음 발굴을 기대하는 팬이 늘었다.",
+      "effects": {
+        "fans": 100
+      },
+      "result": "success"
+    }
+  }
+}

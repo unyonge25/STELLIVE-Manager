@@ -1,0 +1,142 @@
+{
+  "id": "st_member_mashiro_1_a",
+  "title": "괴물에게 말을 건 순간",
+  "category": "member",
+  "group": "personal_mashiro_1",
+  "description": "즉흥 상황극 폭주(pe_mashiro_1) 변형 A. 공포게임 날과 잡담 날이 다른 장면으로 시작하고, 배역이 늘어나는 상황극을 끝까지 이끈다.",
+  "meta": {
+    "theme": "game_content",
+    "setting": "horror_roleplay_takeover",
+    "conflict": "audience_reaction",
+    "resolution": "viral_moment",
+    "activity": "roleplay",
+    "tone": "comedic"
+  },
+  "memberId": "mashiro",
+  "conditions": {
+    "activityCategories": [
+      "horror",
+      "talk"
+    ],
+    "cooldown": 4
+  },
+  "weight": 1,
+  "start": "spark",
+  "steps": {
+    "spark": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "horror"
+            ]
+          },
+          "text": "공포게임 도중 갑자기 괴물이 튀어나왔다. 그런데 {member}가 비명 대신 게임 속 인물의 목소리로 괴물에게 말을 걸기 시작했다. 채팅창이 들썩인다."
+        },
+        {
+          "text": "잡담 도중 사연 하나를 읽던 {member}가 갑자기 사연 속 인물의 목소리로 상황극을 시작했다. 채팅창이 들썩인다."
+        }
+      ],
+      "next": "grow"
+    },
+    "grow": {
+      "type": "choice",
+      "text": "상황극에 불이 붙었다. 어디까지 키울까?",
+      "choices": [
+        {
+          "text": "상황극을 방송의 메인으로 키운다",
+          "effects": {
+            "hp": -5
+          },
+          "story": "{member}가 목소리를 바꿔 가며 새 배역을 하나 더 꺼냈다.",
+          "next": "rp_check"
+        },
+        {
+          "text": "적당히 받아주고 원래 콘텐츠로 돌아간다",
+          "story": "{member}가 짧게 한 장면만 더 받아 주고 원래 하던 것으로 돌아갔다.",
+          "next": "back_end"
+        }
+      ]
+    },
+    "rp_check": {
+      "type": "check",
+      "text": "배역이 셋, 넷으로 늘어난다. 이야기를 끝까지 이끌어 결말을 낼 수 있을까?",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "roleplay": 15,
+          "horror": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 배역마다 다른 목소리로 결말까지 단숨에 이끌었다. 채팅창이 커튼콜 이모티콘으로 가득 찼다.",
+          "effects": {
+            "fans": 120,
+            "fame": 1
+          },
+          "next": "rp_hit"
+        },
+        "success": {
+          "text": "늘어난 배역을 하나하나 정리하며 깔끔한 결말을 냈다.",
+          "next": "rp_hit"
+        },
+        "partial": {
+          "text": "결말은 냈지만 중간에 배역 이름이 몇 번 뒤섞였다.",
+          "next": "rp_messy"
+        },
+        "fail": {
+          "text": "배역이 너무 많아져 이야기가 어디로 가는지 모르게 됐다.",
+          "next": "rp_lost"
+        }
+      }
+    },
+    "rp_hit": {
+      "type": "end",
+      "text": "즉흥 상황극 장면이 클립으로 퍼졌다. \"다음엔 처음부터 상황극 방송 해 달라\"는 요청이 이어졌다.",
+      "effects": {
+        "fans": 180,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "rp_messy": {
+      "type": "end",
+      "text": "뒤섞인 배역마저 웃음 포인트가 됐다. 다만 처음 보는 사람에게는 조금 정신없는 장면이었다.",
+      "effects": {
+        "fans": 120
+      },
+      "result": "partial"
+    },
+    "rp_lost": {
+      "type": "end",
+      "text": "결말 없이 끝난 상황극에 {member}가 \"2화에서 계속\"이라고 선언했다. 팬들은 2화를 기다리겠다며 웃었다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "back_end": {
+      "type": "end",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "horror"
+            ]
+          },
+          "text": "짧은 상황극이 공포게임의 긴장을 풀어 주는 쉼표가 됐다. 게임은 다시 무서워졌다."
+        },
+        {
+          "text": "짧은 상황극이 잡담에 활기를 더했다. 대화는 자연스럽게 원래 이야기로 돌아왔다."
+        }
+      ],
+      "effects": {
+        "fans": 90
+      },
+      "result": "success"
+    }
+  }
+}

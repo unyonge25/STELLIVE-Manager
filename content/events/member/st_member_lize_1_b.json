@@ -1,0 +1,135 @@
+{
+  "id": "st_member_lize_1_b",
+  "title": "새벽 세 시의 마지막 방송",
+  "category": "member",
+  "group": "personal_lize_1",
+  "description": "심야 잡담의 종착역(pe_lize_1) 변형 B. 남은 체력에 따라 첫 장면이 갈리고, 다른 방송이 모두 꺼진 새벽 해가 뜰 때까지의 대화를 이끈다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "dawn_last_stream",
+    "conflict": "fatigue",
+    "resolution": "quiet_growth",
+    "activity": "late_talk",
+    "tone": "emotional"
+  },
+  "memberId": "lize",
+  "conditions": {
+    "activityCategories": [
+      "talk",
+      "broadcast"
+    ],
+    "cooldown": 4
+  },
+  "weight": 2,
+  "start": "hour",
+  "steps": {
+    "hour": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "maxHp": 45
+          },
+          "next": "sleepy_intro"
+        }
+      ],
+      "next": "owl_intro"
+    },
+    "owl_intro": {
+      "type": "story",
+      "text": "새벽 세 시. 다른 방송이 모두 꺼진 시간에도 {member}의 방송은 켜져 있다. 올빼미답게 오히려 지금부터가 시작이라는 분위기다. 갈 곳을 잃은 시청자들이 \"여기가 종착역\"이라며 모여든다.",
+      "next": "stay"
+    },
+    "sleepy_intro": {
+      "type": "story",
+      "text": "새벽 세 시. 요즘 일정이 빡빡했던 {member}의 목소리가 평소보다 낮다. 그래도 다른 방송에서 넘어온 시청자들이 \"여기가 종착역\"이라며 모여든다.",
+      "next": "stay"
+    },
+    "stay": {
+      "type": "choice",
+      "text": "해가 뜰 때까지 남을까?",
+      "choices": [
+        {
+          "text": "모인 시청자들과 길게 이야기를 나눈다",
+          "effects": {
+            "hp": -6
+          },
+          "story": "{member}가 조명을 조금 낮추고 의자를 고쳐 앉았다.",
+          "next": "dawn_check"
+        },
+        {
+          "text": "적당한 시간에 인사하고 마무리한다",
+          "story": "{member}가 \"오늘은 여기까지\"라며 마지막 이야기 하나만 듣기로 했다.",
+          "next": "wrap_end"
+        }
+      ]
+    },
+    "dawn_check": {
+      "type": "check",
+      "text": "창밖이 조금씩 밝아진다. 길어진 새벽을 끝까지 편안한 대화로 채울 수 있을까?",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "chatter": 10,
+          "nightOwl": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "해 뜨는 시간에 맞춰 {member}가 오늘 나눈 이야기를 하나씩 되짚었다. 채팅창에 아침 인사가 쏟아졌다.",
+          "effects": {
+            "fans": 120,
+            "fame": 1
+          },
+          "next": "dawn_sunrise"
+        },
+        "success": {
+          "text": "대화가 끊기지 않고 해 뜰 무렵까지 이어졌다.",
+          "next": "dawn_sunrise"
+        },
+        "partial": {
+          "text": "해는 함께 봤지만 마지막 한 시간은 말수가 눈에 띄게 줄었다.",
+          "next": "dawn_doze"
+        },
+        "fail": {
+          "text": "새벽이 깊어질수록 대화가 자꾸 끊겼다. 결국 해가 뜨기 전에 인사를 했다.",
+          "next": "dawn_quiet"
+        }
+      }
+    },
+    "dawn_sunrise": {
+      "type": "end",
+      "text": "\"종착역에서 같이 본 해돋이\"라는 제목의 클립이 올라왔다. 새벽 방송을 기다리는 팬이 눈에 띄게 늘었다.",
+      "effects": {
+        "fans": 180,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "dawn_doze": {
+      "type": "end",
+      "text": "끝까지 함께한 시청자들은 만족했지만, 조용했던 마지막 한 시간에는 \"이제 자라\"는 걱정이 섞여 있었다.",
+      "effects": {
+        "fans": 120
+      },
+      "result": "partial"
+    },
+    "dawn_quiet": {
+      "type": "end",
+      "text": "예정보다 일찍 인사했지만, 남은 시청자들은 \"다음 종착역에서 보자\"며 기분 좋게 떠났다.",
+      "effects": {
+        "fans": 70
+      },
+      "result": "fail"
+    },
+    "wrap_end": {
+      "type": "end",
+      "text": "마지막 이야기 하나를 듣고 방송을 마쳤다. 짧았지만 새벽다운 따뜻한 마무리였다.",
+      "effects": {
+        "fans": 90
+      },
+      "result": "success"
+    }
+  }
+}

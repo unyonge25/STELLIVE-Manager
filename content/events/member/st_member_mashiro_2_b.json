@@ -1,0 +1,186 @@
+{
+  "id": "st_member_mashiro_2_b",
+  "title": "우쿨렐레 코드 노트",
+  "category": "member",
+  "group": "personal_mashiro_2",
+  "description": "우쿨렐레 신청곡(pe_mashiro_2) 변형 B. 낯선 곡의 코드를 정리하는 장면에서 시작해 일정에 맞는 진행을 고르고, 짧은 준비 시간 안에 곡을 완성한다.",
+  "meta": {
+    "theme": "music_production",
+    "setting": "ukulele_chord_notes",
+    "conflict": "time_pressure",
+    "resolution": "steady_success",
+    "activity": "ukulele_singing",
+    "tone": "calm"
+  },
+  "memberId": "mashiro",
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "cooldown": 5
+  },
+  "weight": 1,
+  "start": "notes",
+  "steps": {
+    "notes": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "녹음 전, {member}가 우쿨렐레 코드 노트를 펼쳤다. 오늘 담고 싶은 곡 중 하나는 처음 쳐 보는 곡이라 코드가 아직 비어 있다."
+        },
+        {
+          "text": "노래 방송 전, {member}가 우쿨렐레 코드 노트를 펼쳤다. 미리 받아 둔 신청곡 중 하나는 처음 쳐 보는 곡이라 코드가 아직 비어 있다."
+        }
+      ],
+      "next": "mode"
+    },
+    "mode": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "next": "rec_choice"
+        }
+      ],
+      "next": "live_choice"
+    },
+    "live_choice": {
+      "type": "choice",
+      "text": "코드를 다 채우기 전에 방송 시간이 됐다.",
+      "choices": [
+        {
+          "text": "장르를 가리지 않고 받아 연주한다",
+          "effects": {
+            "hp": -5
+          },
+          "story": "{member}가 비어 있는 코드는 즉석에서 채우겠다며 노트를 보면대에 올렸다.",
+          "next": "chord_check"
+        },
+        {
+          "text": "편안한 곡 위주로 조용히 부른다",
+          "story": "{member}가 처음 쳐 보는 곡은 다음으로 미루고 익숙한 곡들로 가기로 했다.",
+          "next": "calm_end"
+        }
+      ]
+    },
+    "rec_choice": {
+      "type": "choice",
+      "text": "코드를 다 채우기 전에 녹음 시간이 됐다.",
+      "choices": [
+        {
+          "text": "여러 장르를 번갈아 연주해 녹음한다",
+          "effects": {
+            "hp": -5
+          },
+          "story": "{member}가 비어 있는 코드는 녹음하며 채우겠다고 노트를 펼쳐 두었다.",
+          "next": "chord_check"
+        },
+        {
+          "text": "편안한 곡 위주로 조용히 녹음한다",
+          "story": "{member}가 처음 쳐 보는 곡은 미루고 익숙한 곡들만 녹음하기로 했다.",
+          "next": "calm_end"
+        }
+      ]
+    },
+    "chord_check": {
+      "type": "check",
+      "text": "처음 쳐 보는 곡의 차례가 왔다. 귀로 들으며 비어 있는 코드를 채워 나가야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 76,
+        "traitBonus": {
+          "instrument": 15
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "귀로 찾은 코드가 원곡보다 우쿨렐레에 더 잘 어울렸다. {member}가 노트에 바로 받아 적었다.",
+          "effects": {
+            "fans": 110,
+            "fame": 1
+          },
+          "next": "chord_done"
+        },
+        "success": {
+          "text": "몇 번 더듬어 본 끝에 코드가 자리를 잡았다. 처음 쳐 보는 곡이 무사히 완성됐다.",
+          "next": "chord_done"
+        },
+        "partial": {
+          "text": "곡은 완성했지만 후렴 코드 하나는 끝내 확신이 서지 않았다.",
+          "next": "chord_half"
+        },
+        "fail": {
+          "text": "비어 있는 코드를 찾느라 곡이 자꾸 끊겼다.",
+          "next": "chord_blank"
+        }
+      }
+    },
+    "chord_done": {
+      "type": "end",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "처음 쳐 본 곡까지 녹음을 마쳤다. 완성된 코드 노트는 다음 곡 준비의 든든한 자료가 됐다."
+        },
+        {
+          "text": "처음 쳐 보는 곡을 즉석에서 완성해 내자 신청한 팬이 크게 기뻐했다. 다른 팬들도 다음 신청곡을 줄줄이 올렸다."
+        }
+      ],
+      "effects": {
+        "fans": 170,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "chord_half": {
+      "type": "end",
+      "text": "곡은 마무리했지만 노트에는 물음표가 하나 남았다. 다음에 다시 쳐 보면 더 좋아질 것 같다.",
+      "effects": {
+        "fans": 110
+      },
+      "result": "partial"
+    },
+    "chord_blank": {
+      "type": "end",
+      "text": "{member}가 빈칸 코드를 숙제로 남겼다. 노트의 빈칸이 다음 연습 목표가 됐다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "calm_end": {
+      "type": "end",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "익숙한 곡들을 편안하게 녹음했다. 서두르지 않은 덕에 손도 목도 가볍게 마무리했다."
+        },
+        {
+          "text": "익숙한 곡들이 편안하게 이어졌다. 조용한 노래에 채팅창도 덩달아 차분해졌다."
+        }
+      ],
+      "effects": {
+        "fans": 100,
+        "hp": 2
+      },
+      "result": "success"
+    }
+  }
+}

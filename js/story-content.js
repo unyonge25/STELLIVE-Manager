@@ -1,6 +1,6 @@
 // story-content.js — 자동 생성 파일. 직접 고치지 말 것.
 // 원본: content/events/**/*.json → node tools/events.mjs build
-// 이벤트 52개
+// 이벤트 72개
 export const STORY_EVENTS = [
   {
     "id": "st_game_aos_league",
@@ -11348,6 +11348,2385 @@ export const STORY_EVENTS = [
     }
   },
   {
+    "id": "st_member_hina_1_a",
+    "title": "알림 하나에 모인 사람들",
+    "category": "member",
+    "group": "personal_hina_1",
+    "description": "예고 없는 게릴라 방송(pe_hina_1) 변형 A. 판정 없이, 장시간으로 가면 남은 체력에 따라 마무리가 갈린다.",
+    "meta": {
+      "theme": "broadcast_live",
+      "setting": "guerrilla_stream_alert",
+      "conflict": "fatigue",
+      "resolution": "risky_gamble",
+      "activity": "surprise_stream",
+      "tone": "hype"
+    },
+    "memberId": "hina",
+    "conditions": {
+      "activityCategories": [
+        "broadcast"
+      ],
+      "cooldown": 4
+    },
+    "weight": 2,
+    "start": "alert",
+    "steps": {
+      "alert": {
+        "type": "story",
+        "text": "{member}가 공지도 없이 방송을 켰다. 알림을 본 팬들이 빠르게 모여들어 10분 만에 평소 방송만큼 사람이 찼다.",
+        "next": "go"
+      },
+      "go": {
+        "type": "choice",
+        "text": "모인 기세를 어디까지 끌고 갈까?",
+        "choices": [
+          {
+            "text": "기세를 몰아 장시간 방송으로 간다",
+            "effects": {
+              "hp": -12
+            },
+            "story": "\"오늘 그냥 길게 갈까?\" {member}의 한마디에 채팅창이 환호로 뒤덮였다.",
+            "next": "long_branch"
+          },
+          {
+            "text": "짧고 굵게 즐기고 마무리한다",
+            "effects": {
+              "hp": -4
+            },
+            "story": "{member}가 딱 하고 싶었던 것만 하고 끝내기로 했다.",
+            "next": "short_story"
+          }
+        ]
+      },
+      "long_branch": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "minHp": 40
+            },
+            "next": "long_strong"
+          }
+        ],
+        "next": "long_tired"
+      },
+      "long_strong": {
+        "type": "end",
+        "text": "새벽까지 기세가 한 번도 꺾이지 않았다. 게릴라 방송이 그날 가장 긴 방송이 됐고, 알림을 늦게 본 팬들이 다시보기로 몰렸다.",
+        "effects": {
+          "fans": 220,
+          "fame": 1,
+          "memberFlags": {
+            "stayedUpLate": true
+          }
+        },
+        "result": "success"
+      },
+      "long_tired": {
+        "type": "end",
+        "text": "길게 이어 갔지만 후반에는 지친 기색이 역력했다. 팬들은 즐거워하면서도 \"오늘은 푹 자\"라는 인사를 많이 남겼다.",
+        "effects": {
+          "fans": 190,
+          "fame": 1,
+          "memberFlags": {
+            "stayedUpLate": true
+          }
+        },
+        "result": "partial"
+      },
+      "short_story": {
+        "type": "story",
+        "text": "짧은 방송 동안 {member}는 하고 싶던 이야기를 쉬지 않고 쏟아냈다. 한 시간이 금방 지나갔다.",
+        "next": "short_end"
+      },
+      "short_end": {
+        "type": "end",
+        "text": "짧고 굵은 게릴라 방송에 \"알림 켜 두길 잘했다\"는 반응이 이어졌다.",
+        "effects": {
+          "fans": 110
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_hina_1_b",
+    "title": "즉흥 아이디어 하나로",
+    "category": "member",
+    "group": "personal_hina_1",
+    "description": "예고 없는 게릴라 방송(pe_hina_1) 변형 B. 판정 없이, 방송 길이를 먼저 정하고 장시간으로 가면 마무리 방식을 한 번 더 고른다.",
+    "meta": {
+      "theme": "content_production",
+      "setting": "spontaneous_idea_stream",
+      "conflict": "time_pressure",
+      "resolution": "compromise",
+      "activity": "surprise_stream",
+      "tone": "comedic"
+    },
+    "memberId": "hina",
+    "conditions": {
+      "activityCategories": [
+        "broadcast"
+      ],
+      "cooldown": 4
+    },
+    "weight": 2,
+    "start": "idea",
+    "steps": {
+      "idea": {
+        "type": "choice",
+        "text": "방송 예정이 없던 날, {member}에게 즉흥 아이디어가 떠올랐다. 공지 없이 바로 방송을 켜기로 했다. 얼마나 길게 할까?",
+        "choices": [
+          {
+            "text": "기세를 몰아 장시간 방송으로 간다",
+            "effects": {
+              "hp": -12
+            },
+            "story": "아이디어 하나로 시작한 방송이 곧 다음 아이디어로, 또 다음 아이디어로 이어졌다.",
+            "next": "idea_story"
+          },
+          {
+            "text": "짧고 굵게 즐기고 마무리한다",
+            "effects": {
+              "hp": -4
+            },
+            "story": "{member}가 아이디어 하나만 딱 보여 주고 끝내기로 했다.",
+            "next": "quick_story"
+          }
+        ]
+      },
+      "idea_story": {
+        "type": "story",
+        "text": "알림을 늦게 본 팬들까지 몰려오며 방송이 점점 길어진다. 새벽이 가까워지자 마무리를 어떻게 할지 정해야 한다.",
+        "next": "wrap"
+      },
+      "wrap": {
+        "type": "choice",
+        "text": "긴 방송의 마지막을 어떻게 장식할까?",
+        "choices": [
+          {
+            "text": "끝까지 팬들과 수다로 마무리한다",
+            "story": "{member}가 화면을 끄고 채팅만 띄운 채 남은 시간을 이야기로 채웠다.",
+            "next": "wrap_talk"
+          },
+          {
+            "text": "오늘의 명장면 투표로 마무리한다",
+            "story": "{member}가 오늘 방송의 명장면 후보를 띄우고 투표창을 열었다.",
+            "next": "wrap_vote"
+          }
+        ]
+      },
+      "wrap_talk": {
+        "type": "end",
+        "text": "새벽 수다로 끝난 게릴라 방송이 그날 가장 긴 방송이 됐다. 대신 {member}의 회복은 오늘 밤 더딜 것이다.",
+        "effects": {
+          "fans": 220,
+          "fame": 1,
+          "memberFlags": {
+            "stayedUpLate": true
+          }
+        },
+        "result": "success"
+      },
+      "wrap_vote": {
+        "type": "end",
+        "text": "명장면 투표가 깔끔한 마무리가 됐다. 다만 투표 결과를 두고 채팅창이 한참 시끌벅적해서, 예정보다 조금 더 늦게 끝났다.",
+        "effects": {
+          "fans": 200,
+          "fame": 1,
+          "memberFlags": {
+            "stayedUpLate": true
+          }
+        },
+        "result": "partial"
+      },
+      "quick_story": {
+        "type": "story",
+        "text": "아이디어 하나를 보여 주는 데 딱 40분. 짧은 만큼 알찬 방송이었다.",
+        "next": "quick_end"
+      },
+      "quick_end": {
+        "type": "end",
+        "text": "\"이런 즉흥 방송 자주 해 줘\"라는 요청이 이어졌다. 짧았지만 존재감은 확실했다.",
+        "effects": {
+          "fans": 110
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_hina_2_a",
+    "title": "건반 위의 페달 소리",
+    "category": "member",
+    "group": "personal_hina_2",
+    "description": "피아노 라이브(pe_hina_2) 변형 A. 노래 방송 날과 녹음 날이 다른 장면으로 시작하고, 연주와 노래를 함께 하던 중 생긴 잡음을 넘긴다.",
+    "meta": {
+      "theme": "music_live",
+      "setting": "piano_vocal_session",
+      "conflict": "technical_trouble",
+      "resolution": "clutch_moment",
+      "activity": "piano_singing",
+      "tone": "emotional"
+    },
+    "memberId": "hina",
+    "conditions": {
+      "activityCategories": [
+        "music"
+      ],
+      "cooldown": 5
+    },
+    "weight": 2,
+    "start": "mode",
+    "steps": {
+      "mode": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "next": "rec_choice"
+          }
+        ],
+        "next": "live_choice"
+      },
+      "live_choice": {
+        "type": "choice",
+        "text": "{member}가 오늘은 피아노를 치며 노래하고 싶다고 한다. 키보드를 마이크 옆에 놓자 채팅창이 반가운 인사로 가득 찼다.",
+        "choices": [
+          {
+            "text": "연주와 노래를 함께 하는 라이브",
+            "effects": {
+              "hp": -5
+            },
+            "story": "{member}가 첫 곡의 전주를 천천히 치기 시작했다.",
+            "next": "piano_check"
+          },
+          {
+            "text": "연주 위주의 잔잔한 방송",
+            "effects": {
+              "hp": -2
+            },
+            "story": "{member}가 노래는 쉬고 잔잔한 연주곡을 이어 가기로 했다.",
+            "next": "calm_end"
+          }
+        ]
+      },
+      "rec_choice": {
+        "type": "choice",
+        "text": "녹음 날, {member}가 오늘은 피아노를 직접 치며 노래를 담아 보고 싶다고 한다. 녹음실 한쪽에 키보드가 놓였다.",
+        "choices": [
+          {
+            "text": "연주와 노래를 한 번에 녹음한다",
+            "effects": {
+              "hp": -5
+            },
+            "story": "{member}가 헤드폰을 쓰고 첫 테이크를 시작했다.",
+            "next": "piano_check"
+          },
+          {
+            "text": "연주 트랙만 차분히 녹음한다",
+            "effects": {
+              "hp": -2
+            },
+            "story": "{member}가 노래는 다음으로 미루고 피아노 트랙만 녹음하기로 했다.",
+            "next": "calm_end"
+          }
+        ]
+      },
+      "piano_check": {
+        "type": "check",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "첫 테이크. 건반과 목소리를 한 번에 맞춰야 하는데, 중간부터 페달 소리가 녹음에 걸리기 시작했다."
+          },
+          {
+            "text": "첫 곡. 건반과 목소리를 한 번에 맞춰야 하는데, 중간부터 페달 소리가 마이크에 걸리기 시작했다."
+          }
+        ],
+        "check": {
+          "stat": "Vc",
+          "difficulty": 78,
+          "traitBonus": {
+            "instrument": 15
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 페달을 쓰지 않는 편곡으로 즉석에서 바꿔 쳤다. 오히려 더 맑은 소리가 났다.",
+            "effects": {
+              "fans": 130,
+              "fame": 2,
+              "stats": {
+                "Vc": 1
+              }
+            },
+            "next": "piano_hit"
+          },
+          "success": {
+            "text": "페달을 살살 밟는 법을 찾아내자 잡음이 사라졌다. 남은 소절은 깨끗하게 이어졌다.",
+            "next": "piano_hit"
+          },
+          "partial": {
+            "text": "잡음은 줄였지만 노래에 집중하느라 건반이 몇 번 엇나갔다.",
+            "next": "piano_mid"
+          },
+          "fail": {
+            "text": "잡음에 신경 쓰다 보니 노래와 연주가 자꾸 어긋났다.",
+            "next": "piano_retry"
+          }
+        }
+      },
+      "piano_hit": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "건반과 목소리가 한 번에 담긴 테이크가 나왔다. 짧은 영상으로 공개되자 포근한 음색에 대한 감상이 줄을 이었다."
+          },
+          {
+            "text": "연주와 노래가 어우러진 무대에 \"오늘 방송은 소장각\"이라는 채팅이 쏟아졌다."
+          }
+        ],
+        "effects": {
+          "fans": 190,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "piano_mid": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "쓸 만한 테이크는 나왔지만 건반 실수 몇 군데를 다음 작업에서 손보기로 했다."
+          },
+          {
+            "text": "노래는 좋았지만 엇나간 건반이 조금 아쉬웠다. 그래도 피아노 치는 모습을 처음 본 팬들은 반가워했다."
+          }
+        ],
+        "effects": {
+          "fans": 130
+        },
+        "result": "partial"
+      },
+      "piano_retry": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "오늘 테이크는 쓰지 않기로 했다. {member}는 페달 위치를 바꿔 다음 녹음 날 다시 해 보겠다고 했다."
+          },
+          {
+            "text": "{member}가 \"다음엔 페달부터 고쳐 오겠다\"며 웃었다. 팬들은 다음 피아노 방송을 기다리겠다고 했다."
+          }
+        ],
+        "effects": {
+          "fans": 70
+        },
+        "result": "fail"
+      },
+      "calm_end": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "잔잔한 피아노 트랙이 녹음됐다. 나중에 짧은 영상으로 올라가 조용히 사랑받았다."
+          },
+          {
+            "text": "연주 위주의 잔잔한 방송이 이어졌다. \"작업할 때 틀어 놓기 좋다\"는 반응이 많았다."
+          }
+        ],
+        "effects": {
+          "fans": 110
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_hina_2_b",
+    "title": "정해지지 않는 편곡",
+    "category": "member",
+    "group": "personal_hina_2",
+    "description": "피아노 라이브(pe_hina_2) 변형 B. 편곡을 고민하는 장면에서 시작해 일정에 맞는 진행을 고르고, 즉흥 편곡으로 곡을 완성해 낸다.",
+    "meta": {
+      "theme": "music_production",
+      "setting": "piano_arrangement_desk",
+      "conflict": "creative_block",
+      "resolution": "compromise",
+      "activity": "piano_singing",
+      "tone": "calm"
+    },
+    "memberId": "hina",
+    "conditions": {
+      "activityCategories": [
+        "music"
+      ],
+      "cooldown": 5
+    },
+    "weight": 2,
+    "start": "tune",
+    "steps": {
+      "tune": {
+        "type": "story",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "녹음실에서 {member}가 오랜만에 피아노 앞에 앉았다. 손이 기억하는 곡은 많은데, 오늘 담을 곡의 편곡이 좀처럼 정해지지 않는다."
+          },
+          {
+            "text": "노래 방송을 앞두고 {member}가 오랜만에 피아노 앞에 앉았다. 손이 기억하는 곡은 많은데, 오늘 부를 곡의 편곡이 좀처럼 정해지지 않는다."
+          }
+        ],
+        "next": "mode"
+      },
+      "mode": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "next": "rec_choice"
+          }
+        ],
+        "next": "live_choice"
+      },
+      "live_choice": {
+        "type": "choice",
+        "text": "편곡이 덜 정해진 채 방송 시간이 됐다. 오늘 방송을 어떻게 꾸릴까?",
+        "choices": [
+          {
+            "text": "연주와 노래를 함께 하는 라이브",
+            "effects": {
+              "hp": -5
+            },
+            "story": "{member}가 \"만들면서 부를게요\"라며 건반에 손을 올렸다.",
+            "next": "arrange_check"
+          },
+          {
+            "text": "연주 위주의 잔잔한 방송",
+            "effects": {
+              "hp": -2
+            },
+            "story": "{member}가 편곡 고민은 잠시 내려놓고 손이 기억하는 곡들을 이어 치기로 했다.",
+            "next": "calm_end"
+          }
+        ]
+      },
+      "rec_choice": {
+        "type": "choice",
+        "text": "편곡이 덜 정해진 채 녹음 시간이 됐다. 오늘 녹음을 어떻게 할까?",
+        "choices": [
+          {
+            "text": "연주와 노래를 한 번에 녹음한다",
+            "effects": {
+              "hp": -5
+            },
+            "story": "{member}가 정해진 부분까지만 악보를 놓고 녹음을 시작했다.",
+            "next": "arrange_check"
+          },
+          {
+            "text": "연주 트랙만 차분히 녹음한다",
+            "effects": {
+              "hp": -2
+            },
+            "story": "{member}가 노래는 미루고 손에 익은 곡의 피아노 트랙만 녹음하기로 했다.",
+            "next": "calm_end"
+          }
+        ]
+      },
+      "arrange_check": {
+        "type": "check",
+        "text": "정해지지 않은 후렴 부분이 다가온다. 즉흥으로 편곡을 채워야 한다.",
+        "check": {
+          "stat": "Vc",
+          "difficulty": 78,
+          "traitBonus": {
+            "instrument": 15
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "즉흥으로 바꾼 후렴이 원래 생각했던 편곡보다 좋았다. {member} 스스로도 놀란 얼굴이었다.",
+            "effects": {
+              "fans": 130,
+              "fame": 2,
+              "stats": {
+                "Vc": 1
+              }
+            },
+            "next": "arrange_found"
+          },
+          "success": {
+            "text": "몇 번 손을 바꿔 쳐 본 끝에 후렴의 편곡이 자리를 잡았다.",
+            "next": "arrange_found"
+          },
+          "partial": {
+            "text": "후렴은 채웠지만 마지막 마디의 편곡은 끝내 마음에 들지 않았다.",
+            "next": "arrange_half"
+          },
+          "fail": {
+            "text": "즉흥 편곡이 잘 풀리지 않아 같은 부분을 여러 번 멈췄다.",
+            "next": "arrange_stuck"
+          }
+        }
+      },
+      "arrange_found": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "즉흥으로 완성한 편곡이 그대로 녹음됐다. 공개된 짧은 영상에 \"이 편곡 정식으로 내 달라\"는 댓글이 이어졌다."
+          },
+          {
+            "text": "즉흥으로 완성된 편곡에 채팅창이 감탄으로 가득 찼다. \"편곡 과정까지 본 게 행운\"이라는 반응이 많았다."
+          }
+        ],
+        "effects": {
+          "fans": 190,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "arrange_half": {
+        "type": "end",
+        "text": "곡은 완성했지만 마지막 마디는 다음에 다시 다듬기로 했다. 고민하는 과정을 흥미롭게 본 사람들도 있었다.",
+        "effects": {
+          "fans": 130
+        },
+        "result": "partial"
+      },
+      "arrange_stuck": {
+        "type": "end",
+        "text": "편곡은 다음으로 미뤘다. {member}는 막힌 부분을 악보에 표시해 두었고, 팬들은 완성본을 기다리겠다고 했다.",
+        "effects": {
+          "fans": 70
+        },
+        "result": "fail"
+      },
+      "calm_end": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "손이 기억하는 곡들로 피아노 트랙을 녹음했다. 잔잔한 트랙은 나중에 짧은 영상으로 올라가 조용히 사랑받았다."
+          },
+          {
+            "text": "손이 기억하는 곡들을 잔잔하게 이어 쳤다. \"작업할 때 틀어 놓기 좋다\"는 반응이 많았다."
+          }
+        ],
+        "effects": {
+          "fans": 110
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_huya_1_a",
+    "title": "리뷰 열두 개짜리 인디게임",
+    "category": "member",
+    "group": "personal_huya_1",
+    "description": "숨은 인디게임 발굴(pe_huya_1) 변형 A. 아무도 모르는 게임을 화면에 띄운 뒤, 끝까지 파고들지 여러 게임을 맛볼지 고른다.",
+    "meta": {
+      "theme": "game_content",
+      "setting": "hidden_indie_showcase",
+      "conflict": "big_opportunity",
+      "resolution": "viral_moment",
+      "activity": "indie_game",
+      "tone": "warm"
+    },
+    "memberId": "huya",
+    "conditions": {
+      "activityCategories": [
+        "game"
+      ],
+      "cooldown": 4
+    },
+    "weight": 2,
+    "start": "find",
+    "steps": {
+      "find": {
+        "type": "story",
+        "text": "{member}가 아무도 모르는 인디게임을 찾아냈다며 화면을 공유했다. 리뷰는 고작 열두 개지만, 첫 화면부터 분위기가 남다르다.",
+        "next": "dig"
+      },
+      "dig": {
+        "type": "choice",
+        "text": "오늘 방송을 이 게임에 다 쓸까?",
+        "choices": [
+          {
+            "text": "끝까지 파고드는 방송을 한다",
+            "effects": {
+              "hp": -5
+            },
+            "story": "{member}가 다른 게임 목록을 닫고 이 게임 하나에 집중하기로 했다.",
+            "next": "dig_check"
+          },
+          {
+            "text": "여러 게임을 짧게 맛만 본다",
+            "effects": {
+              "hp": -3
+            },
+            "story": "이 게임을 포함해 찜해 둔 인디게임 네 개를 번갈아 켜 보기로 했다.",
+            "next": "sampler_end"
+          }
+        ]
+      },
+      "dig_check": {
+        "type": "check",
+        "text": "중반부터 퍼즐이 급격히 어려워졌다. 숨겨진 길을 찾아내야 엔딩까지 갈 수 있다.",
+        "check": {
+          "stat": "Ga",
+          "difficulty": 72,
+          "traitBonus": {
+            "indie": 15
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 아무도 몰랐던 숨은 엔딩까지 찾아냈다. 방송이 끝나기도 전에 게임 리뷰 수가 눈에 띄게 늘었다.",
+            "effects": {
+              "fans": 100,
+              "fame": 1,
+              "stockEffect": {
+                "ticker": "PXLG",
+                "percentage": 2
+              }
+            },
+            "next": "dig_found"
+          },
+          "success": {
+            "text": "막히던 퍼즐을 풀고 엔딩까지 도착했다. 엔딩 화면에서 채팅창이 조용히 감탄했다.",
+            "next": "dig_found"
+          },
+          "partial": {
+            "text": "엔딩 직전까지 갔지만 마지막 퍼즐에서 시간이 다 됐다.",
+            "next": "dig_halfway"
+          },
+          "fail": {
+            "text": "중반 퍼즐에서 한참을 헤맸다. 결국 다음 방송에서 이어 가기로 했다.",
+            "next": "dig_stuck"
+          }
+        }
+      },
+      "dig_found": {
+        "type": "end",
+        "text": "\"{member}가 찾은 게임\"이라는 이름으로 이 인디게임이 조금씩 알려지기 시작했다.",
+        "effects": {
+          "fans": 150,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "dig_halfway": {
+        "type": "end",
+        "text": "엔딩은 못 봤지만 게임의 매력은 충분히 전해졌다. 다음 방송에서 마저 하자는 요청이 이어졌다.",
+        "effects": {
+          "fans": 100
+        },
+        "result": "partial"
+      },
+      "dig_stuck": {
+        "type": "end",
+        "text": "헤맨 시간이 길어 지루해한 시청자도 있었다. 그래도 끝까지 함께한 팬들이 다음 방송 공략을 같이 고민해 주겠다고 했다.",
+        "effects": {
+          "fans": 50
+        },
+        "result": "fail"
+      },
+      "sampler_end": {
+        "type": "end",
+        "text": "네 게임을 맛보는 동안 각각의 개성이 잘 드러났다. \"인디게임 추천 방송\"으로 저장해 두겠다는 팬이 많았다.",
+        "effects": {
+          "fans": 100
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_huya_1_b",
+    "title": "제작자가 보고 있다",
+    "category": "member",
+    "group": "personal_huya_1",
+    "description": "숨은 인디게임 발굴(pe_huya_1) 변형 B. 플레이 방식을 먼저 정한 뒤, 제작자가 방송을 보고 있다는 사실을 알게 된 순간을 넘긴다.",
+    "meta": {
+      "theme": "content_production",
+      "setting": "indie_dev_watching",
+      "conflict": "nervousness",
+      "resolution": "quiet_growth",
+      "activity": "indie_game",
+      "tone": "calm"
+    },
+    "memberId": "huya",
+    "conditions": {
+      "activityCategories": [
+        "game"
+      ],
+      "cooldown": 4
+    },
+    "weight": 2,
+    "start": "plan",
+    "steps": {
+      "plan": {
+        "type": "choice",
+        "text": "{member}가 발굴한 인디게임을 방송에서 해 보기로 했다. 오늘은 이 게임 하나를 깊게 볼지, 비슷한 게임들과 함께 볼지 정해야 한다.",
+        "choices": [
+          {
+            "text": "끝까지 파고드는 방송을 한다",
+            "effects": {
+              "hp": -5
+            },
+            "story": "{member}가 게임 설명을 꼼꼼히 읽고 첫 화면으로 들어갔다.",
+            "next": "dev_story"
+          },
+          {
+            "text": "여러 게임을 짧게 맛만 본다",
+            "effects": {
+              "hp": -3
+            },
+            "story": "{member}가 비슷한 분위기의 인디게임 세 개를 나란히 띄웠다.",
+            "next": "sampler_story"
+          }
+        ]
+      },
+      "dev_story": {
+        "type": "story",
+        "text": "엔딩이 가까워졌을 때, 채팅창에 게임 제작자라는 닉네임이 나타났다. 낯가림이 있는 {member}의 목소리가 잠깐 작아졌다.",
+        "next": "dev_check"
+      },
+      "dev_check": {
+        "type": "check",
+        "text": "제작자 앞에서 마지막 구간을 해내야 한다. 긴장을 누르고 손에 집중할 수 있을까?",
+        "check": {
+          "stat": "Ga",
+          "difficulty": 72,
+          "traitBonus": {
+            "indie": 15
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 마지막 구간을 막힘없이 넘기자 제작자가 \"이렇게 깨는 걸 처음 본다\"고 남겼다.",
+            "effects": {
+              "fans": 100,
+              "fame": 1,
+              "stockEffect": {
+                "ticker": "PXLG",
+                "percentage": 2
+              }
+            },
+            "next": "dev_ending"
+          },
+          "success": {
+            "text": "잠깐 긴장했지만 손은 흔들리지 않았다. 엔딩 크레딧이 올라가자 제작자가 감사 인사를 남겼다.",
+            "next": "dev_ending"
+          },
+          "partial": {
+            "text": "엔딩은 봤지만 마지막 구간에서 여러 번 넘어졌다. 제작자가 웃으며 힌트를 보냈다.",
+            "next": "dev_credit"
+          },
+          "fail": {
+            "text": "긴장한 탓에 같은 구간에서 계속 막혔다. 엔딩은 다음 방송으로 미뤘다.",
+            "next": "dev_lost"
+          }
+        }
+      },
+      "dev_ending": {
+        "type": "end",
+        "text": "제작자의 감사 인사가 담긴 장면이 클립으로 돌았다. 작은 인디게임과 {member}의 이름이 함께 알려졌다.",
+        "effects": {
+          "fans": 150,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "dev_credit": {
+        "type": "end",
+        "text": "제작자의 힌트로 엔딩을 본 장면은 훈훈했다. 다만 플레이 자체는 아쉬웠다는 반응도 있었다.",
+        "effects": {
+          "fans": 100
+        },
+        "result": "partial"
+      },
+      "dev_lost": {
+        "type": "end",
+        "text": "엔딩은 못 봤지만 제작자가 \"다음 방송도 기다리겠다\"고 남겼다. {member}는 그 말을 고정 채팅으로 걸어 두었다.",
+        "effects": {
+          "fans": 50
+        },
+        "result": "fail"
+      },
+      "sampler_story": {
+        "type": "story",
+        "text": "세 게임을 번갈아 하던 중, 한 게임에서 예상치 못한 버그가 터져 채팅창이 웃음바다가 됐다.",
+        "next": "sampler_end"
+      },
+      "sampler_end": {
+        "type": "end",
+        "text": "버그 장면까지 포함해 세 게임의 매력이 골고루 전해졌다. 다음 발굴을 기대하는 팬이 늘었다.",
+        "effects": {
+          "fans": 100
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_huya_2_a",
+    "title": "최고 난이도 곡 앞에서",
+    "category": "member",
+    "group": "personal_huya_2",
+    "description": "리듬게임 기록 도전(pe_huya_2) 변형 A. 그날 일정에 맞는 장면으로 도전이 시작되고, 풀콤보 도전 중 초반 실수를 만회해야 한다.",
+    "meta": {
+      "theme": "game_content",
+      "setting": "rhythm_top_difficulty",
+      "conflict": "early_disadvantage",
+      "resolution": "clutch_moment",
+      "activity": "rhythm_game",
+      "tone": "tense"
+    },
+    "memberId": "huya",
+    "conditions": {
+      "activityCategories": [
+        "rhythm",
+        "music"
+      ],
+      "cooldown": 5
+    },
+    "weight": 2,
+    "start": "intro",
+    "steps": {
+      "intro": {
+        "type": "story",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "녹음을 시작하기 전, {member}가 박자 감각을 깨우려고 리듬게임을 켰다. 마이크 앞이 아니라 컨트롤러 앞에서 오늘의 첫 도전이 시작됐다. 목표는 최고 난이도 곡이다."
+          },
+          {
+            "when": {
+              "activity": [
+                "sing"
+              ]
+            },
+            "text": "노래 방송을 시작하기 전, {member}가 몸풀기로 리듬게임을 켰다. 그리고 오늘은 최고 난이도 곡에 도전해 보겠다고 했다. 채팅창이 \"노래 전에 그걸?\"으로 들썩였다."
+          },
+          {
+            "text": "리듬게임 방송, {member}가 오늘은 최고 난이도 곡에 도전하겠다고 했다. 곡 선택 화면에서 채팅창이 \"그걸?\"으로 가득 찼다."
+          }
+        ],
+        "next": "challenge"
+      },
+      "challenge": {
+        "type": "choice",
+        "text": "어떤 방식으로 도전할까?",
+        "choices": [
+          {
+            "text": "풀콤보가 나올 때까지 도전한다",
+            "effects": {
+              "hp": -7
+            },
+            "story": "{member}가 손을 풀고 시작 버튼을 눌렀다.",
+            "next": "combo_check"
+          },
+          {
+            "text": "연습 모드로 차근차근 올린다",
+            "story": "{member}가 곡을 구간별로 나눠 연습 모드에 들어갔다.",
+            "next": "practice_end"
+          }
+        ]
+      },
+      "combo_check": {
+        "type": "check",
+        "text": "첫 시도부터 초반 구간에서 노트를 연달아 놓쳤다. 다시 처음부터, 이번엔 끝까지 이어 가야 한다.",
+        "check": {
+          "stat": "Ga",
+          "difficulty": 76,
+          "traitBonus": {
+            "rhythm": 15
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "마지막 고밀도 구간까지 한 번도 끊기지 않았다. 결과 화면에 최고 기록이 떴다.",
+            "effects": {
+              "fans": 130,
+              "fame": 2
+            },
+            "next": "combo_full"
+          },
+          "success": {
+            "text": "몇 번의 재도전 끝에 마지막 노트까지 이어졌다. 풀콤보 표시가 화면에 떴다.",
+            "next": "combo_full"
+          },
+          "partial": {
+            "text": "마지막 구간에서 단 하나를 놓쳤다. 풀콤보까지 정말 한 끗이었다.",
+            "next": "combo_one_miss"
+          },
+          "fail": {
+            "text": "초반 구간의 벽을 끝내 넘지 못했다. 손목을 털던 {member}가 짧게 웃었다.",
+            "next": "combo_retry"
+          }
+        }
+      },
+      "combo_full": {
+        "type": "end",
+        "text": "풀콤보 결과 화면이 짧은 영상으로 퍼졌다. \"이 곡을 이렇게?\"라는 반응이 이어졌다.",
+        "effects": {
+          "fans": 170,
+          "stats": {
+            "Ga": 1
+          }
+        },
+        "result": "success"
+      },
+      "combo_one_miss": {
+        "type": "end",
+        "text": "하나 차이로 놓친 기록은 아쉬웠지만, 그 마지막 구간 영상은 꽤 많이 돌았다.",
+        "effects": {
+          "fans": 110,
+          "stats": {
+            "Ga": 1
+          }
+        },
+        "result": "partial"
+      },
+      "combo_retry": {
+        "type": "end",
+        "text": "기록은 다음으로 미뤘다. {member}는 막힌 구간을 따로 메모해 두었고, 팬들은 재도전 날을 기다리겠다고 했다.",
+        "effects": {
+          "fans": 60
+        },
+        "result": "fail"
+      },
+      "practice_end": {
+        "type": "end",
+        "text": "구간을 하나씩 익혀 나갔다. 화려하진 않았지만 손에 남은 감각은 확실했다.",
+        "effects": {
+          "fans": 60,
+          "stats": {
+            "Ga": 1
+          }
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_huya_2_b",
+    "title": "열 번째 시도의 손목",
+    "category": "member",
+    "group": "personal_huya_2",
+    "description": "리듬게임 기록 도전(pe_huya_2) 변형 B. 체력을 먼저 생각해 도전 방식을 정하고, 지친 손목으로 마지막 몇 번에 기록을 건다.",
+    "meta": {
+      "theme": "member_growth",
+      "setting": "rhythm_practice_log",
+      "conflict": "fatigue",
+      "resolution": "steady_success",
+      "activity": "rhythm_game",
+      "tone": "emotional"
+    },
+    "memberId": "huya",
+    "conditions": {
+      "activityCategories": [
+        "rhythm",
+        "music"
+      ],
+      "cooldown": 5
+    },
+    "weight": 2,
+    "start": "plan",
+    "steps": {
+      "plan": {
+        "type": "choice",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "녹음 날. {member}가 녹음 전에 리듬게임 최고 난이도 곡 기록에 도전해 보겠다고 한다. 체력이 많지 않은 편이라 도전 방식을 먼저 정해야 한다."
+          },
+          {
+            "when": {
+              "activity": [
+                "sing"
+              ]
+            },
+            "text": "노래 방송 날. {member}가 방송 전에 리듬게임 최고 난이도 곡 기록에 도전해 보겠다고 한다. 체력이 많지 않은 편이라 도전 방식을 먼저 정해야 한다."
+          },
+          {
+            "text": "리듬게임 방송 날. {member}가 오늘은 최고 난이도 곡 기록에 도전해 보겠다고 한다. 체력이 많지 않은 편이라 도전 방식을 먼저 정해야 한다."
+          }
+        ],
+        "choices": [
+          {
+            "text": "풀콤보가 나올 때까지 도전한다",
+            "effects": {
+              "hp": -7
+            },
+            "story": "{member}가 물병을 옆에 두고 첫 시도를 시작했다.",
+            "next": "stamina_story"
+          },
+          {
+            "text": "연습 모드로 차근차근 올린다",
+            "story": "{member}가 연습 기록표를 펼치고 구간별 연습을 시작했다.",
+            "next": "log_story"
+          }
+        ]
+      },
+      "stamina_story": {
+        "type": "story",
+        "text": "열 번째 시도쯤 손목이 뻐근해졌다. {member}가 잠깐 손을 털고 물을 마셨다. 남은 힘으로 할 수 있는 건 몇 번뿐이다.",
+        "next": "last_check"
+      },
+      "last_check": {
+        "type": "check",
+        "text": "마지막 몇 번의 시도. 지친 손목으로 끝까지 박자를 지켜야 한다.",
+        "check": {
+          "stat": "Ga",
+          "difficulty": 76,
+          "traitBonus": {
+            "rhythm": 15
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "지친 손목이 오히려 힘을 빼 줬다. 가장 깔끔한 플레이로 최고 기록이 나왔다.",
+            "effects": {
+              "fans": 130,
+              "fame": 2
+            },
+            "next": "last_full"
+          },
+          "success": {
+            "text": "마지막 시도에서 끝까지 이어졌다. {member}가 컨트롤러를 내려놓고 한참 숨을 골랐다.",
+            "next": "last_full"
+          },
+          "partial": {
+            "text": "기록은 경신했지만 풀콤보는 아니었다. 그래도 어제보다 확실히 높은 점수다.",
+            "next": "last_close"
+          },
+          "fail": {
+            "text": "손목이 먼저 한계에 닿았다. {member}가 오늘은 여기까지라며 컨트롤러를 내려놓았다.",
+            "next": "last_rest"
+          }
+        }
+      },
+      "last_full": {
+        "type": "end",
+        "text": "체력을 아껴 가며 만든 기록이라 더 값졌다. 결과 화면 영상에 \"끈기\"라는 댓글이 많이 달렸다.",
+        "effects": {
+          "fans": 170,
+          "stats": {
+            "Ga": 1
+          }
+        },
+        "result": "success"
+      },
+      "last_close": {
+        "type": "end",
+        "text": "기록 경신은 했지만 목표였던 풀콤보는 남았다. 다음 도전 목표가 분명해졌다.",
+        "effects": {
+          "fans": 110,
+          "stats": {
+            "Ga": 1
+          }
+        },
+        "result": "partial"
+      },
+      "last_rest": {
+        "type": "end",
+        "text": "무리하지 않고 멈춘 덕에 손목은 금방 풀렸다. 팬들은 \"다음 도전 때 또 같이 보자\"며 기록표 사진에 응원을 남겼다.",
+        "effects": {
+          "fans": 60
+        },
+        "result": "fail"
+      },
+      "log_story": {
+        "type": "story",
+        "text": "구간별 정확도를 기록표에 적어 나갔다. 어제보다 조금씩 오르는 숫자가 눈에 보였다.",
+        "next": "log_end"
+      },
+      "log_end": {
+        "type": "end",
+        "text": "차근차근 올린 정확도 기록표가 공개되자 \"성실한 연습 일지\"라는 반응이 이어졌다.",
+        "effects": {
+          "fans": 60,
+          "stats": {
+            "Ga": 1
+          }
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_huya_3_a",
+    "title": "클립을 보고 온 사람들",
+    "category": "member",
+    "group": "personal_huya_3",
+    "description": "처음 보는 시청자들(pe_huya_3) 변형 A. 클립을 보고 처음 온 사람이 몰린 날, 긴장을 털어놓을지 화면 위주로 갈지 고른다.",
+    "meta": {
+      "theme": "fan_event",
+      "setting": "newcomer_flood_stream",
+      "conflict": "nervousness",
+      "resolution": "audience_help",
+      "activity": "talk_stream",
+      "tone": "warm"
+    },
+    "memberId": "huya",
+    "conditions": {
+      "activityCategories": [
+        "talk",
+        "broadcast"
+      ],
+      "minFans": 3000,
+      "cooldown": 6
+    },
+    "start": "crowd",
+    "steps": {
+      "crowd": {
+        "type": "story",
+        "text": "처음 보는 닉네임이 채팅창을 빠르게 채운다. 클립을 보고 왔다는 시청자가 유난히 많은 날이다. 사람이 많아지자 낯가림이 있는 {member}의 목소리가 조금씩 작아졌다.",
+        "next": "respond"
+      },
+      "respond": {
+        "type": "choice",
+        "text": "어떻게 이어 갈까?",
+        "choices": [
+          {
+            "text": "긴장을 솔직하게 말하고 천천히 대화한다",
+            "effects": {
+              "hp": -3
+            },
+            "story": "{member}가 \"사실 지금 조금 긴장돼요\"라고 털어놓았다.",
+            "next": "talk_check"
+          },
+          {
+            "text": "게임 화면 위주로 진행한다",
+            "conditions": {
+              "activityCategories": [
+                "game"
+              ]
+            },
+            "story": "{member}가 게임 화면을 크게 띄우고 플레이에 집중했다.",
+            "next": "screen_end"
+          },
+          {
+            "text": "말수를 줄이고 준비한 코너 위주로 진행한다",
+            "conditions": {
+              "blockedActivityCategories": [
+                "game"
+              ]
+            },
+            "story": "{member}가 미리 준비해 둔 코너 화면을 띄우고 차분히 진행했다.",
+            "next": "screen_end"
+          }
+        ]
+      },
+      "talk_check": {
+        "type": "check",
+        "text": "긴장했다는 말에 채팅 속도가 잠깐 느려졌다. 이제 천천히 대화를 이어 갈 차례다.",
+        "check": {
+          "stat": "Bs",
+          "difficulty": 72,
+          "traitBonus": {
+            "calm": 10
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "처음 온 시청자들이 하나둘 자기소개를 하기 시작했다. {member}가 이름을 하나하나 읽으며 편안하게 웃었다.",
+            "effects": {
+              "fans": 100,
+              "fame": 2
+            },
+            "next": "talk_open"
+          },
+          "success": {
+            "text": "천천히 주고받는 대화에 {member}의 목소리가 점점 안정됐다.",
+            "next": "talk_open"
+          },
+          "partial": {
+            "text": "대화는 이어졌지만 중간중간 말이 끊겼다. 기존 팬들이 대신 분위기를 띄워 줬다.",
+            "next": "talk_slow"
+          },
+          "fail": {
+            "text": "긴장이 쉽게 풀리지 않아 대화가 자꾸 끊겼다.",
+            "next": "talk_freeze"
+          }
+        }
+      },
+      "talk_open": {
+        "type": "end",
+        "text": "\"긴장한다고 말해 줘서 오히려 편했다\"는 처음 온 시청자의 채팅이 마지막을 장식했다. 단골이 될 사람이 많아 보였다.",
+        "effects": {
+          "fans": 160,
+          "stats": {
+            "Bs": 1
+          }
+        },
+        "result": "success"
+      },
+      "talk_slow": {
+        "type": "end",
+        "text": "분위기는 따뜻했지만 처음 온 시청자 일부는 금방 떠났다. 그래도 남은 사람들과의 대화는 오래 기억될 것 같다.",
+        "effects": {
+          "fans": 100
+        },
+        "result": "partial"
+      },
+      "talk_freeze": {
+        "type": "end",
+        "text": "방송은 조용히 끝났다. 다음 날 {member}가 짧은 감사 글을 올리자, 처음 온 시청자 몇몇이 \"다음에도 올게요\"라고 답했다.",
+        "effects": {
+          "fans": 60
+        },
+        "result": "fail"
+      },
+      "screen_end": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activityCategories": [
+                "game"
+              ]
+            },
+            "text": "게임에 집중하자 목소리도 안정됐다. 처음 온 시청자들은 플레이를 구경하며 조용히 머물렀다."
+          },
+          {
+            "text": "준비한 코너 덕분에 흐름이 끊기지 않았다. 처음 온 시청자들도 코너를 따라 조용히 머물렀다."
+          }
+        ],
+        "effects": {
+          "fans": 80
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_huya_3_b",
+    "title": "두 배로 늘어난 인사 채팅",
+    "category": "member",
+    "group": "personal_huya_3",
+    "description": "처음 보는 시청자들(pe_huya_3) 변형 B. 방송 시작부터 바로 방식을 정하고, 낯선 시청자들과의 첫 대화를 이끌어 간다.",
+    "meta": {
+      "theme": "member_growth",
+      "setting": "first_timer_greeting",
+      "conflict": "audience_reaction",
+      "resolution": "lesson_learned",
+      "activity": "talk_stream",
+      "tone": "calm"
+    },
+    "memberId": "huya",
+    "conditions": {
+      "activityCategories": [
+        "talk",
+        "broadcast"
+      ],
+      "minFans": 3000,
+      "cooldown": 6
+    },
+    "start": "opening",
+    "steps": {
+      "opening": {
+        "type": "choice",
+        "text": "방송 시작 10분 만에 처음 온 시청자가 평소의 두 배를 넘었다. 인사 채팅이 쏟아지자 {member}가 잠깐 말을 고른다.",
+        "choices": [
+          {
+            "text": "긴장을 솔직하게 말하고 천천히 대화한다",
+            "effects": {
+              "hp": -3
+            },
+            "story": "{member}가 크게 숨을 한 번 쉬고, 인사 채팅을 천천히 읽기 시작했다.",
+            "next": "greet_story"
+          },
+          {
+            "text": "게임 화면 위주로 진행한다",
+            "conditions": {
+              "activityCategories": [
+                "game"
+              ]
+            },
+            "story": "{member}가 인사를 짧게 하고 게임 화면으로 넘어갔다.",
+            "next": "screen_story"
+          },
+          {
+            "text": "말수를 줄이고 준비한 코너 위주로 진행한다",
+            "conditions": {
+              "blockedActivityCategories": [
+                "game"
+              ]
+            },
+            "story": "{member}가 인사를 짧게 하고 준비한 코너로 넘어갔다.",
+            "next": "screen_story"
+          }
+        ]
+      },
+      "greet_story": {
+        "type": "story",
+        "text": "인사를 읽던 중, 처음 온 시청자 한 명이 \"어디서부터 보면 돼요?\"라고 물었다. 다른 처음 온 시청자들도 같은 질문을 이어 올렸다.",
+        "next": "greet_check"
+      },
+      "greet_check": {
+        "type": "check",
+        "text": "이 질문에 어떻게 답하느냐가 오늘 처음 온 사람들의 첫인상이 된다.",
+        "check": {
+          "stat": "Bs",
+          "difficulty": 72,
+          "traitBonus": {
+            "calm": 10
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 자기 방송을 처음 보는 사람을 위한 짧은 소개를 즉석에서 해 냈다. 기존 팬들이 추천 클립을 줄줄이 달았다.",
+            "effects": {
+              "fans": 100,
+              "fame": 2
+            },
+            "next": "greet_regulars"
+          },
+          "success": {
+            "text": "천천히, 하지만 또박또박 방송을 소개했다. 처음 온 시청자들이 고개를 끄덕이는 이모티콘을 남겼다.",
+            "next": "greet_regulars"
+          },
+          "partial": {
+            "text": "소개는 했지만 말이 자꾸 엉켰다. 기존 팬들이 대신 설명을 보태 줬다.",
+            "next": "greet_some"
+          },
+          "fail": {
+            "text": "질문이 몰리자 무엇부터 답할지 몰라 한참 머뭇거렸다.",
+            "next": "greet_awkward"
+          }
+        }
+      },
+      "greet_regulars": {
+        "type": "end",
+        "text": "처음 온 시청자를 위한 소개 장면이 고정 클립이 됐다. 낯선 사람 앞에서도 차분히 해낸 하루였다.",
+        "effects": {
+          "fans": 160,
+          "stats": {
+            "Bs": 1
+          }
+        },
+        "result": "success"
+      },
+      "greet_some": {
+        "type": "end",
+        "text": "팬들의 도움으로 첫인상은 지켰다. {member}는 다음엔 직접 소개 자료를 만들어 두겠다고 했다.",
+        "effects": {
+          "fans": 100
+        },
+        "result": "partial"
+      },
+      "greet_awkward": {
+        "type": "end",
+        "text": "어색한 순간이 길었지만, 방송이 끝난 뒤 {member}가 짧은 소개 글을 따로 올렸다. 처음 온 시청자 몇몇이 그 글에 인사를 남겼다.",
+        "effects": {
+          "fans": 60
+        },
+        "result": "fail"
+      },
+      "screen_story": {
+        "type": "story",
+        "text": "화면에 집중하자 목소리가 다시 안정됐다. 다만 처음 온 시청자들과 이야기할 틈은 많지 않았다.",
+        "next": "screen_end"
+      },
+      "screen_end": {
+        "type": "end",
+        "text": "무난하게 끝난 방송이었다. 처음 온 시청자 중 일부는 다음 방송 알림을 켜 두었다.",
+        "effects": {
+          "fans": 80
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_lize_1_a",
+    "title": "한 채팅창에 섞인 레이드",
+    "category": "member",
+    "group": "personal_lize_1",
+    "description": "심야 잡담의 종착역(pe_lize_1) 변형 A. 여러 방송에서 넘어온 시청자들이 한 채팅창에 섞인 새벽, 길게 이야기할지 정리할지 고른다.",
+    "meta": {
+      "theme": "broadcast_live",
+      "setting": "late_night_raid_terminal",
+      "conflict": "unexpected_guest",
+      "resolution": "audience_help",
+      "activity": "late_talk",
+      "tone": "calm"
+    },
+    "memberId": "lize",
+    "conditions": {
+      "activityCategories": [
+        "talk",
+        "broadcast"
+      ],
+      "cooldown": 4
+    },
+    "weight": 2,
+    "start": "raids",
+    "steps": {
+      "raids": {
+        "type": "story",
+        "text": "다른 멤버들의 방송이 끝난 새벽, 레이드가 하나둘 {member}의 방송으로 모여든다. 여러 방송에서 넘어온 시청자들이 한 채팅창에 섞였다.",
+        "next": "host"
+      },
+      "host": {
+        "type": "choice",
+        "text": "모여든 시청자들과 어떻게 새벽을 보낼까?",
+        "choices": [
+          {
+            "text": "모인 시청자들과 길게 이야기를 나눈다",
+            "effects": {
+              "hp": -6
+            },
+            "story": "{member}가 넘어온 시청자들에게 원래 보던 방송 이야기를 하나씩 묻기 시작했다.",
+            "next": "night_check"
+          },
+          {
+            "text": "적당한 시간에 인사하고 마무리한다",
+            "story": "{member}가 넘어온 시청자들에게 인사를 건네고 마무리 시간을 정했다.",
+            "next": "wrap_end"
+          }
+        ]
+      },
+      "night_check": {
+        "type": "check",
+        "text": "서로 다른 방송에서 온 시청자들의 이야기를 한데 엮어야 한다. 새벽 감성이 오히려 도움이 될 수도 있다.",
+        "check": {
+          "stat": "Bs",
+          "difficulty": 74,
+          "traitBonus": {
+            "chatter": 10,
+            "nightOwl": 5
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 각 방송의 이야기를 이어 붙이자 채팅창이 \"오늘 방송 총정리\"처럼 흘러갔다.",
+            "effects": {
+              "fans": 120,
+              "fame": 1
+            },
+            "next": "night_full"
+          },
+          "success": {
+            "text": "넘어온 시청자들이 자기가 본 방송 이야기를 꺼내며 대화가 끝없이 이어졌다.",
+            "next": "night_full"
+          },
+          "partial": {
+            "text": "대화는 이어졌지만 채팅이 너무 빨라 몇몇 이야기는 놓쳤다.",
+            "next": "night_busy"
+          },
+          "fail": {
+            "text": "서로 다른 분위기의 시청자들이 섞이며 대화의 방향을 잡지 못했다.",
+            "next": "night_scattered"
+          }
+        }
+      },
+      "night_full": {
+        "type": "end",
+        "text": "새벽 잡담이 \"하루의 종착역\"이라는 이름으로 불리기 시작했다. 넘어온 시청자 중 상당수가 그대로 팔로우를 눌렀다.",
+        "effects": {
+          "fans": 180,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "night_busy": {
+        "type": "end",
+        "text": "즐거운 새벽이었지만 놓친 이야기가 아쉬웠다. 다시보기에서 그 부분을 찾아보는 팬들이 있었다.",
+        "effects": {
+          "fans": 120
+        },
+        "result": "partial"
+      },
+      "night_scattered": {
+        "type": "end",
+        "text": "대화가 흩어진 채 방송을 마쳤다. {member}는 다음엔 주제를 하나 정해 두겠다고 했고, 남은 팬들은 주제 후보를 보내왔다.",
+        "effects": {
+          "fans": 70
+        },
+        "result": "fail"
+      },
+      "wrap_end": {
+        "type": "end",
+        "text": "적당한 시간에 깔끔하게 마무리했다. 넘어온 시청자들도 기분 좋게 인사를 남기고 떠났다.",
+        "effects": {
+          "fans": 90
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_lize_1_b",
+    "title": "새벽 세 시의 마지막 방송",
+    "category": "member",
+    "group": "personal_lize_1",
+    "description": "심야 잡담의 종착역(pe_lize_1) 변형 B. 남은 체력에 따라 첫 장면이 갈리고, 다른 방송이 모두 꺼진 새벽 해가 뜰 때까지의 대화를 이끈다.",
+    "meta": {
+      "theme": "member_growth",
+      "setting": "dawn_last_stream",
+      "conflict": "fatigue",
+      "resolution": "quiet_growth",
+      "activity": "late_talk",
+      "tone": "emotional"
+    },
+    "memberId": "lize",
+    "conditions": {
+      "activityCategories": [
+        "talk",
+        "broadcast"
+      ],
+      "cooldown": 4
+    },
+    "weight": 2,
+    "start": "hour",
+    "steps": {
+      "hour": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "maxHp": 45
+            },
+            "next": "sleepy_intro"
+          }
+        ],
+        "next": "owl_intro"
+      },
+      "owl_intro": {
+        "type": "story",
+        "text": "새벽 세 시. 다른 방송이 모두 꺼진 시간에도 {member}의 방송은 켜져 있다. 올빼미답게 오히려 지금부터가 시작이라는 분위기다. 갈 곳을 잃은 시청자들이 \"여기가 종착역\"이라며 모여든다.",
+        "next": "stay"
+      },
+      "sleepy_intro": {
+        "type": "story",
+        "text": "새벽 세 시. 요즘 일정이 빡빡했던 {member}의 목소리가 평소보다 낮다. 그래도 다른 방송에서 넘어온 시청자들이 \"여기가 종착역\"이라며 모여든다.",
+        "next": "stay"
+      },
+      "stay": {
+        "type": "choice",
+        "text": "해가 뜰 때까지 남을까?",
+        "choices": [
+          {
+            "text": "모인 시청자들과 길게 이야기를 나눈다",
+            "effects": {
+              "hp": -6
+            },
+            "story": "{member}가 조명을 조금 낮추고 의자를 고쳐 앉았다.",
+            "next": "dawn_check"
+          },
+          {
+            "text": "적당한 시간에 인사하고 마무리한다",
+            "story": "{member}가 \"오늘은 여기까지\"라며 마지막 이야기 하나만 듣기로 했다.",
+            "next": "wrap_end"
+          }
+        ]
+      },
+      "dawn_check": {
+        "type": "check",
+        "text": "창밖이 조금씩 밝아진다. 길어진 새벽을 끝까지 편안한 대화로 채울 수 있을까?",
+        "check": {
+          "stat": "Bs",
+          "difficulty": 74,
+          "traitBonus": {
+            "chatter": 10,
+            "nightOwl": 5
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "해 뜨는 시간에 맞춰 {member}가 오늘 나눈 이야기를 하나씩 되짚었다. 채팅창에 아침 인사가 쏟아졌다.",
+            "effects": {
+              "fans": 120,
+              "fame": 1
+            },
+            "next": "dawn_sunrise"
+          },
+          "success": {
+            "text": "대화가 끊기지 않고 해 뜰 무렵까지 이어졌다.",
+            "next": "dawn_sunrise"
+          },
+          "partial": {
+            "text": "해는 함께 봤지만 마지막 한 시간은 말수가 눈에 띄게 줄었다.",
+            "next": "dawn_doze"
+          },
+          "fail": {
+            "text": "새벽이 깊어질수록 대화가 자꾸 끊겼다. 결국 해가 뜨기 전에 인사를 했다.",
+            "next": "dawn_quiet"
+          }
+        }
+      },
+      "dawn_sunrise": {
+        "type": "end",
+        "text": "\"종착역에서 같이 본 해돋이\"라는 제목의 클립이 올라왔다. 새벽 방송을 기다리는 팬이 눈에 띄게 늘었다.",
+        "effects": {
+          "fans": 180,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "dawn_doze": {
+        "type": "end",
+        "text": "끝까지 함께한 시청자들은 만족했지만, 조용했던 마지막 한 시간에는 \"이제 자라\"는 걱정이 섞여 있었다.",
+        "effects": {
+          "fans": 120
+        },
+        "result": "partial"
+      },
+      "dawn_quiet": {
+        "type": "end",
+        "text": "예정보다 일찍 인사했지만, 남은 시청자들은 \"다음 종착역에서 보자\"며 기분 좋게 떠났다.",
+        "effects": {
+          "fans": 70
+        },
+        "result": "fail"
+      },
+      "wrap_end": {
+        "type": "end",
+        "text": "마지막 이야기 하나를 듣고 방송을 마쳤다. 짧았지만 새벽다운 따뜻한 마무리였다.",
+        "effects": {
+          "fans": 90
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_mashiro_1_a",
+    "title": "괴물에게 말을 건 순간",
+    "category": "member",
+    "group": "personal_mashiro_1",
+    "description": "즉흥 상황극 폭주(pe_mashiro_1) 변형 A. 공포게임 날과 잡담 날이 다른 장면으로 시작하고, 배역이 늘어나는 상황극을 끝까지 이끈다.",
+    "meta": {
+      "theme": "game_content",
+      "setting": "horror_roleplay_takeover",
+      "conflict": "audience_reaction",
+      "resolution": "viral_moment",
+      "activity": "roleplay",
+      "tone": "comedic"
+    },
+    "memberId": "mashiro",
+    "conditions": {
+      "activityCategories": [
+        "horror",
+        "talk"
+      ],
+      "cooldown": 4
+    },
+    "weight": 1,
+    "start": "spark",
+    "steps": {
+      "spark": {
+        "type": "story",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "horror"
+              ]
+            },
+            "text": "공포게임 도중 갑자기 괴물이 튀어나왔다. 그런데 {member}가 비명 대신 게임 속 인물의 목소리로 괴물에게 말을 걸기 시작했다. 채팅창이 들썩인다."
+          },
+          {
+            "text": "잡담 도중 사연 하나를 읽던 {member}가 갑자기 사연 속 인물의 목소리로 상황극을 시작했다. 채팅창이 들썩인다."
+          }
+        ],
+        "next": "grow"
+      },
+      "grow": {
+        "type": "choice",
+        "text": "상황극에 불이 붙었다. 어디까지 키울까?",
+        "choices": [
+          {
+            "text": "상황극을 방송의 메인으로 키운다",
+            "effects": {
+              "hp": -5
+            },
+            "story": "{member}가 목소리를 바꿔 가며 새 배역을 하나 더 꺼냈다.",
+            "next": "rp_check"
+          },
+          {
+            "text": "적당히 받아주고 원래 콘텐츠로 돌아간다",
+            "story": "{member}가 짧게 한 장면만 더 받아 주고 원래 하던 것으로 돌아갔다.",
+            "next": "back_end"
+          }
+        ]
+      },
+      "rp_check": {
+        "type": "check",
+        "text": "배역이 셋, 넷으로 늘어난다. 이야기를 끝까지 이끌어 결말을 낼 수 있을까?",
+        "check": {
+          "stat": "Bs",
+          "difficulty": 74,
+          "traitBonus": {
+            "roleplay": 15,
+            "horror": 5
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 배역마다 다른 목소리로 결말까지 단숨에 이끌었다. 채팅창이 커튼콜 이모티콘으로 가득 찼다.",
+            "effects": {
+              "fans": 120,
+              "fame": 1
+            },
+            "next": "rp_hit"
+          },
+          "success": {
+            "text": "늘어난 배역을 하나하나 정리하며 깔끔한 결말을 냈다.",
+            "next": "rp_hit"
+          },
+          "partial": {
+            "text": "결말은 냈지만 중간에 배역 이름이 몇 번 뒤섞였다.",
+            "next": "rp_messy"
+          },
+          "fail": {
+            "text": "배역이 너무 많아져 이야기가 어디로 가는지 모르게 됐다.",
+            "next": "rp_lost"
+          }
+        }
+      },
+      "rp_hit": {
+        "type": "end",
+        "text": "즉흥 상황극 장면이 클립으로 퍼졌다. \"다음엔 처음부터 상황극 방송 해 달라\"는 요청이 이어졌다.",
+        "effects": {
+          "fans": 180,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "rp_messy": {
+        "type": "end",
+        "text": "뒤섞인 배역마저 웃음 포인트가 됐다. 다만 처음 보는 사람에게는 조금 정신없는 장면이었다.",
+        "effects": {
+          "fans": 120
+        },
+        "result": "partial"
+      },
+      "rp_lost": {
+        "type": "end",
+        "text": "결말 없이 끝난 상황극에 {member}가 \"2화에서 계속\"이라고 선언했다. 팬들은 2화를 기다리겠다며 웃었다.",
+        "effects": {
+          "fans": 60
+        },
+        "result": "fail"
+      },
+      "back_end": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "horror"
+              ]
+            },
+            "text": "짧은 상황극이 공포게임의 긴장을 풀어 주는 쉼표가 됐다. 게임은 다시 무서워졌다."
+          },
+          {
+            "text": "짧은 상황극이 잡담에 활기를 더했다. 대화는 자연스럽게 원래 이야기로 돌아왔다."
+          }
+        ],
+        "effects": {
+          "fans": 90
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_mashiro_1_b",
+    "title": "채팅이 정해 준 배역",
+    "category": "member",
+    "group": "personal_mashiro_1",
+    "description": "즉흥 상황극 폭주(pe_mashiro_1) 변형 B. 진행 방식을 먼저 정하고, 시청자들이 배역을 나눠 맡으며 꼬인 줄거리를 진행으로 정리한다.",
+    "meta": {
+      "theme": "unexpected",
+      "setting": "chat_cast_roleplay",
+      "conflict": "miscommunication",
+      "resolution": "teamwork",
+      "activity": "roleplay",
+      "tone": "hype"
+    },
+    "memberId": "mashiro",
+    "conditions": {
+      "activityCategories": [
+        "horror",
+        "talk"
+      ],
+      "cooldown": 4
+    },
+    "weight": 1,
+    "start": "request",
+    "steps": {
+      "request": {
+        "type": "choice",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "horror"
+              ]
+            },
+            "text": "공포게임 방송 중, 채팅창에 \"주인공 대사 쳐 줘\"라는 요청이 몰렸다. {member}가 장난스럽게 목소리를 바꾸자 시청자들이 배역을 정해 주기 시작한다."
+          },
+          {
+            "text": "잡담 방송 중, 채팅창에 \"상황극 해 줘\"라는 요청이 몰렸다. {member}가 장난스럽게 목소리를 바꾸자 시청자들이 배역을 정해 주기 시작한다."
+          }
+        ],
+        "choices": [
+          {
+            "text": "상황극을 방송의 메인으로 키운다",
+            "effects": {
+              "hp": -5
+            },
+            "story": "진행을 맡은 {member}가 시청자들에게 배역 신청을 받았다.",
+            "next": "cast_story"
+          },
+          {
+            "text": "적당히 받아주고 원래 콘텐츠로 돌아간다",
+            "story": "{member}가 한 장면만 받아 주겠다고 웃으며 선을 그었다.",
+            "next": "back_story"
+          }
+        ]
+      },
+      "cast_story": {
+        "type": "story",
+        "text": "그런데 시청자 여럿이 같은 배역을 원하는 바람에 줄거리가 동시에 세 갈래로 꼬이기 시작했다.",
+        "next": "cast_check"
+      },
+      "cast_check": {
+        "type": "check",
+        "text": "진행자로서 꼬인 세 갈래 줄거리를 하나로 묶어야 한다.",
+        "check": {
+          "stat": "Bs",
+          "difficulty": 74,
+          "traitBonus": {
+            "roleplay": 15,
+            "horror": 5
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 세 갈래를 모두 살린 반전 결말을 만들어 냈다. 배역을 맡은 시청자들이 모두 박수를 쳤다.",
+            "effects": {
+              "fans": 120,
+              "fame": 1
+            },
+            "next": "cast_hit"
+          },
+          "success": {
+            "text": "{member}가 배역마다 역할을 나눠 주며 줄거리를 하나로 정리했다.",
+            "next": "cast_hit"
+          },
+          "partial": {
+            "text": "두 갈래는 묶었지만 하나는 결국 흐지부지 끝났다.",
+            "next": "cast_tangle"
+          },
+          "fail": {
+            "text": "세 갈래가 끝내 합쳐지지 않았다. 채팅창은 웃음과 혼란이 반반이었다.",
+            "next": "cast_split"
+          }
+        }
+      },
+      "cast_hit": {
+        "type": "end",
+        "text": "시청자와 함께 만든 상황극이 \"참여형 상황극\"이라는 이름으로 회자됐다. 다음 배역 신청이 벌써 들어오기 시작했다.",
+        "effects": {
+          "fans": 180,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "cast_tangle": {
+        "type": "end",
+        "text": "배역을 못 살린 시청자 몇몇은 아쉬워했다. 그래도 참여한 사람들은 \"또 하자\"고 입을 모았다.",
+        "effects": {
+          "fans": 120
+        },
+        "result": "partial"
+      },
+      "cast_split": {
+        "type": "end",
+        "text": "흐지부지 끝난 상황극에 {member}가 \"다음엔 배역표부터 만든다\"고 선언했다. 시청자들은 배역표 초안을 벌써 보내오기 시작했다.",
+        "effects": {
+          "fans": 60
+        },
+        "result": "fail"
+      },
+      "back_story": {
+        "type": "story",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "horror"
+              ]
+            },
+            "text": "한 장면 상황극 뒤에 게임으로 돌아오자, 방금 웃던 채팅창이 다시 비명으로 가득 찼다."
+          },
+          {
+            "text": "한 장면 상황극 뒤에 잡담으로 돌아오자, 대화가 한결 부드러워졌다."
+          }
+        ],
+        "next": "back_end"
+      },
+      "back_end": {
+        "type": "end",
+        "text": "짧게 받아 준 상황극이 방송에 기분 좋은 양념이 됐다.",
+        "effects": {
+          "fans": 90
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_mashiro_2_a",
+    "title": "장르가 제각각인 신청곡",
+    "category": "member",
+    "group": "personal_mashiro_2",
+    "description": "우쿨렐레 신청곡(pe_mashiro_2) 변형 A. 노래 방송 날과 녹음 날이 다른 장면으로 시작하고, 여러 장르를 우쿨렐레 하나로 소화해 낸다.",
+    "meta": {
+      "theme": "music_live",
+      "setting": "ukulele_request_hour",
+      "conflict": "high_expectations",
+      "resolution": "audience_help",
+      "activity": "ukulele_singing",
+      "tone": "warm"
+    },
+    "memberId": "mashiro",
+    "conditions": {
+      "activityCategories": [
+        "music"
+      ],
+      "cooldown": 5
+    },
+    "weight": 1,
+    "start": "mode",
+    "steps": {
+      "mode": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "next": "rec_choice"
+          }
+        ],
+        "next": "live_choice"
+      },
+      "live_choice": {
+        "type": "choice",
+        "text": "{member}가 우쿨렐레를 꺼내 들자 신청곡이 줄을 잇는다. 발라드부터 애니메이션 주제가까지 장르가 제각각이다.",
+        "choices": [
+          {
+            "text": "장르를 가리지 않고 받아 연주한다",
+            "effects": {
+              "hp": -5
+            },
+            "story": "{member}가 신청곡 목록을 위에서부터 차례로 받기로 했다.",
+            "next": "uke_check"
+          },
+          {
+            "text": "편안한 곡 위주로 조용히 부른다",
+            "story": "{member}가 템포가 느린 곡들만 골라 조용히 부르기로 했다.",
+            "next": "calm_end"
+          }
+        ]
+      },
+      "rec_choice": {
+        "type": "choice",
+        "text": "녹음 날, {member}가 우쿨렐레를 꺼내 들었다. 녹음 전 손을 풀며 장르가 다른 곡들을 번갈아 쳐 보는 중이다.",
+        "choices": [
+          {
+            "text": "여러 장르를 번갈아 연주해 녹음한다",
+            "effects": {
+              "hp": -5
+            },
+            "story": "{member}가 장르별로 한 곡씩, 다섯 곡을 연달아 녹음하기로 했다.",
+            "next": "uke_check"
+          },
+          {
+            "text": "편안한 곡 위주로 조용히 녹음한다",
+            "story": "{member}가 손에 익은 느린 곡 몇 개만 녹음하기로 했다.",
+            "next": "calm_end"
+          }
+        ]
+      },
+      "uke_check": {
+        "type": "check",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "세 번째 곡은 빠른 템포의 곡이다. 우쿨렐레 하나로 이 박자를 살려 녹음해야 한다."
+          },
+          {
+            "text": "세 번째 신청곡은 빠른 템포의 곡이다. 우쿨렐레 하나로 이 박자를 살려야 한다."
+          }
+        ],
+        "check": {
+          "stat": "Vc",
+          "difficulty": 76,
+          "traitBonus": {
+            "instrument": 15
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 스트로크를 바꿔 빠른 곡을 경쾌한 버전으로 새로 만들어 냈다.",
+            "effects": {
+              "fans": 110,
+              "fame": 1
+            },
+            "next": "uke_hit"
+          },
+          "success": {
+            "text": "빠른 곡도 우쿨렐레 특유의 경쾌함으로 무리 없이 소화했다.",
+            "next": "uke_hit"
+          },
+          "partial": {
+            "text": "곡은 끝까지 갔지만 빠른 구간에서 손이 조금 밀렸다.",
+            "next": "uke_mid"
+          },
+          "fail": {
+            "text": "빠른 곡에서 손이 따라가지 못해 중간에 멈췄다.",
+            "next": "uke_miss"
+          }
+        }
+      },
+      "uke_hit": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "장르가 제각각인 다섯 곡이 우쿨렐레 버전으로 녹음됐다. 짧은 영상으로 공개되자 \"장르 불문\"이라는 감탄이 이어졌다."
+          },
+          {
+            "text": "어떤 장르든 우쿨렐레로 바꿔 내는 모습에 \"장르 불문\"이라는 채팅이 쏟아졌다."
+          }
+        ],
+        "effects": {
+          "fans": 170,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "uke_mid": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "쓸 만한 녹음은 나왔지만 빠른 곡은 다음에 다시 녹음하기로 했다."
+          },
+          {
+            "text": "빠른 곡은 조금 아쉬웠지만 나머지 곡들은 따뜻하게 이어졌다."
+          }
+        ],
+        "effects": {
+          "fans": 110
+        },
+        "result": "partial"
+      },
+      "uke_miss": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "빠른 곡은 다음 녹음 날로 미뤘다. {member}는 스트로크 연습부터 다시 하겠다고 했다."
+          },
+          {
+            "text": "멈춘 곡은 {member}가 \"다음 방송까지 연습해 오겠다\"며 숙제로 남겼다. 신청한 팬은 기다리겠다고 답했다."
+          }
+        ],
+        "effects": {
+          "fans": 60
+        },
+        "result": "fail"
+      },
+      "calm_end": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "느린 곡 몇 개가 차분하게 녹음됐다. 손도 목도 편안하게 마무리했다."
+          },
+          {
+            "text": "조용한 곡들이 이어지며 방송이 포근하게 마무리됐다."
+          }
+        ],
+        "effects": {
+          "fans": 100,
+          "hp": 2
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_mashiro_2_b",
+    "title": "우쿨렐레 코드 노트",
+    "category": "member",
+    "group": "personal_mashiro_2",
+    "description": "우쿨렐레 신청곡(pe_mashiro_2) 변형 B. 낯선 곡의 코드를 정리하는 장면에서 시작해 일정에 맞는 진행을 고르고, 짧은 준비 시간 안에 곡을 완성한다.",
+    "meta": {
+      "theme": "music_production",
+      "setting": "ukulele_chord_notes",
+      "conflict": "time_pressure",
+      "resolution": "steady_success",
+      "activity": "ukulele_singing",
+      "tone": "calm"
+    },
+    "memberId": "mashiro",
+    "conditions": {
+      "activityCategories": [
+        "music"
+      ],
+      "cooldown": 5
+    },
+    "weight": 1,
+    "start": "notes",
+    "steps": {
+      "notes": {
+        "type": "story",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "녹음 전, {member}가 우쿨렐레 코드 노트를 펼쳤다. 오늘 담고 싶은 곡 중 하나는 처음 쳐 보는 곡이라 코드가 아직 비어 있다."
+          },
+          {
+            "text": "노래 방송 전, {member}가 우쿨렐레 코드 노트를 펼쳤다. 미리 받아 둔 신청곡 중 하나는 처음 쳐 보는 곡이라 코드가 아직 비어 있다."
+          }
+        ],
+        "next": "mode"
+      },
+      "mode": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "next": "rec_choice"
+          }
+        ],
+        "next": "live_choice"
+      },
+      "live_choice": {
+        "type": "choice",
+        "text": "코드를 다 채우기 전에 방송 시간이 됐다.",
+        "choices": [
+          {
+            "text": "장르를 가리지 않고 받아 연주한다",
+            "effects": {
+              "hp": -5
+            },
+            "story": "{member}가 비어 있는 코드는 즉석에서 채우겠다며 노트를 보면대에 올렸다.",
+            "next": "chord_check"
+          },
+          {
+            "text": "편안한 곡 위주로 조용히 부른다",
+            "story": "{member}가 처음 쳐 보는 곡은 다음으로 미루고 익숙한 곡들로 가기로 했다.",
+            "next": "calm_end"
+          }
+        ]
+      },
+      "rec_choice": {
+        "type": "choice",
+        "text": "코드를 다 채우기 전에 녹음 시간이 됐다.",
+        "choices": [
+          {
+            "text": "여러 장르를 번갈아 연주해 녹음한다",
+            "effects": {
+              "hp": -5
+            },
+            "story": "{member}가 비어 있는 코드는 녹음하며 채우겠다고 노트를 펼쳐 두었다.",
+            "next": "chord_check"
+          },
+          {
+            "text": "편안한 곡 위주로 조용히 녹음한다",
+            "story": "{member}가 처음 쳐 보는 곡은 미루고 익숙한 곡들만 녹음하기로 했다.",
+            "next": "calm_end"
+          }
+        ]
+      },
+      "chord_check": {
+        "type": "check",
+        "text": "처음 쳐 보는 곡의 차례가 왔다. 귀로 들으며 비어 있는 코드를 채워 나가야 한다.",
+        "check": {
+          "stat": "Vc",
+          "difficulty": 76,
+          "traitBonus": {
+            "instrument": 15
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "귀로 찾은 코드가 원곡보다 우쿨렐레에 더 잘 어울렸다. {member}가 노트에 바로 받아 적었다.",
+            "effects": {
+              "fans": 110,
+              "fame": 1
+            },
+            "next": "chord_done"
+          },
+          "success": {
+            "text": "몇 번 더듬어 본 끝에 코드가 자리를 잡았다. 처음 쳐 보는 곡이 무사히 완성됐다.",
+            "next": "chord_done"
+          },
+          "partial": {
+            "text": "곡은 완성했지만 후렴 코드 하나는 끝내 확신이 서지 않았다.",
+            "next": "chord_half"
+          },
+          "fail": {
+            "text": "비어 있는 코드를 찾느라 곡이 자꾸 끊겼다.",
+            "next": "chord_blank"
+          }
+        }
+      },
+      "chord_done": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "처음 쳐 본 곡까지 녹음을 마쳤다. 완성된 코드 노트는 다음 곡 준비의 든든한 자료가 됐다."
+          },
+          {
+            "text": "처음 쳐 보는 곡을 즉석에서 완성해 내자 신청한 팬이 크게 기뻐했다. 다른 팬들도 다음 신청곡을 줄줄이 올렸다."
+          }
+        ],
+        "effects": {
+          "fans": 170,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "chord_half": {
+        "type": "end",
+        "text": "곡은 마무리했지만 노트에는 물음표가 하나 남았다. 다음에 다시 쳐 보면 더 좋아질 것 같다.",
+        "effects": {
+          "fans": 110
+        },
+        "result": "partial"
+      },
+      "chord_blank": {
+        "type": "end",
+        "text": "{member}가 빈칸 코드를 숙제로 남겼다. 노트의 빈칸이 다음 연습 목표가 됐다.",
+        "effects": {
+          "fans": 60
+        },
+        "result": "fail"
+      },
+      "calm_end": {
+        "type": "end",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "익숙한 곡들을 편안하게 녹음했다. 서두르지 않은 덕에 손도 목도 가볍게 마무리했다."
+          },
+          {
+            "text": "익숙한 곡들이 편안하게 이어졌다. 조용한 노래에 채팅창도 덩달아 차분해졌다."
+          }
+        ],
+        "effects": {
+          "fans": 100,
+          "hp": 2
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
     "id": "st_member_slump_voice",
     "title": "가라앉은 목소리",
     "category": "member",
@@ -12099,6 +14478,553 @@ export const STORY_EVENTS = [
           }
         },
         "result": "fail"
+      }
+    }
+  },
+  {
+    "id": "st_member_yuni_1_a",
+    "title": "일요일 뉴스 원고 마감",
+    "category": "member",
+    "group": "personal_yuni_1",
+    "description": "일요일 아침 뉴스 방송(pe_yuni_1) 변형 A. 방송 30분 전 아직 확인하지 못한 소식들을 두고 준비 방식을 정한다.",
+    "meta": {
+      "theme": "broadcast_live",
+      "setting": "sunday_news_desk",
+      "conflict": "time_pressure",
+      "resolution": "steady_success",
+      "activity": "news_corner",
+      "tone": "calm"
+    },
+    "memberId": "yuni",
+    "conditions": {
+      "activityCategories": [
+        "broadcast"
+      ],
+      "dayOfWeek": 7,
+      "cooldown": 6
+    },
+    "weight": 1.5,
+    "start": "desk",
+    "steps": {
+      "desk": {
+        "type": "story",
+        "text": "일요일 아침, {member}가 한 주의 소식을 정리한 뉴스 원고를 펼쳤다. 그런데 방송 30분 전인데도 멤버 소식 몇 개가 아직 확인되지 않은 채다.",
+        "next": "plan"
+      },
+      "plan": {
+        "type": "choice",
+        "text": "남은 30분을 어떻게 쓸까?",
+        "choices": [
+          {
+            "text": "멤버들 소식까지 꼼꼼히 준비한다",
+            "effects": {
+              "hp": -4
+            },
+            "story": "{member}가 멤버별 소식을 하나하나 다시 확인하며 원고 순서를 고쳤다.",
+            "next": "news_check"
+          },
+          {
+            "text": "가볍게 근황 위주로 진행한다",
+            "story": "확인이 끝난 소식만 남기고, 나머지는 근황 이야기로 채우기로 했다.",
+            "next": "light_end"
+          }
+        ]
+      },
+      "news_check": {
+        "type": "check",
+        "text": "뉴스 코너가 시작됐다. 원고를 읽으면서 쏟아지는 채팅 반응까지 받아 내야 한다.",
+        "check": {
+          "stat": "Bs",
+          "difficulty": 75,
+          "traitBonus": {
+            "chatter": 10
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 소식 사이사이 채팅 반응을 엮어 넣자 뉴스가 토크쇼처럼 살아났다.",
+            "effects": {
+              "fans": 110,
+              "fame": 1
+            },
+            "next": "news_full"
+          },
+          "success": {
+            "text": "준비한 소식이 막힘없이 이어졌다. 멤버 소식이 나올 때마다 채팅창이 반가운 인사로 가득 찼다.",
+            "next": "news_full"
+          },
+          "partial": {
+            "text": "소식은 다 전했지만 시간이 모자라 마지막 몇 개는 빠르게 넘어갔다.",
+            "next": "news_rushed"
+          },
+          "fail": {
+            "text": "소식 두 개의 순서가 뒤바뀌어 읽히는 바람에 채팅창이 잠시 헷갈려했다.",
+            "next": "news_mixup"
+          }
+        }
+      },
+      "news_full": {
+        "type": "end",
+        "text": "꼼꼼하게 준비한 뉴스 코너가 \"이번 주 요약 보러 왔다\"는 반응을 끌어냈다. 다음 주 일요일을 기다리겠다는 채팅이 이어졌다.",
+        "effects": {
+          "fans": 170,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "news_rushed": {
+        "type": "end",
+        "text": "내용은 알찼지만 끝이 급했다. 다시보기 댓글에는 \"마지막 소식 다시 듣고 싶다\"는 요청이 몇 개 달렸다.",
+        "effects": {
+          "fans": 100
+        },
+        "result": "partial"
+      },
+      "news_mixup": {
+        "type": "end",
+        "text": "{member}가 방송 끝에 정정 코너를 따로 열어 바로잡았다. 팬들은 웃으며 넘겼고, 다음 주에는 원고를 하루 일찍 마감하기로 했다.",
+        "effects": {
+          "fans": 50
+        },
+        "result": "fail"
+      },
+      "light_end": {
+        "type": "end",
+        "text": "근황 위주의 가벼운 뉴스는 일요일 아침답게 편안했다. 크게 화제가 되진 않았지만 꾸준히 보러 오는 팬들이 반가워했다.",
+        "effects": {
+          "fans": 90
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_yuni_1_b",
+    "title": "시청자 제보가 몰린 일요일",
+    "category": "member",
+    "group": "personal_yuni_1",
+    "description": "일요일 아침 뉴스 방송(pe_yuni_1) 변형 B. 제보가 평소의 세 배로 몰린 날, 원고 방향을 먼저 정하고 방송 중 정정 소동을 넘긴다.",
+    "meta": {
+      "theme": "fan_event",
+      "setting": "sunday_viewer_tip_corner",
+      "conflict": "audience_reaction",
+      "resolution": "audience_help",
+      "activity": "news_corner",
+      "tone": "comedic"
+    },
+    "memberId": "yuni",
+    "conditions": {
+      "activityCategories": [
+        "broadcast"
+      ],
+      "dayOfWeek": 7,
+      "cooldown": 6
+    },
+    "weight": 1.5,
+    "start": "plan",
+    "steps": {
+      "plan": {
+        "type": "choice",
+        "text": "일요일 뉴스 코너를 앞두고, 이번 주에는 시청자 제보가 평소의 세 배나 들어왔다. {member}가 원고 방향을 정해야 한다.",
+        "choices": [
+          {
+            "text": "멤버들 소식까지 꼼꼼히 준비한다",
+            "effects": {
+              "hp": -4
+            },
+            "story": "제보를 하나하나 확인해 멤버별 코너를 만들었다. 원고가 평소보다 두 배는 두꺼워졌다.",
+            "next": "tip_story"
+          },
+          {
+            "text": "가볍게 근황 위주로 진행한다",
+            "story": "제보는 다음 주로 넘기고, 이번 주는 근황 위주로 가볍게 가기로 했다.",
+            "next": "light_story"
+          }
+        ]
+      },
+      "tip_story": {
+        "type": "story",
+        "text": "방송 중반, 제보 하나가 사실과 조금 다르다는 채팅이 올라왔다. 채팅창이 \"속보 정정\"을 외치며 술렁인다.",
+        "next": "tip_check"
+      },
+      "tip_check": {
+        "type": "check",
+        "text": "잘못 들어온 제보를 어떻게 다루느냐에 따라 오늘 뉴스의 인상이 갈린다.",
+        "check": {
+          "stat": "Bs",
+          "difficulty": 75,
+          "traitBonus": {
+            "chatter": 10
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 즉석에서 \"정정 보도\" 코너를 만들어 제보자와 함께 사실을 바로잡자 채팅창이 박수로 가득 찼다.",
+            "effects": {
+              "fans": 110,
+              "fame": 1
+            },
+            "next": "tip_fixed"
+          },
+          "success": {
+            "text": "{member}가 침착하게 정정하고 다음 소식으로 넘어갔다. 오히려 꼼꼼하다는 반응이 많았다.",
+            "next": "tip_fixed"
+          },
+          "partial": {
+            "text": "정정은 했지만 설명이 길어져 뒤쪽 소식 몇 개를 다음 주로 미뤘다.",
+            "next": "tip_half"
+          },
+          "fail": {
+            "text": "정정하는 사이 다른 제보까지 섞이며 순서가 꼬였다.",
+            "next": "tip_confused"
+          }
+        }
+      },
+      "tip_fixed": {
+        "type": "end",
+        "text": "제보 코너는 \"시청자와 같이 만드는 뉴스\"라는 별명을 얻었다. 다음 주 제보가 벌써 들어오기 시작했다.",
+        "effects": {
+          "fans": 170,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "tip_half": {
+        "type": "end",
+        "text": "다 전하지 못한 소식은 다음 주 예고가 됐다. 다만 오늘 소식을 기다린 제보자 몇몇은 아쉬워했다.",
+        "effects": {
+          "fans": 100
+        },
+        "result": "partial"
+      },
+      "tip_confused": {
+        "type": "end",
+        "text": "꼬인 순서는 방송 끝까지 웃음거리가 됐다. {member}는 다음 주부터 제보 확인 시간을 따로 잡겠다고 했고, 팬들은 \"그래도 재밌었다\"며 응원했다.",
+        "effects": {
+          "fans": 50
+        },
+        "result": "fail"
+      },
+      "light_story": {
+        "type": "story",
+        "text": "근황 위주로 진행하자 채팅창이 \"이번 주 근황\"이라는 즉석 코너 제목을 붙여 줬다.",
+        "next": "light_end"
+      },
+      "light_end": {
+        "type": "end",
+        "text": "가볍게 끝낸 뉴스 코너에 \"일요일 아침엔 이 정도가 딱 좋다\"는 반응이 이어졌다.",
+        "effects": {
+          "fans": 90
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_yuni_2_a",
+    "title": "이길 때까지 한 판 더",
+    "category": "member",
+    "group": "personal_yuni_2",
+    "description": "승부욕 발동(pe_yuni_2) 변형 A. 컨디션에 따라 첫 장면이 갈리고, 밤샘 특훈이냐 정해진 시간의 집중 연습이냐를 고른다.",
+    "meta": {
+      "theme": "game_content",
+      "setting": "rematch_practice_room",
+      "conflict": "rivalry",
+      "resolution": "comeback_win",
+      "activity": "game_practice",
+      "tone": "hype"
+    },
+    "memberId": "yuni",
+    "conditions": {
+      "activityCategories": [
+        "game"
+      ],
+      "cooldown": 5
+    },
+    "weight": 1.5,
+    "start": "condition",
+    "steps": {
+      "condition": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "maxHp": 50
+            },
+            "next": "tired_intro"
+          }
+        ],
+        "next": "fired_intro"
+      },
+      "fired_intro": {
+        "type": "story",
+        "text": "어제 아깝게 진 판을 다시 돌려 보던 {member}가 화면을 멈췄다. 오늘은 이길 때까지 연습하겠다는 선언에 채팅창이 들썩인다.",
+        "next": "practice"
+      },
+      "tired_intro": {
+        "type": "story",
+        "text": "어제 아깝게 진 판을 다시 돌려 보던 {member}가 이길 때까지 연습하겠다고 선언했다. 다만 이어진 일정 탓에 목소리에 피곤이 묻어난다.",
+        "next": "practice"
+      },
+      "practice": {
+        "type": "choice",
+        "text": "연습 방송을 어떻게 꾸릴까?",
+        "choices": [
+          {
+            "text": "밤새 특훈 방송을 한다",
+            "effects": {
+              "hp": -10
+            },
+            "story": "\"오늘은 끝까지 간다.\" {member}가 연습 목표를 화면 한쪽에 적었다.",
+            "next": "night_check"
+          },
+          {
+            "text": "정해진 시간만 집중해서 연습한다",
+            "effects": {
+              "hp": -4
+            },
+            "story": "두 시간 타이머를 띄우고, 진 판에서 나온 약점만 골라 연습하기로 했다.",
+            "next": "focus_end"
+          }
+        ]
+      },
+      "night_check": {
+        "type": "check",
+        "text": "새벽 세 시, 어제 진 상대와 같은 조건의 마지막 판이 시작됐다.",
+        "check": {
+          "stat": "Ga",
+          "difficulty": 82,
+          "traitBonus": {
+            "competitive": 10,
+            "fps": 5
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "초반부터 몰아붙인 {member}가 한 번도 흐름을 내주지 않았다. 채팅창이 \"설욕\"으로 도배됐다.",
+            "effects": {
+              "fans": 130,
+              "fame": 2,
+              "stats": {
+                "Ga": 1
+              }
+            },
+            "next": "night_win"
+          },
+          "success": {
+            "text": "끝까지 팽팽했던 판을 마지막 순간에 가져왔다. {member}가 의자에 기대 크게 웃었다.",
+            "next": "night_win"
+          },
+          "partial": {
+            "text": "이기지는 못했지만 어제보다 훨씬 가까웠다. 마지막 장면에서 채팅창이 한숨과 박수를 함께 보냈다.",
+            "next": "night_close"
+          },
+          "fail": {
+            "text": "밤새 연습한 판도 아깝게 내줬다. 화면을 한참 바라보던 {member}가 짧게 \"다음엔 이긴다\"고만 말했다.",
+            "next": "night_loss"
+          }
+        }
+      },
+      "night_win": {
+        "type": "end",
+        "text": "밤샘 특훈 끝에 거둔 설욕전이 클립으로 퍼졌다. 대신 {member}는 오늘 밤 회복이 더딜 것이다.",
+        "effects": {
+          "fans": 170,
+          "stats": {
+            "Ga": 1
+          },
+          "memberFlags": {
+            "stayedUpLate": true
+          }
+        },
+        "result": "success"
+      },
+      "night_close": {
+        "type": "end",
+        "text": "설욕은 다음으로 미뤘지만 실력이 는 건 모두가 봤다. 다만 밤샘의 피로는 고스란히 남았다.",
+        "effects": {
+          "fans": 110,
+          "stats": {
+            "Ga": 1
+          },
+          "memberFlags": {
+            "stayedUpLate": true
+          }
+        },
+        "result": "partial"
+      },
+      "night_loss": {
+        "type": "end",
+        "text": "진 판의 리플레이가 오히려 응원 클립이 됐다. {member}는 다음 연습 방송 날짜부터 공지했고, 팬들은 그날을 기다리겠다고 답했다.",
+        "effects": {
+          "fans": 60,
+          "stats": {
+            "Ga": 1
+          },
+          "memberFlags": {
+            "stayedUpLate": true
+          }
+        },
+        "result": "fail"
+      },
+      "focus_end": {
+        "type": "end",
+        "text": "정해진 두 시간 동안 약점 하나를 확실히 고쳤다. 화려하진 않았지만 \"이게 진짜 연습\"이라는 반응이 많았다.",
+        "effects": {
+          "fans": 70,
+          "stats": {
+            "Ga": 1
+          }
+        },
+        "result": "success"
+      }
+    }
+  },
+  {
+    "id": "st_member_yuni_2_b",
+    "title": "리플레이 속 세 번의 실수",
+    "category": "member",
+    "group": "personal_yuni_2",
+    "description": "승부욕 발동(pe_yuni_2) 변형 B. 연습 방식을 먼저 정한 뒤, 리플레이에서 찾은 같은 실수를 고치는 특훈과 집중 연습이 따로 이어진다.",
+    "meta": {
+      "theme": "member_growth",
+      "setting": "replay_review_session",
+      "conflict": "high_expectations",
+      "resolution": "lesson_learned",
+      "activity": "game_practice",
+      "tone": "tense"
+    },
+    "memberId": "yuni",
+    "conditions": {
+      "activityCategories": [
+        "game"
+      ],
+      "cooldown": 5
+    },
+    "weight": 1.5,
+    "start": "decide",
+    "steps": {
+      "decide": {
+        "type": "choice",
+        "text": "패배가 분했던 {member}가 리플레이를 켠 채 선언했다. 오늘은 이길 때까지 연습한다. 남은 건 연습 방식이다.",
+        "choices": [
+          {
+            "text": "밤새 특훈 방송을 한다",
+            "effects": {
+              "hp": -10
+            },
+            "story": "\"밤새 간다.\" 연습 방송 제목이 바뀌자 채팅창이 응원 이모티콘으로 가득 찼다.",
+            "next": "review_story"
+          },
+          {
+            "text": "정해진 시간만 집중해서 연습한다",
+            "effects": {
+              "hp": -4
+            },
+            "story": "{member}가 연습 시간을 딱 정해 두고 집중하기로 했다.",
+            "next": "focus_story"
+          }
+        ]
+      },
+      "review_story": {
+        "type": "story",
+        "text": "리플레이를 다시 보던 {member}가 같은 실수를 세 번 반복한 장면을 찾아냈다. 특훈은 그 장면을 고치는 데서 시작됐다.",
+        "next": "drill_check"
+      },
+      "drill_check": {
+        "type": "check",
+        "text": "같은 상황을 수십 번 반복한 끝에 실전 같은 연습 판이 시작됐다. 세 번의 실수를 이번엔 피할 수 있을까?",
+        "check": {
+          "stat": "Ga",
+          "difficulty": 82,
+          "traitBonus": {
+            "competitive": 10,
+            "fps": 5
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "세 장면을 모두 완벽하게 넘긴 {member}가 판까지 압도적으로 가져왔다.",
+            "effects": {
+              "fans": 130,
+              "fame": 2,
+              "stats": {
+                "Ga": 1
+              }
+            },
+            "next": "drill_fixed"
+          },
+          "success": {
+            "text": "두 번째 장면에서 손이 먼저 반응했다. 몸에 익은 연습이 판을 바꿨다.",
+            "next": "drill_fixed"
+          },
+          "partial": {
+            "text": "실수 두 개는 고쳤지만 마지막 하나가 또 나왔다.",
+            "next": "drill_almost"
+          },
+          "fail": {
+            "text": "긴장한 탓에 연습한 장면에서 오히려 같은 실수가 나왔다.",
+            "next": "drill_stuck"
+          }
+        }
+      },
+      "drill_fixed": {
+        "type": "end",
+        "text": "\"같은 실수는 두 번 안 한다\"는 말을 증명한 연습 방송이었다. 새벽까지 남은 시청자들이 박수로 마무리했다.",
+        "effects": {
+          "fans": 170,
+          "stats": {
+            "Ga": 1
+          },
+          "memberFlags": {
+            "stayedUpLate": true
+          }
+        },
+        "result": "success"
+      },
+      "drill_almost": {
+        "type": "end",
+        "text": "하나가 남았지만 연습 노트에는 고친 두 장면이 굵게 적혔다. 피곤은 컸지만 소득도 분명했다.",
+        "effects": {
+          "fans": 110,
+          "stats": {
+            "Ga": 1
+          },
+          "memberFlags": {
+            "stayedUpLate": true
+          }
+        },
+        "result": "partial"
+      },
+      "drill_stuck": {
+        "type": "end",
+        "text": "{member}가 그 장면만 따로 잘라 다음 연습 과제로 남겼다. 팬들은 \"다음엔 된다\"며 그 장면에 응원 댓글을 달았다.",
+        "effects": {
+          "fans": 60,
+          "stats": {
+            "Ga": 1
+          },
+          "memberFlags": {
+            "stayedUpLate": true
+          }
+        },
+        "result": "fail"
+      },
+      "focus_story": {
+        "type": "story",
+        "text": "정해진 시간 안에서 {member}가 실수 장면 하나만 골라 반복했다. 채팅창도 덩달아 조용히 집중했다.",
+        "next": "focus_end"
+      },
+      "focus_end": {
+        "type": "end",
+        "text": "짧고 굵은 연습으로 약점 하나를 지웠다. 체력도 아끼고 실력도 챙긴 하루였다.",
+        "effects": {
+          "fans": 70,
+          "stats": {
+            "Ga": 1
+          }
+        },
+        "result": "success"
       }
     }
   },

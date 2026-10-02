@@ -1,0 +1,147 @@
+{
+  "id": "st_member_mashiro_1_b",
+  "title": "채팅이 정해 준 배역",
+  "category": "member",
+  "group": "personal_mashiro_1",
+  "description": "즉흥 상황극 폭주(pe_mashiro_1) 변형 B. 진행 방식을 먼저 정하고, 시청자들이 배역을 나눠 맡으며 꼬인 줄거리를 진행으로 정리한다.",
+  "meta": {
+    "theme": "unexpected",
+    "setting": "chat_cast_roleplay",
+    "conflict": "miscommunication",
+    "resolution": "teamwork",
+    "activity": "roleplay",
+    "tone": "hype"
+  },
+  "memberId": "mashiro",
+  "conditions": {
+    "activityCategories": [
+      "horror",
+      "talk"
+    ],
+    "cooldown": 4
+  },
+  "weight": 1,
+  "start": "request",
+  "steps": {
+    "request": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "horror"
+            ]
+          },
+          "text": "공포게임 방송 중, 채팅창에 \"주인공 대사 쳐 줘\"라는 요청이 몰렸다. {member}가 장난스럽게 목소리를 바꾸자 시청자들이 배역을 정해 주기 시작한다."
+        },
+        {
+          "text": "잡담 방송 중, 채팅창에 \"상황극 해 줘\"라는 요청이 몰렸다. {member}가 장난스럽게 목소리를 바꾸자 시청자들이 배역을 정해 주기 시작한다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "상황극을 방송의 메인으로 키운다",
+          "effects": {
+            "hp": -5
+          },
+          "story": "진행을 맡은 {member}가 시청자들에게 배역 신청을 받았다.",
+          "next": "cast_story"
+        },
+        {
+          "text": "적당히 받아주고 원래 콘텐츠로 돌아간다",
+          "story": "{member}가 한 장면만 받아 주겠다고 웃으며 선을 그었다.",
+          "next": "back_story"
+        }
+      ]
+    },
+    "cast_story": {
+      "type": "story",
+      "text": "그런데 시청자 여럿이 같은 배역을 원하는 바람에 줄거리가 동시에 세 갈래로 꼬이기 시작했다.",
+      "next": "cast_check"
+    },
+    "cast_check": {
+      "type": "check",
+      "text": "진행자로서 꼬인 세 갈래 줄거리를 하나로 묶어야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "roleplay": 15,
+          "horror": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 세 갈래를 모두 살린 반전 결말을 만들어 냈다. 배역을 맡은 시청자들이 모두 박수를 쳤다.",
+          "effects": {
+            "fans": 120,
+            "fame": 1
+          },
+          "next": "cast_hit"
+        },
+        "success": {
+          "text": "{member}가 배역마다 역할을 나눠 주며 줄거리를 하나로 정리했다.",
+          "next": "cast_hit"
+        },
+        "partial": {
+          "text": "두 갈래는 묶었지만 하나는 결국 흐지부지 끝났다.",
+          "next": "cast_tangle"
+        },
+        "fail": {
+          "text": "세 갈래가 끝내 합쳐지지 않았다. 채팅창은 웃음과 혼란이 반반이었다.",
+          "next": "cast_split"
+        }
+      }
+    },
+    "cast_hit": {
+      "type": "end",
+      "text": "시청자와 함께 만든 상황극이 \"참여형 상황극\"이라는 이름으로 회자됐다. 다음 배역 신청이 벌써 들어오기 시작했다.",
+      "effects": {
+        "fans": 180,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "cast_tangle": {
+      "type": "end",
+      "text": "배역을 못 살린 시청자 몇몇은 아쉬워했다. 그래도 참여한 사람들은 \"또 하자\"고 입을 모았다.",
+      "effects": {
+        "fans": 120
+      },
+      "result": "partial"
+    },
+    "cast_split": {
+      "type": "end",
+      "text": "흐지부지 끝난 상황극에 {member}가 \"다음엔 배역표부터 만든다\"고 선언했다. 시청자들은 배역표 초안을 벌써 보내오기 시작했다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "back_story": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "horror"
+            ]
+          },
+          "text": "한 장면 상황극 뒤에 게임으로 돌아오자, 방금 웃던 채팅창이 다시 비명으로 가득 찼다."
+        },
+        {
+          "text": "한 장면 상황극 뒤에 잡담으로 돌아오자, 대화가 한결 부드러워졌다."
+        }
+      ],
+      "next": "back_end"
+    },
+    "back_end": {
+      "type": "end",
+      "text": "짧게 받아 준 상황극이 방송에 기분 좋은 양념이 됐다.",
+      "effects": {
+        "fans": 90
+      },
+      "result": "success"
+    }
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "id": "st_member_yuni_1_a",
+  "title": "일요일 뉴스 원고 마감",
+  "category": "member",
+  "group": "personal_yuni_1",
+  "description": "일요일 아침 뉴스 방송(pe_yuni_1) 변형 A. 방송 30분 전 아직 확인하지 못한 소식들을 두고 준비 방식을 정한다.",
+  "meta": {
+    "theme": "broadcast_live",
+    "setting": "sunday_news_desk",
+    "conflict": "time_pressure",
+    "resolution": "steady_success",
+    "activity": "news_corner",
+    "tone": "calm"
+  },
+  "memberId": "yuni",
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "dayOfWeek": 7,
+    "cooldown": 6
+  },
+  "weight": 1.5,
+  "start": "desk",
+  "steps": {
+    "desk": {
+      "type": "story",
+      "text": "일요일 아침, {member}가 한 주의 소식을 정리한 뉴스 원고를 펼쳤다. 그런데 방송 30분 전인데도 멤버 소식 몇 개가 아직 확인되지 않은 채다.",
+      "next": "plan"
+    },
+    "plan": {
+      "type": "choice",
+      "text": "남은 30분을 어떻게 쓸까?",
+      "choices": [
+        {
+          "text": "멤버들 소식까지 꼼꼼히 준비한다",
+          "effects": {
+            "hp": -4
+          },
+          "story": "{member}가 멤버별 소식을 하나하나 다시 확인하며 원고 순서를 고쳤다.",
+          "next": "news_check"
+        },
+        {
+          "text": "가볍게 근황 위주로 진행한다",
+          "story": "확인이 끝난 소식만 남기고, 나머지는 근황 이야기로 채우기로 했다.",
+          "next": "light_end"
+        }
+      ]
+    },
+    "news_check": {
+      "type": "check",
+      "text": "뉴스 코너가 시작됐다. 원고를 읽으면서 쏟아지는 채팅 반응까지 받아 내야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 75,
+        "traitBonus": {
+          "chatter": 10
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 소식 사이사이 채팅 반응을 엮어 넣자 뉴스가 토크쇼처럼 살아났다.",
+          "effects": {
+            "fans": 110,
+            "fame": 1
+          },
+          "next": "news_full"
+        },
+        "success": {
+          "text": "준비한 소식이 막힘없이 이어졌다. 멤버 소식이 나올 때마다 채팅창이 반가운 인사로 가득 찼다.",
+          "next": "news_full"
+        },
+        "partial": {
+          "text": "소식은 다 전했지만 시간이 모자라 마지막 몇 개는 빠르게 넘어갔다.",
+          "next": "news_rushed"
+        },
+        "fail": {
+          "text": "소식 두 개의 순서가 뒤바뀌어 읽히는 바람에 채팅창이 잠시 헷갈려했다.",
+          "next": "news_mixup"
+        }
+      }
+    },
+    "news_full": {
+      "type": "end",
+      "text": "꼼꼼하게 준비한 뉴스 코너가 \"이번 주 요약 보러 왔다\"는 반응을 끌어냈다. 다음 주 일요일을 기다리겠다는 채팅이 이어졌다.",
+      "effects": {
+        "fans": 170,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "news_rushed": {
+      "type": "end",
+      "text": "내용은 알찼지만 끝이 급했다. 다시보기 댓글에는 \"마지막 소식 다시 듣고 싶다\"는 요청이 몇 개 달렸다.",
+      "effects": {
+        "fans": 100
+      },
+      "result": "partial"
+    },
+    "news_mixup": {
+      "type": "end",
+      "text": "{member}가 방송 끝에 정정 코너를 따로 열어 바로잡았다. 팬들은 웃으며 넘겼고, 다음 주에는 원고를 하루 일찍 마감하기로 했다.",
+      "effects": {
+        "fans": 50
+      },
+      "result": "fail"
+    },
+    "light_end": {
+      "type": "end",
+      "text": "근황 위주의 가벼운 뉴스는 일요일 아침답게 편안했다. 크게 화제가 되진 않았지만 꾸준히 보러 오는 팬들이 반가워했다.",
+      "effects": {
+        "fans": 90
+      },
+      "result": "success"
+    }
+  }
+}

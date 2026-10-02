@@ -1,0 +1,205 @@
+{
+  "id": "st_member_mashiro_2_a",
+  "title": "장르가 제각각인 신청곡",
+  "category": "member",
+  "group": "personal_mashiro_2",
+  "description": "우쿨렐레 신청곡(pe_mashiro_2) 변형 A. 노래 방송 날과 녹음 날이 다른 장면으로 시작하고, 여러 장르를 우쿨렐레 하나로 소화해 낸다.",
+  "meta": {
+    "theme": "music_live",
+    "setting": "ukulele_request_hour",
+    "conflict": "high_expectations",
+    "resolution": "audience_help",
+    "activity": "ukulele_singing",
+    "tone": "warm"
+  },
+  "memberId": "mashiro",
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "cooldown": 5
+  },
+  "weight": 1,
+  "start": "mode",
+  "steps": {
+    "mode": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "next": "rec_choice"
+        }
+      ],
+      "next": "live_choice"
+    },
+    "live_choice": {
+      "type": "choice",
+      "text": "{member}가 우쿨렐레를 꺼내 들자 신청곡이 줄을 잇는다. 발라드부터 애니메이션 주제가까지 장르가 제각각이다.",
+      "choices": [
+        {
+          "text": "장르를 가리지 않고 받아 연주한다",
+          "effects": {
+            "hp": -5
+          },
+          "story": "{member}가 신청곡 목록을 위에서부터 차례로 받기로 했다.",
+          "next": "uke_check"
+        },
+        {
+          "text": "편안한 곡 위주로 조용히 부른다",
+          "story": "{member}가 템포가 느린 곡들만 골라 조용히 부르기로 했다.",
+          "next": "calm_end"
+        }
+      ]
+    },
+    "rec_choice": {
+      "type": "choice",
+      "text": "녹음 날, {member}가 우쿨렐레를 꺼내 들었다. 녹음 전 손을 풀며 장르가 다른 곡들을 번갈아 쳐 보는 중이다.",
+      "choices": [
+        {
+          "text": "여러 장르를 번갈아 연주해 녹음한다",
+          "effects": {
+            "hp": -5
+          },
+          "story": "{member}가 장르별로 한 곡씩, 다섯 곡을 연달아 녹음하기로 했다.",
+          "next": "uke_check"
+        },
+        {
+          "text": "편안한 곡 위주로 조용히 녹음한다",
+          "story": "{member}가 손에 익은 느린 곡 몇 개만 녹음하기로 했다.",
+          "next": "calm_end"
+        }
+      ]
+    },
+    "uke_check": {
+      "type": "check",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "세 번째 곡은 빠른 템포의 곡이다. 우쿨렐레 하나로 이 박자를 살려 녹음해야 한다."
+        },
+        {
+          "text": "세 번째 신청곡은 빠른 템포의 곡이다. 우쿨렐레 하나로 이 박자를 살려야 한다."
+        }
+      ],
+      "check": {
+        "stat": "Vc",
+        "difficulty": 76,
+        "traitBonus": {
+          "instrument": 15
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 스트로크를 바꿔 빠른 곡을 경쾌한 버전으로 새로 만들어 냈다.",
+          "effects": {
+            "fans": 110,
+            "fame": 1
+          },
+          "next": "uke_hit"
+        },
+        "success": {
+          "text": "빠른 곡도 우쿨렐레 특유의 경쾌함으로 무리 없이 소화했다.",
+          "next": "uke_hit"
+        },
+        "partial": {
+          "text": "곡은 끝까지 갔지만 빠른 구간에서 손이 조금 밀렸다.",
+          "next": "uke_mid"
+        },
+        "fail": {
+          "text": "빠른 곡에서 손이 따라가지 못해 중간에 멈췄다.",
+          "next": "uke_miss"
+        }
+      }
+    },
+    "uke_hit": {
+      "type": "end",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "장르가 제각각인 다섯 곡이 우쿨렐레 버전으로 녹음됐다. 짧은 영상으로 공개되자 \"장르 불문\"이라는 감탄이 이어졌다."
+        },
+        {
+          "text": "어떤 장르든 우쿨렐레로 바꿔 내는 모습에 \"장르 불문\"이라는 채팅이 쏟아졌다."
+        }
+      ],
+      "effects": {
+        "fans": 170,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "uke_mid": {
+      "type": "end",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "쓸 만한 녹음은 나왔지만 빠른 곡은 다음에 다시 녹음하기로 했다."
+        },
+        {
+          "text": "빠른 곡은 조금 아쉬웠지만 나머지 곡들은 따뜻하게 이어졌다."
+        }
+      ],
+      "effects": {
+        "fans": 110
+      },
+      "result": "partial"
+    },
+    "uke_miss": {
+      "type": "end",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "빠른 곡은 다음 녹음 날로 미뤘다. {member}는 스트로크 연습부터 다시 하겠다고 했다."
+        },
+        {
+          "text": "멈춘 곡은 {member}가 \"다음 방송까지 연습해 오겠다\"며 숙제로 남겼다. 신청한 팬은 기다리겠다고 답했다."
+        }
+      ],
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "calm_end": {
+      "type": "end",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "느린 곡 몇 개가 차분하게 녹음됐다. 손도 목도 편안하게 마무리했다."
+        },
+        {
+          "text": "조용한 곡들이 이어지며 방송이 포근하게 마무리됐다."
+        }
+      ],
+      "effects": {
+        "fans": 100,
+        "hp": 2
+      },
+      "result": "success"
+    }
+  }
+}

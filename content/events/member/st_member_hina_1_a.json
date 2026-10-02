@@ -1,0 +1,102 @@
+{
+  "id": "st_member_hina_1_a",
+  "title": "알림 하나에 모인 사람들",
+  "category": "member",
+  "group": "personal_hina_1",
+  "description": "예고 없는 게릴라 방송(pe_hina_1) 변형 A. 판정 없이, 장시간으로 가면 남은 체력에 따라 마무리가 갈린다.",
+  "meta": {
+    "theme": "broadcast_live",
+    "setting": "guerrilla_stream_alert",
+    "conflict": "fatigue",
+    "resolution": "risky_gamble",
+    "activity": "surprise_stream",
+    "tone": "hype"
+  },
+  "memberId": "hina",
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "cooldown": 4
+  },
+  "weight": 2,
+  "start": "alert",
+  "steps": {
+    "alert": {
+      "type": "story",
+      "text": "{member}가 공지도 없이 방송을 켰다. 알림을 본 팬들이 빠르게 모여들어 10분 만에 평소 방송만큼 사람이 찼다.",
+      "next": "go"
+    },
+    "go": {
+      "type": "choice",
+      "text": "모인 기세를 어디까지 끌고 갈까?",
+      "choices": [
+        {
+          "text": "기세를 몰아 장시간 방송으로 간다",
+          "effects": {
+            "hp": -12
+          },
+          "story": "\"오늘 그냥 길게 갈까?\" {member}의 한마디에 채팅창이 환호로 뒤덮였다.",
+          "next": "long_branch"
+        },
+        {
+          "text": "짧고 굵게 즐기고 마무리한다",
+          "effects": {
+            "hp": -4
+          },
+          "story": "{member}가 딱 하고 싶었던 것만 하고 끝내기로 했다.",
+          "next": "short_story"
+        }
+      ]
+    },
+    "long_branch": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "minHp": 40
+          },
+          "next": "long_strong"
+        }
+      ],
+      "next": "long_tired"
+    },
+    "long_strong": {
+      "type": "end",
+      "text": "새벽까지 기세가 한 번도 꺾이지 않았다. 게릴라 방송이 그날 가장 긴 방송이 됐고, 알림을 늦게 본 팬들이 다시보기로 몰렸다.",
+      "effects": {
+        "fans": 220,
+        "fame": 1,
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "success"
+    },
+    "long_tired": {
+      "type": "end",
+      "text": "길게 이어 갔지만 후반에는 지친 기색이 역력했다. 팬들은 즐거워하면서도 \"오늘은 푹 자\"라는 인사를 많이 남겼다.",
+      "effects": {
+        "fans": 190,
+        "fame": 1,
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "partial"
+    },
+    "short_story": {
+      "type": "story",
+      "text": "짧은 방송 동안 {member}는 하고 싶던 이야기를 쉬지 않고 쏟아냈다. 한 시간이 금방 지나갔다.",
+      "next": "short_end"
+    },
+    "short_end": {
+      "type": "end",
+      "text": "짧고 굵은 게릴라 방송에 \"알림 켜 두길 잘했다\"는 반응이 이어졌다.",
+      "effects": {
+        "fans": 110
+      },
+      "result": "success"
+    }
+  }
+}

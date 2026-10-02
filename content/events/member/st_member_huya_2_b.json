@@ -1,0 +1,150 @@
+{
+  "id": "st_member_huya_2_b",
+  "title": "열 번째 시도의 손목",
+  "category": "member",
+  "group": "personal_huya_2",
+  "description": "리듬게임 기록 도전(pe_huya_2) 변형 B. 체력을 먼저 생각해 도전 방식을 정하고, 지친 손목으로 마지막 몇 번에 기록을 건다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "rhythm_practice_log",
+    "conflict": "fatigue",
+    "resolution": "steady_success",
+    "activity": "rhythm_game",
+    "tone": "emotional"
+  },
+  "memberId": "huya",
+  "conditions": {
+    "activityCategories": [
+      "rhythm",
+      "music"
+    ],
+    "cooldown": 5
+  },
+  "weight": 2,
+  "start": "plan",
+  "steps": {
+    "plan": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "녹음 날. {member}가 녹음 전에 리듬게임 최고 난이도 곡 기록에 도전해 보겠다고 한다. 체력이 많지 않은 편이라 도전 방식을 먼저 정해야 한다."
+        },
+        {
+          "when": {
+            "activity": [
+              "sing"
+            ]
+          },
+          "text": "노래 방송 날. {member}가 방송 전에 리듬게임 최고 난이도 곡 기록에 도전해 보겠다고 한다. 체력이 많지 않은 편이라 도전 방식을 먼저 정해야 한다."
+        },
+        {
+          "text": "리듬게임 방송 날. {member}가 오늘은 최고 난이도 곡 기록에 도전해 보겠다고 한다. 체력이 많지 않은 편이라 도전 방식을 먼저 정해야 한다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "풀콤보가 나올 때까지 도전한다",
+          "effects": {
+            "hp": -7
+          },
+          "story": "{member}가 물병을 옆에 두고 첫 시도를 시작했다.",
+          "next": "stamina_story"
+        },
+        {
+          "text": "연습 모드로 차근차근 올린다",
+          "story": "{member}가 연습 기록표를 펼치고 구간별 연습을 시작했다.",
+          "next": "log_story"
+        }
+      ]
+    },
+    "stamina_story": {
+      "type": "story",
+      "text": "열 번째 시도쯤 손목이 뻐근해졌다. {member}가 잠깐 손을 털고 물을 마셨다. 남은 힘으로 할 수 있는 건 몇 번뿐이다.",
+      "next": "last_check"
+    },
+    "last_check": {
+      "type": "check",
+      "text": "마지막 몇 번의 시도. 지친 손목으로 끝까지 박자를 지켜야 한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 76,
+        "traitBonus": {
+          "rhythm": 15
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "지친 손목이 오히려 힘을 빼 줬다. 가장 깔끔한 플레이로 최고 기록이 나왔다.",
+          "effects": {
+            "fans": 130,
+            "fame": 2
+          },
+          "next": "last_full"
+        },
+        "success": {
+          "text": "마지막 시도에서 끝까지 이어졌다. {member}가 컨트롤러를 내려놓고 한참 숨을 골랐다.",
+          "next": "last_full"
+        },
+        "partial": {
+          "text": "기록은 경신했지만 풀콤보는 아니었다. 그래도 어제보다 확실히 높은 점수다.",
+          "next": "last_close"
+        },
+        "fail": {
+          "text": "손목이 먼저 한계에 닿았다. {member}가 오늘은 여기까지라며 컨트롤러를 내려놓았다.",
+          "next": "last_rest"
+        }
+      }
+    },
+    "last_full": {
+      "type": "end",
+      "text": "체력을 아껴 가며 만든 기록이라 더 값졌다. 결과 화면 영상에 \"끈기\"라는 댓글이 많이 달렸다.",
+      "effects": {
+        "fans": 170,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    },
+    "last_close": {
+      "type": "end",
+      "text": "기록 경신은 했지만 목표였던 풀콤보는 남았다. 다음 도전 목표가 분명해졌다.",
+      "effects": {
+        "fans": 110,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "partial"
+    },
+    "last_rest": {
+      "type": "end",
+      "text": "무리하지 않고 멈춘 덕에 손목은 금방 풀렸다. 팬들은 \"다음 도전 때 또 같이 보자\"며 기록표 사진에 응원을 남겼다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "log_story": {
+      "type": "story",
+      "text": "구간별 정확도를 기록표에 적어 나갔다. 어제보다 조금씩 오르는 숫자가 눈에 보였다.",
+      "next": "log_end"
+    },
+    "log_end": {
+      "type": "end",
+      "text": "차근차근 올린 정확도 기록표가 공개되자 \"성실한 연습 일지\"라는 반응이 이어졌다.",
+      "effects": {
+        "fans": 60,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    }
+  }
+}

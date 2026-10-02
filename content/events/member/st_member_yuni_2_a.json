@@ -1,0 +1,160 @@
+{
+  "id": "st_member_yuni_2_a",
+  "title": "이길 때까지 한 판 더",
+  "category": "member",
+  "group": "personal_yuni_2",
+  "description": "승부욕 발동(pe_yuni_2) 변형 A. 컨디션에 따라 첫 장면이 갈리고, 밤샘 특훈이냐 정해진 시간의 집중 연습이냐를 고른다.",
+  "meta": {
+    "theme": "game_content",
+    "setting": "rematch_practice_room",
+    "conflict": "rivalry",
+    "resolution": "comeback_win",
+    "activity": "game_practice",
+    "tone": "hype"
+  },
+  "memberId": "yuni",
+  "conditions": {
+    "activityCategories": [
+      "game"
+    ],
+    "cooldown": 5
+  },
+  "weight": 1.5,
+  "start": "condition",
+  "steps": {
+    "condition": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "maxHp": 50
+          },
+          "next": "tired_intro"
+        }
+      ],
+      "next": "fired_intro"
+    },
+    "fired_intro": {
+      "type": "story",
+      "text": "어제 아깝게 진 판을 다시 돌려 보던 {member}가 화면을 멈췄다. 오늘은 이길 때까지 연습하겠다는 선언에 채팅창이 들썩인다.",
+      "next": "practice"
+    },
+    "tired_intro": {
+      "type": "story",
+      "text": "어제 아깝게 진 판을 다시 돌려 보던 {member}가 이길 때까지 연습하겠다고 선언했다. 다만 이어진 일정 탓에 목소리에 피곤이 묻어난다.",
+      "next": "practice"
+    },
+    "practice": {
+      "type": "choice",
+      "text": "연습 방송을 어떻게 꾸릴까?",
+      "choices": [
+        {
+          "text": "밤새 특훈 방송을 한다",
+          "effects": {
+            "hp": -10
+          },
+          "story": "\"오늘은 끝까지 간다.\" {member}가 연습 목표를 화면 한쪽에 적었다.",
+          "next": "night_check"
+        },
+        {
+          "text": "정해진 시간만 집중해서 연습한다",
+          "effects": {
+            "hp": -4
+          },
+          "story": "두 시간 타이머를 띄우고, 진 판에서 나온 약점만 골라 연습하기로 했다.",
+          "next": "focus_end"
+        }
+      ]
+    },
+    "night_check": {
+      "type": "check",
+      "text": "새벽 세 시, 어제 진 상대와 같은 조건의 마지막 판이 시작됐다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 82,
+        "traitBonus": {
+          "competitive": 10,
+          "fps": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "초반부터 몰아붙인 {member}가 한 번도 흐름을 내주지 않았다. 채팅창이 \"설욕\"으로 도배됐다.",
+          "effects": {
+            "fans": 130,
+            "fame": 2,
+            "stats": {
+              "Ga": 1
+            }
+          },
+          "next": "night_win"
+        },
+        "success": {
+          "text": "끝까지 팽팽했던 판을 마지막 순간에 가져왔다. {member}가 의자에 기대 크게 웃었다.",
+          "next": "night_win"
+        },
+        "partial": {
+          "text": "이기지는 못했지만 어제보다 훨씬 가까웠다. 마지막 장면에서 채팅창이 한숨과 박수를 함께 보냈다.",
+          "next": "night_close"
+        },
+        "fail": {
+          "text": "밤새 연습한 판도 아깝게 내줬다. 화면을 한참 바라보던 {member}가 짧게 \"다음엔 이긴다\"고만 말했다.",
+          "next": "night_loss"
+        }
+      }
+    },
+    "night_win": {
+      "type": "end",
+      "text": "밤샘 특훈 끝에 거둔 설욕전이 클립으로 퍼졌다. 대신 {member}는 오늘 밤 회복이 더딜 것이다.",
+      "effects": {
+        "fans": 170,
+        "stats": {
+          "Ga": 1
+        },
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "success"
+    },
+    "night_close": {
+      "type": "end",
+      "text": "설욕은 다음으로 미뤘지만 실력이 는 건 모두가 봤다. 다만 밤샘의 피로는 고스란히 남았다.",
+      "effects": {
+        "fans": 110,
+        "stats": {
+          "Ga": 1
+        },
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "partial"
+    },
+    "night_loss": {
+      "type": "end",
+      "text": "진 판의 리플레이가 오히려 응원 클립이 됐다. {member}는 다음 연습 방송 날짜부터 공지했고, 팬들은 그날을 기다리겠다고 답했다.",
+      "effects": {
+        "fans": 60,
+        "stats": {
+          "Ga": 1
+        },
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "fail"
+    },
+    "focus_end": {
+      "type": "end",
+      "text": "정해진 두 시간 동안 약점 하나를 확실히 고쳤다. 화려하진 않았지만 \"이게 진짜 연습\"이라는 반응이 많았다.",
+      "effects": {
+        "fans": 70,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    }
+  }
+}

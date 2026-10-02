@@ -1,0 +1,145 @@
+{
+  "id": "st_member_huya_2_a",
+  "title": "최고 난이도 곡 앞에서",
+  "category": "member",
+  "group": "personal_huya_2",
+  "description": "리듬게임 기록 도전(pe_huya_2) 변형 A. 그날 일정에 맞는 장면으로 도전이 시작되고, 풀콤보 도전 중 초반 실수를 만회해야 한다.",
+  "meta": {
+    "theme": "game_content",
+    "setting": "rhythm_top_difficulty",
+    "conflict": "early_disadvantage",
+    "resolution": "clutch_moment",
+    "activity": "rhythm_game",
+    "tone": "tense"
+  },
+  "memberId": "huya",
+  "conditions": {
+    "activityCategories": [
+      "rhythm",
+      "music"
+    ],
+    "cooldown": 5
+  },
+  "weight": 2,
+  "start": "intro",
+  "steps": {
+    "intro": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "녹음을 시작하기 전, {member}가 박자 감각을 깨우려고 리듬게임을 켰다. 마이크 앞이 아니라 컨트롤러 앞에서 오늘의 첫 도전이 시작됐다. 목표는 최고 난이도 곡이다."
+        },
+        {
+          "when": {
+            "activity": [
+              "sing"
+            ]
+          },
+          "text": "노래 방송을 시작하기 전, {member}가 몸풀기로 리듬게임을 켰다. 그리고 오늘은 최고 난이도 곡에 도전해 보겠다고 했다. 채팅창이 \"노래 전에 그걸?\"으로 들썩였다."
+        },
+        {
+          "text": "리듬게임 방송, {member}가 오늘은 최고 난이도 곡에 도전하겠다고 했다. 곡 선택 화면에서 채팅창이 \"그걸?\"으로 가득 찼다."
+        }
+      ],
+      "next": "challenge"
+    },
+    "challenge": {
+      "type": "choice",
+      "text": "어떤 방식으로 도전할까?",
+      "choices": [
+        {
+          "text": "풀콤보가 나올 때까지 도전한다",
+          "effects": {
+            "hp": -7
+          },
+          "story": "{member}가 손을 풀고 시작 버튼을 눌렀다.",
+          "next": "combo_check"
+        },
+        {
+          "text": "연습 모드로 차근차근 올린다",
+          "story": "{member}가 곡을 구간별로 나눠 연습 모드에 들어갔다.",
+          "next": "practice_end"
+        }
+      ]
+    },
+    "combo_check": {
+      "type": "check",
+      "text": "첫 시도부터 초반 구간에서 노트를 연달아 놓쳤다. 다시 처음부터, 이번엔 끝까지 이어 가야 한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 76,
+        "traitBonus": {
+          "rhythm": 15
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "마지막 고밀도 구간까지 한 번도 끊기지 않았다. 결과 화면에 최고 기록이 떴다.",
+          "effects": {
+            "fans": 130,
+            "fame": 2
+          },
+          "next": "combo_full"
+        },
+        "success": {
+          "text": "몇 번의 재도전 끝에 마지막 노트까지 이어졌다. 풀콤보 표시가 화면에 떴다.",
+          "next": "combo_full"
+        },
+        "partial": {
+          "text": "마지막 구간에서 단 하나를 놓쳤다. 풀콤보까지 정말 한 끗이었다.",
+          "next": "combo_one_miss"
+        },
+        "fail": {
+          "text": "초반 구간의 벽을 끝내 넘지 못했다. 손목을 털던 {member}가 짧게 웃었다.",
+          "next": "combo_retry"
+        }
+      }
+    },
+    "combo_full": {
+      "type": "end",
+      "text": "풀콤보 결과 화면이 짧은 영상으로 퍼졌다. \"이 곡을 이렇게?\"라는 반응이 이어졌다.",
+      "effects": {
+        "fans": 170,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    },
+    "combo_one_miss": {
+      "type": "end",
+      "text": "하나 차이로 놓친 기록은 아쉬웠지만, 그 마지막 구간 영상은 꽤 많이 돌았다.",
+      "effects": {
+        "fans": 110,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "partial"
+    },
+    "combo_retry": {
+      "type": "end",
+      "text": "기록은 다음으로 미뤘다. {member}는 막힌 구간을 따로 메모해 두었고, 팬들은 재도전 날을 기다리겠다고 했다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "practice_end": {
+      "type": "end",
+      "text": "구간을 하나씩 익혀 나갔다. 화려하진 않았지만 손에 남은 감각은 확실했다.",
+      "effects": {
+        "fans": 60,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    }
+  }
+}
