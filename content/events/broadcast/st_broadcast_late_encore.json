@@ -1,0 +1,318 @@
+{
+  "id": "st_broadcast_late_encore",
+  "title": "자정을 넘긴 앵콜 요청",
+  "category": "broadcast",
+  "group": "late_stream",
+  "description": "자정을 넘긴 방송(event_001) 변형 A. 앵콜 요청 앞에서 먼저 방향을 정하고, 방향마다 다른 고비와 판정, 마무리가 이어진다.",
+  "meta": {
+    "theme": "broadcast_live",
+    "setting": "midnight_encore_chat",
+    "conflict": "fatigue",
+    "resolution": "audience_help",
+    "activity": "late_stream",
+    "tone": "warm"
+  },
+  "timeSlot": "lateNight",
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ]
+  },
+  "weight": 1,
+  "start": "encore",
+  "steps": {
+    "encore": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "memberFlags": [
+              "lateSpecialTeaser"
+            ]
+          },
+          "text": "지난 방송에서 걸어 둔 \"새벽 특집\" 예고 때문인지, 자정이 넘었는데도 시청자 수가 줄지 않는다. 채팅창에는 \"오늘이 그날이지?\"가 줄줄이 올라온다. {member}는 웃으면서도 슬쩍 시계를 봤다. 내일 일정도 잡혀 있다."
+        },
+        {
+          "when": {
+            "activity": [
+              "fps",
+              "rhythm",
+              "fighting"
+            ]
+          },
+          "text": "예정된 종료 시간을 한참 넘겼다. 판이 끝날 때마다 채팅창에 \"한 판만 더\"가 줄줄이 올라온다. {member}는 웃으면서도 슬쩍 시계를 봤다. 내일 일정도 잡혀 있지만, 지금 분위기를 끊기는 아깝다."
+        },
+        {
+          "when": {
+            "activity": [
+              "horror",
+              "indie",
+              "openWorld"
+            ]
+          },
+          "text": "예정된 종료 시간을 한참 넘겼다. 구간 하나를 넘길 때마다 채팅창에 \"조금만 더 가 보자\"가 줄줄이 올라온다. {member}는 웃으면서도 슬쩍 시계를 봤다. 내일 일정도 잡혀 있지만, 지금 분위기를 끊기는 아깝다."
+        },
+        {
+          "when": {
+            "activity": [
+              "sing"
+            ]
+          },
+          "text": "예정된 종료 시간을 한참 넘겼다. 곡이 끝날 때마다 채팅창에 \"한 곡만 더\"가 줄줄이 올라온다. {member}는 웃으면서도 슬쩍 시계를 봤다. 내일 일정도 잡혀 있지만, 지금 분위기를 끊기는 아깝다."
+        },
+        {
+          "text": "예정된 종료 시간을 한참 넘겼다. 이야기가 끊길 때마다 채팅창에 \"조금만 더 얘기해 줘\"가 줄줄이 올라온다. {member}는 웃으면서도 슬쩍 시계를 봤다. 내일 일정도 잡혀 있지만, 지금 분위기를 끊기는 아깝다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "시청자가 원하는 만큼 끝까지 달린다",
+          "effects": {
+            "hp": -12
+          },
+          "story": "{member}가 \"그럼 끝까지 간다!\"를 외치자 채팅창이 폭죽 이모티콘으로 뒤덮였다.",
+          "next": "run_wall"
+        },
+        {
+          "text": "30분만 더 하고 깔끔하게 마무리한다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "\"딱 30분!\" {member}가 화면 구석에 타이머를 띄웠다. 시청자들이 숫자에 맞춰 카운트다운을 치기 시작했다.",
+          "next": "timer_twist"
+        },
+        {
+          "text": "오늘은 여기서 끊고 컨디션을 챙긴다",
+          "story": "{member}가 아쉬운 얼굴로 손을 모았다. \"오늘은 여기까지! 내일 더 좋은 컨디션으로 올게.\"",
+          "next": "cut_reaction"
+        }
+      ]
+    },
+    "run_wall": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activityCategories": [
+              "game"
+            ]
+          },
+          "text": "새벽 두 시가 넘었다. 조작하는 손이 눈에 띄게 굼떠지고 반응이 한 박자씩 늦어진다. 그때 채팅창에 \"같이 버티자\"는 응원이 하나둘 올라오기 시작했다."
+        },
+        {
+          "when": {
+            "activity": [
+              "sing"
+            ]
+          },
+          "text": "새벽 두 시가 넘었다. 고음에서 목이 살짝 갈라지자 {member}가 멋쩍게 웃었다. 그때 채팅창에 \"같이 버티자\"는 응원이 하나둘 올라오기 시작했다."
+        },
+        {
+          "text": "새벽 두 시가 넘었다. 이야기 사이사이 하품을 참는 게 보이기 시작했다. 그때 채팅창에 \"같이 버티자\"는 응원이 하나둘 올라오기 시작했다."
+        }
+      ],
+      "next": "run_check"
+    },
+    "run_check": {
+      "type": "check",
+      "text": "이제부터는 텐션 싸움이다. 지친 티를 웃음으로 바꿀 수 있을지가 남은 방송을 가른다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 78,
+        "traitBonus": {
+          "longStream": 10,
+          "highTension": 5,
+          "nightOwl": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "응원을 하나하나 읽어 주던 {member}가 갑자기 살아났다. 새벽 방송이 오늘의 하이라이트가 됐다.",
+          "effects": {
+            "fans": 40,
+            "fame": 1
+          },
+          "next": "run_end_hit"
+        },
+        "success": {
+          "text": "응원에 힘입어 {member}의 텐션이 다시 올라왔다. 해가 뜰 무렵까지 채팅창이 한 번도 식지 않았다.",
+          "next": "run_end_hit"
+        },
+        "partial": {
+          "text": "방송은 끝까지 갔지만 중간중간 말이 끊겼다. 시청자들이 그 빈자리를 채팅으로 채우며 함께 버텼다.",
+          "next": "run_end_held"
+        },
+        "fail": {
+          "text": "결국 {member}가 화면 앞에서 꾸벅 졸았다. 채팅창은 \"재워라\"와 \"깨워라\"로 반반 갈렸다.",
+          "next": "run_end_doze"
+        }
+      }
+    },
+    "run_end_hit": {
+      "type": "end",
+      "text": "해 뜨는 시간에 끝난 방송은 \"새벽 동지\"라는 별명과 함께 클립으로 퍼졌다. {member}는 내일 일정을 위해 바로 잠들었지만, 회복은 더딜 것 같다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1,
+        "stats": {
+          "Bs": 2
+        },
+        "flags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "success"
+    },
+    "run_end_held": {
+      "type": "end",
+      "text": "끝까지 달렸다는 사실에 시청자들은 만족했다. 다만 후반부 다시보기는 하품 소리가 절반이라 클립으로 쓰기 어려웠다.",
+      "effects": {
+        "fans": 110,
+        "fame": 1,
+        "stats": {
+          "Bs": 2
+        },
+        "flags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "partial"
+    },
+    "run_end_doze": {
+      "type": "end",
+      "text": "졸다 깬 {member}가 \"자는 거 아니었다\"고 우기는 장면만 남았다. 팬들은 다음엔 일찍 자라는 메시지를 남겼고, {member}는 다음 새벽 방송에서 제대로 버텨 보겠다고 약속했다.",
+      "effects": {
+        "fans": 50,
+        "stats": {
+          "Bs": 1
+        },
+        "flags": {
+          "stayedUpLate": true
+        },
+        "memberFlags": {
+          "lateStreamRetry": true
+        }
+      },
+      "result": "fail"
+    },
+    "timer_twist": {
+      "type": "story",
+      "text": "타이머가 5분 남았을 때, 오늘 처음 온 시청자의 후원 메시지가 떴다. \"처음 왔는데 벌써 끝나요?\" 채팅창이 술렁인다.",
+      "next": "timer_choice"
+    },
+    "timer_choice": {
+      "type": "choice",
+      "text": "약속한 30분이 거의 끝났다. 새로 온 시청자를 어떻게 맞이할까?",
+      "choices": [
+        {
+          "text": "남은 5분 동안 오늘 방송의 하이라이트를 짚어 준다",
+          "story": "{member}가 \"5분 요약 들어간다!\"며 오늘 있었던 일을 손가락으로 꼽기 시작했다.",
+          "next": "wrap_check"
+        },
+        {
+          "text": "약속대로 정확히 30분에 끝낸다",
+          "story": "{member}가 새 시청자에게 \"다음 방송 때 처음부터 와 줘!\"라고 인사했다.",
+          "next": "timer_end_clean"
+        }
+      ]
+    },
+    "wrap_check": {
+      "type": "check",
+      "text": "남은 5분 안에 오늘 방송의 재미를 한 번에 보여 줘야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "host": 10,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "{member}가 오늘의 명장면을 3분 만에 다시 짚어 줬다. 새 시청자가 \"다음 방송 알림 켰어요\"라고 남겼다.",
+          "next": "timer_end_new"
+        },
+        "partial": {
+          "text": "요약은 조금 길어졌다. 약속한 시간을 10분 넘겼지만, 새 시청자는 끝까지 남아 있었다.",
+          "next": "timer_end_over"
+        },
+        "fail": {
+          "text": "설명이 꼬이면서 \"그래서 무슨 방송이었냐\"는 채팅이 올라왔다.",
+          "next": "timer_end_muddle"
+        }
+      }
+    },
+    "timer_end_new": {
+      "type": "end",
+      "text": "깔끔한 요약 덕에 처음 온 시청자가 단골이 될 것 같은 예감이 들었다. 약속한 30분도 거의 지켰다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "success"
+    },
+    "timer_end_over": {
+      "type": "end",
+      "text": "새 시청자는 붙잡았지만 약속한 시간은 넘겼다. \"30분이라며\"라는 채팅에 {member}가 머쓱하게 웃었다.",
+      "effects": {
+        "fans": 45,
+        "hp": -2
+      },
+      "result": "partial"
+    },
+    "timer_end_muddle": {
+      "type": "end",
+      "text": "꼬인 요약에 {member}가 웃음을 터뜨리며 방송을 마쳤다. 처음 온 시청자는 \"다음엔 처음부터 볼게요\"라는 말을 남겼고, {member}는 다음 방송 첫머리에 제대로 소개하겠다고 약속했다.",
+      "effects": {
+        "fans": 25
+      },
+      "result": "fail"
+    },
+    "timer_end_clean": {
+      "type": "end",
+      "text": "\"30분 지났다! 진짜 끝!\" 타이머가 0이 되는 순간 방송이 꺼졌다. 처음 온 시청자는 \"깔끔해서 좋다\"며 구독을 눌렀다.",
+      "effects": {
+        "fans": 45
+      },
+      "result": "success"
+    },
+    "cut_reaction": {
+      "type": "story",
+      "text": "종료 인사를 하던 중, 채팅창에 \"벌써 가?\"와 \"푹 자!\"가 동시에 쏟아진다. 아쉬워하는 시청자도 적지 않다.",
+      "next": "cut_choice"
+    },
+    "cut_choice": {
+      "type": "choice",
+      "text": "방송을 끄기 전에 마지막으로 무엇을 남길까?",
+      "choices": [
+        {
+          "text": "다음 방송 일정을 공지하고 끈다",
+          "story": "{member}가 내일 방송 시간을 고정 메시지로 걸고 몇 분 더 인사를 나눴다.",
+          "next": "cut_end_notice"
+        },
+        {
+          "text": "인사만 하고 바로 끈다",
+          "story": "\"잘 자!\" 짧은 인사와 함께 화면이 꺼졌다.",
+          "next": "cut_end_quiet"
+        }
+      ]
+    },
+    "cut_end_notice": {
+      "type": "end",
+      "text": "아쉬움은 \"내일 그 시간에 봐\"로 바뀌었다. 몇 분 더 머문 만큼 쉬는 시간은 조금 줄었지만, 팬들의 서운함은 금방 풀렸다.",
+      "effects": {
+        "hp": 8,
+        "fans": -20
+      },
+      "result": "success"
+    },
+    "cut_end_quiet": {
+      "type": "end",
+      "text": "{member}는 오랜만에 푹 잤다. 다만 갑작스러운 종료에 서운해한 시청자들이 다음 날 \"어제 왜 이렇게 빨리 갔어\"라고 물었다.",
+      "effects": {
+        "hp": 10,
+        "fans": -35
+      },
+      "result": "partial"
+    }
+  }
+}

@@ -75,7 +75,7 @@ export const EVENTS = [
     timeSlot: 'lateNight',
     // 시청자 앞에서 방송하는 날에만 (녹음 / 휴방 제외)
     conditions: { activityCategories: ['broadcast'] },
-    weight: 1,
+    weight: 0,
     choices: [
       {
         text: '시청자가 원하는 만큼 끝까지 달린다',
@@ -99,7 +99,7 @@ export const EVENTS = [
     // 노래 / 휴방 날에는 등장하지 않고, 게임 일정에서 우선 등장한다.
     conditions: { blockedActivityCategories: ['music', 'rest'] },
     activityWeights: { game: 3 },
-    weight: 1,
+    weight: 0,
     choices: [
       {
         text: '본선을 노리고 진지하게 준비한다',
@@ -125,7 +125,7 @@ export const EVENTS = [
     // "방송 중에" 일어나는 일이므로 방송 날에만, 노래 방송이면 더 자주
     conditions: { activityCategories: ['broadcast'] },
     activityWeights: { music: 2 },
-    weight: 1,
+    weight: 0,
     choices: [
       {
         text: '정식 커버 프로젝트를 바로 시작한다',
@@ -151,7 +151,7 @@ export const EVENTS = [
       '{member}의 방송이 벌써 여덟 시간째다. 채팅은 여전히 뜨겁고 시청자 수는 오히려 늘고 있다. 다만 목소리에 피로가 조금씩 묻어나기 시작했다.',
     timeSlot: 'lateNight',
     conditions: { activity: ['longStream'], cooldown: 3 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '분위기를 살려 기록 방송으로 밀어붙인다',
@@ -234,7 +234,7 @@ export const EVENTS = [
     description:
       '{member}의 목소리가 평소보다 가라앉아 있다. 본인은 괜찮다고 하지만, 누가 봐도 지쳐 보인다.',
     conditions: { maxHp: HP_RULES.exhausted },
-    weight: 4,
+    weight: 0,
     urgent: true,
     choices: [
       {
@@ -265,7 +265,7 @@ export const EVENTS = [
     // 시청자와 함께하는 방송 날에만 (녹음 / 휴방 제외), 토크 일정에서 우선 등장
     conditions: { activityCategories: ['broadcast'], cooldown: 2 },
     activityWeights: { talk: 2 },
-    weight: 1,
+    weight: 0,
     traitWeights: { host: 2, chatter: 2 },
     choices: [
       {

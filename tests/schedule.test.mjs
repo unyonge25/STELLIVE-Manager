@@ -84,25 +84,46 @@ for (const m of MEMBERS) {
   }
 }
 
-test('event_002(게임 대회)는 노래 / 녹음 / 휴방 일정에서 후보가 되지 않는다', () => {
-  const bad = candidateMatrix.filter(({ activity, ids }) => ids.includes('event_002') && (hasCat(activity, 'music') || hasCat(activity, 'rest')));
+// 같은 상황의 원본 1-step 이벤트와 스토리 변형(group)을 한 묶음으로 본다.
+// 원본이 weight 0 으로 내려가고 변형이 대신 나오므로, 등장 검사는 id 하나가 아니라 묶음 단위로 한다.
+// (원본만 있든 변형만 있든 묶음 중 하나가 나오면 된다. 묶음 전체가 후보에서 사라지면 실패한다)
+const SITUATIONS = {
+  game_tournament_offer: 'event_002',
+  viewer_participation: 'event_205',
+  late_stream: 'event_001',
+  impromptu_sing: 'event_101',
+};
+const situationIds = (group) => [SITUATIONS[group], ...E.EVENTS.filter((event) => event.group === group).map((event) => event.id)];
+const hasSituation = (ids, group) => situationIds(group).some((id) => ids.includes(id));
+const situationOf = (eventId) => Object.keys(SITUATIONS).find((group) => situationIds(group).includes(eventId)) || null;
+// "이 일정에서는 나오지 않는다" 검사가 묶음이 아예 후보에 없어서 통과하는 일이 없도록, 어딘가에서는 후보가 되는지 함께 본다.
+const assertSomewhereCandidate = (group) =>
+  assert(candidateMatrix.some(({ ids }) => hasSituation(ids, group)), `${group}(${situationIds(group).join(', ')}) 가 어떤 일정에서도 후보가 아니다`);
+
+test('game_tournament_offer(event_002 또는 변형)는 노래 / 녹음 / 휴방 일정에서 후보가 되지 않는다', () => {
+  assertSomewhereCandidate('game_tournament_offer');
+  const bad = candidateMatrix.filter(({ activity, ids }) => hasSituation(ids, 'game_tournament_offer') && (hasCat(activity, 'music') || hasCat(activity, 'rest')));
   assert(bad.length === 0, bad.map((b) => `${b.memberId}@${b.activity.id}`).join(', '));
 });
 
-test('event_002 는 모든 게임 일정에서 후보가 된다', () => {
+test('모든 게임 일정에서 game_tournament_offer(event_002 또는 변형)가 후보가 된다 (모든 멤버, HP 정상)', () => {
   E.ACTIVITIES.filter((a) => hasCat(a, 'game')).forEach((a) => {
-    const row = candidateMatrix.find((r) => r.activity.id === a.id && r.hp === 80);
-    assert(row.ids.includes('event_002'), `${a.id} 에서 후보가 아니다`);
+    candidateMatrix.filter((r) => r.activity.id === a.id && r.hp === 80).forEach((row) => {
+      assert(hasSituation(row.ids, 'game_tournament_offer'), `${row.memberId}@${a.id} 에서 후보가 아니다`);
+    });
   });
 });
 
-test('event_205(시청자 참여)는 방송이 아닌 일정(녹음 / 휴방)에서 후보가 되지 않는다', () => {
-  const bad = candidateMatrix.filter(({ activity, ids }) => ids.includes('event_205') && !hasCat(activity, 'broadcast'));
+test('viewer_participation(event_205 또는 변형)은 방송이 아닌 일정(녹음 / 휴방)에서 후보가 되지 않는다', () => {
+  assertSomewhereCandidate('viewer_participation');
+  const bad = candidateMatrix.filter(({ activity, ids }) => hasSituation(ids, 'viewer_participation') && !hasCat(activity, 'broadcast'));
   assert(bad.length === 0, bad.map((b) => `${b.memberId}@${b.activity.id}`).join(', '));
 });
 
-test('event_001(자정 넘긴 방송) / event_101(즉석 노래 방송)도 방송이 아닌 일정에서 후보가 되지 않는다', () => {
-  const bad = candidateMatrix.filter(({ activity, ids }) => (ids.includes('event_001') || ids.includes('event_101')) && !hasCat(activity, 'broadcast'));
+test('late_stream(event_001 또는 변형) / impromptu_sing(event_101 또는 변형)도 방송이 아닌 일정에서 후보가 되지 않는다', () => {
+  assertSomewhereCandidate('late_stream');
+  assertSomewhereCandidate('impromptu_sing');
+  const bad = candidateMatrix.filter(({ activity, ids }) => (hasSituation(ids, 'late_stream') || hasSituation(ids, 'impromptu_sing')) && !hasCat(activity, 'broadcast'));
   assert(bad.length === 0, bad.map((b) => `${b.memberId}@${b.activity.id}`).join(', '));
 });
 
@@ -137,7 +158,7 @@ const N = 20000;
 
 // planDay 를 n 번 돌려 중요 이벤트 등장 수를 센다.
 function runPlanDays(n) {
-  const result = { perEvent: {}, perPair: {}, zeroImportantDays: 0, importantTotal: 0 };
+  const result = { perEvent: {}, perPair: {}, perGroup: {}, perGroupPair: {}, zeroImportantDays: 0, importantTotal: 0 };
   S.createInitialState(MEMBERS);
   for (let i = 0; i < n; i += 1) {
     const st = S.getState();
@@ -151,12 +172,17 @@ function runPlanDays(n) {
     imp.forEach((e) => {
       result.perEvent[e.eventId] = (result.perEvent[e.eventId] || 0) + 1;
       result.perPair[`${e.eventId}@${e.activityId}`] = (result.perPair[`${e.eventId}@${e.activityId}`] || 0) + 1;
+      const group = situationOf(e.eventId);
+      if (group) {
+        result.perGroup[group] = (result.perGroup[group] || 0) + 1;
+        result.perGroupPair[`${group}@${e.activityId}`] = (result.perGroupPair[`${group}@${e.activityId}`] || 0) + 1;
+      }
     });
   }
   return result;
 }
 
-// 비교 기준: 같은 이벤트 풀에서 event_002 / event_205 의 일정 조건·일정 가중치만 뺀 경우
+// 비교 기준: 같은 이벤트 풀에서 game_tournament_offer / viewer_participation 묶음(원본 + 변형)의 일정 조건·일정 가중치만 뺀 경우
 function withoutActivityConditions(ids, fn) {
   const saved = ids.map((id) => {
     const event = E.getEventById(id);
@@ -177,17 +203,19 @@ function withoutActivityConditions(ids, fn) {
 }
 
 const withConditions = runPlanDays(N);
-const baseline = withoutActivityConditions(['event_002', 'event_205'], () => runPlanDays(N));
-const { perEvent, perPair, zeroImportantDays, importantTotal } = withConditions;
-const pair = (ev, act) => perPair[`${ev}@${act}`] || 0;
+const baseline = withoutActivityConditions([...situationIds('game_tournament_offer'), ...situationIds('viewer_participation')], () => runPlanDays(N));
+const { perGroup, perGroupPair, zeroImportantDays, importantTotal } = withConditions;
+const groupPair = (group, act) => perGroupPair[`${group}@${act}`] || 0;
 
-test('실제 하루 계획에서도 event_002 가 노래 / 녹음 / 휴방 일정에 0회 등장한다', () => {
-  const n = pair('event_002', 'sing') + pair('event_002', 'recording') + pair('event_002', 'rest');
+test('실제 하루 계획에서도 game_tournament_offer(event_002 또는 변형)가 노래 / 녹음 / 휴방 일정에 0회 등장한다 (다른 일정에서는 등장)', () => {
+  assert((perGroup.game_tournament_offer || 0) > 0, 'game_tournament_offer 가 한 번도 등장하지 않았다');
+  const n = groupPair('game_tournament_offer', 'sing') + groupPair('game_tournament_offer', 'recording') + groupPair('game_tournament_offer', 'rest');
   assert(n === 0, `${n}회 등장`);
 });
 
-test('실제 하루 계획에서도 event_205 가 녹음 / 휴방 일정에 0회 등장한다', () => {
-  const n = pair('event_205', 'recording') + pair('event_205', 'rest');
+test('실제 하루 계획에서도 viewer_participation(event_205 또는 변형)이 녹음 / 휴방 일정에 0회 등장한다 (다른 일정에서는 등장)', () => {
+  assert((perGroup.viewer_participation || 0) > 0, 'viewer_participation 이 한 번도 등장하지 않았다');
+  const n = groupPair('viewer_participation', 'recording') + groupPair('viewer_participation', 'rest');
   assert(n === 0, `${n}회 등장`);
 });
 
@@ -203,20 +231,22 @@ test('하루 중요 이벤트 수가 수정 전(2.21개)에서 크게 줄지 않
 
 // 이벤트 풀이 커지면 개별 이벤트의 절대 빈도는 자연히 줄어든다.
 // 그래서 고정 숫자 대신, 같은 풀에서 일정 조건이 없을 때와 비교해 조건 때문에 과소 등장하지 않는지 확인한다.
-test('event_002 등장 수가 일정 조건이 없을 때의 70% 이상 유지된다', () => {
-  const base = baseline.perEvent.event_002 || 0;
-  assert((perEvent.event_002 || 0) >= base * 0.7, `${perEvent.event_002}회 / 조건 없음 ${base}회`);
+test('game_tournament_offer(event_002 또는 변형) 등장 수가 일정 조건이 없을 때의 70% 이상 유지된다', () => {
+  const base = baseline.perGroup.game_tournament_offer || 0;
+  assert(base > 0, '비교 기준에서도 한 번도 등장하지 않았다');
+  assert((perGroup.game_tournament_offer || 0) >= base * 0.7, `${perGroup.game_tournament_offer || 0}회 / 조건 없음 ${base}회`);
 });
 
-test('event_205 등장 수가 일정 조건이 없을 때의 70% 이상 유지된다', () => {
-  const base = baseline.perEvent.event_205 || 0;
-  assert((perEvent.event_205 || 0) >= base * 0.7, `${perEvent.event_205}회 / 조건 없음 ${base}회`);
+test('viewer_participation(event_205 또는 변형) 등장 수가 일정 조건이 없을 때의 70% 이상 유지된다', () => {
+  const base = baseline.perGroup.viewer_participation || 0;
+  assert(base > 0, '비교 기준에서도 한 번도 등장하지 않았다');
+  assert((perGroup.viewer_participation || 0) >= base * 0.7, `${perGroup.viewer_participation || 0}회 / 조건 없음 ${base}회`);
 });
 
-test('event_002 는 게임 일정에서 우선 등장한다 (게임 일정 1개당 평균 > 비게임 방송 일정 1개당 평균)', () => {
+test('game_tournament_offer(event_002 또는 변형)는 게임 일정에서 우선 등장한다 (게임 일정 1개당 평균 > 비게임 방송 일정 1개당 평균)', () => {
   const game = E.ACTIVITIES.filter((a) => hasCat(a, 'game')).map((a) => a.id);
   const nonGame = E.ACTIVITIES.filter((a) => hasCat(a, 'broadcast') && !hasCat(a, 'game') && !hasCat(a, 'music')).map((a) => a.id);
-  const avg = (ids) => ids.reduce((s, id) => s + pair('event_002', id), 0) / ids.length;
+  const avg = (ids) => ids.reduce((s, id) => s + groupPair('game_tournament_offer', id), 0) / ids.length;
   assert(avg(game) > avg(nonGame), `게임 ${avg(game).toFixed(0)} vs 비게임 ${avg(nonGame).toFixed(0)}`);
 });
 
@@ -295,9 +325,9 @@ test('숨겨진 선택지를 골라도 처리되지 않는다 (원래 index 로 
 /* ---------- 결과 ---------- */
 console.log('\n[빈도 요약]');
 console.log(`  하루 중요 이벤트 ${(importantTotal / N).toFixed(2)}개 (수정 전 2.21) · 중요 이벤트 없는 날 ${zeroImportantDays}`);
-console.log(`  event_002 ${perEvent.event_002}회 (일정 조건 없을 때 ${baseline.perEvent.event_002}) · event_205 ${perEvent.event_205}회 (일정 조건 없을 때 ${baseline.perEvent.event_205})`);
-console.log('  event_002 일정별: ' + E.ACTIVITIES.map((a) => `${a.id} ${pair('event_002', a.id)}`).join(', '));
-console.log('  event_205 일정별: ' + E.ACTIVITIES.map((a) => `${a.id} ${pair('event_205', a.id)}`).join(', '));
+console.log(`  game_tournament_offer ${perGroup.game_tournament_offer || 0}회 (일정 조건 없을 때 ${baseline.perGroup.game_tournament_offer || 0}) · viewer_participation ${perGroup.viewer_participation || 0}회 (일정 조건 없을 때 ${baseline.perGroup.viewer_participation || 0})`);
+console.log('  game_tournament_offer 일정별: ' + E.ACTIVITIES.map((a) => `${a.id} ${groupPair('game_tournament_offer', a.id)}`).join(', '));
+console.log('  viewer_participation 일정별: ' + E.ACTIVITIES.map((a) => `${a.id} ${groupPair('viewer_participation', a.id)}`).join(', '));
 
 console.log(`\n${passed} passed, ${failures.length} failed`);
 if (failures.length) process.exit(1);

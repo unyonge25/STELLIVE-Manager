@@ -1,0 +1,367 @@
+{
+  "id": "st_game_offer_estimate",
+  "title": "대회 참가 견적서",
+  "category": "game",
+  "group": "game_tournament_offer",
+  "description": "게임 대회 참가 제안(event_002) 변형 B. 주인공의 컨디션과 실력에 따라 첫 장면이 갈리고, 견적서를 앞에 두고 고른 길마다 다른 판정과 결말이 이어진다.",
+  "meta": {
+    "theme": "game_tournament",
+    "setting": "tournament_cost_meeting",
+    "conflict": "budget_limit",
+    "resolution": "graceful_loss",
+    "activity": "online_tournament",
+    "tone": "emotional"
+  },
+  "conditions": {
+    "blockedActivityCategories": [
+      "music",
+      "rest"
+    ]
+  },
+  "activityWeights": {
+    "game": 3
+  },
+  "weight": 1,
+  "start": "condition",
+  "steps": {
+    "condition": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "maxHp": 45
+          },
+          "next": "tired_intro"
+        },
+        {
+          "when": {
+            "minStat": {
+              "Ga": 88
+            }
+          },
+          "next": "ace_intro"
+        }
+      ],
+      "next": "fresh_intro"
+    },
+    "tired_intro": {
+      "type": "story",
+      "text": "게임단에서 온라인 대회 참가 제안이 들어왔다. 요즘 일정이 빡빡했던 {member}는 제안서를 받아 들고 잠깐 눈을 감았다. 하고 싶은 마음과 지친 몸이 동시에 대답하는 것 같다.",
+      "next": "estimate"
+    },
+    "ace_intro": {
+      "type": "story",
+      "text": "게임단에서 온라인 대회 참가 제안이 들어왔다. 제안서에는 \"{member} 님이라면 본선도 충분하다\"는 코치의 메모가 붙어 있다. 기대가 큰 만큼 준비도 만만치 않을 것이다.",
+      "next": "estimate"
+    },
+    "fresh_intro": {
+      "type": "story",
+      "text": "게임단에서 온라인 대회 참가 제안이 들어왔다. 컨디션이 좋은 {member}는 제안서를 보자마자 눈이 반짝였다. 다만 함께 온 견적서를 펼치자 표정이 조금 굳었다.",
+      "next": "estimate"
+    },
+    "estimate": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "memberFlags": [
+              "tourneyCoachInvite"
+            ]
+          },
+          "text": "\"지난번 연습 경기 기억하시죠?\" 코치의 메시지와 함께 견적서가 왔다. 참가비, 장비 대여비, 연습 상대 섭외비가 줄줄이 적혀 있다. 잘 풀리면 채널에 큰 자극이 되겠지만, 무리하면 다른 일정이 밀린다."
+        },
+        {
+          "when": {
+            "activity": [
+              "fps"
+            ]
+          },
+          "text": "견적서에는 FPS 대회 참가비, 장비 대여비, 연습 상대 섭외비가 줄줄이 적혀 있다. 잘 풀리면 채널에 큰 자극이 되겠지만, 무리하면 다른 일정이 밀린다."
+        },
+        {
+          "when": {
+            "activity": [
+              "fighting"
+            ]
+          },
+          "text": "견적서에는 격투게임 대회 참가비, 대회용 컨트롤러 대여비, 연습 상대 섭외비가 줄줄이 적혀 있다. 잘 풀리면 채널에 큰 자극이 되겠지만, 무리하면 다른 일정이 밀린다."
+        },
+        {
+          "when": {
+            "activity": [
+              "rhythm"
+            ]
+          },
+          "text": "견적서에는 리듬게임 대회 참가비, 전용 컨트롤러 대여비, 연습실 대여비가 줄줄이 적혀 있다. 잘 풀리면 채널에 큰 자극이 되겠지만, 무리하면 다른 일정이 밀린다."
+        },
+        {
+          "text": "견적서에는 대회 참가비, 장비 대여비, 연습 상대 섭외비가 줄줄이 적혀 있다. 잘 풀리면 채널에 큰 자극이 되겠지만, 무리하면 다른 일정이 밀린다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "본선을 노리고 진지하게 준비한다",
+          "effects": {
+            "money": -120000,
+            "hp": -6
+          },
+          "story": "{member}가 견적서에 서명했다. 다음 날 대진표가 나왔다.",
+          "next": "bracket"
+        },
+        {
+          "text": "재미로 가볍게 참가한다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "\"성적보다 재밌게!\" {member}가 가장 저렴한 참가 옵션에 체크했다.",
+          "next": "fun_check"
+        },
+        {
+          "text": "이번엔 쉬어가고 다음 기회를 노린다",
+          "story": "{member}가 견적서를 조용히 접었다. \"이번엔 보는 쪽으로 할게요.\"",
+          "next": "pass_story"
+        },
+        {
+          "text": "참가비를 나눌 후원사를 먼저 찾아본다",
+          "story": "매니저와 {member}가 함께 후원 제안서를 만들었다. 오늘 안에 두 곳과 통화가 잡혔다.",
+          "next": "sponsor_check"
+        }
+      ]
+    },
+    "bracket": {
+      "type": "story",
+      "text": "대진표를 본 {member}가 웃음을 터뜨렸다. 첫 상대가 이번 대회 우승 후보다. 코치가 \"오히려 좋다, 잃을 게 없다\"며 어깨를 두드렸다.",
+      "next": "serious_check"
+    },
+    "serious_check": {
+      "type": "check",
+      "text": "우승 후보와의 첫 경기. 초반만 버티면 해볼 만하다는 게 코치의 분석이다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 80,
+        "traitBonus": {
+          "competitive": 10,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "초반을 버틴 {member}가 중반부터 흐름을 가져왔다. 우승 후보를 꺾는 이변이 일어났다.",
+          "next": "b_end_upset"
+        },
+        "partial": {
+          "text": "세트 스코어 동점까지 끌고 갔지만 마지막 세트를 내줬다. 상대 팀이 경기 후 먼저 악수를 청했다.",
+          "next": "b_end_close"
+        },
+        "fail": {
+          "text": "우승 후보의 벽은 높았다. 완패였지만 {member}는 끝까지 고개를 들고 경기를 마쳤다.",
+          "next": "b_end_bow"
+        }
+      }
+    },
+    "b_end_upset": {
+      "type": "end",
+      "text": "\"우승 후보 잡은 스트리머\"라는 제목의 클립이 퍼졌다. 들인 비용 이상의 관심이 채널로 돌아왔다.",
+      "effects": {
+        "fans": 90,
+        "fame": 2,
+        "stats": {
+          "Ga": 3
+        }
+      },
+      "result": "success"
+    },
+    "b_end_close": {
+      "type": "end",
+      "text": "아쉽게 졌지만, 경기 내용은 \"대회 최고의 접전\"으로 꼽혔다. 다만 들인 비용에 비해 손에 남은 건 박수뿐이라는 생각도 들었다.",
+      "effects": {
+        "fans": 60,
+        "fame": 2,
+        "stats": {
+          "Ga": 2
+        }
+      },
+      "result": "partial"
+    },
+    "b_end_bow": {
+      "type": "end",
+      "text": "완패 직후 {member}가 \"많이 배웠다, 다음엔 더 버티겠다\"고 남기자 팬들이 응원 댓글을 줄줄이 달았다. 비용은 아팠지만, 진 경기를 깔끔하게 인정한 모습이 오래 기억됐다.",
+      "effects": {
+        "fans": 35,
+        "fame": 1,
+        "stats": {
+          "Ga": 2
+        },
+        "memberFlags": {
+          "tourneySeasonRetry": true
+        }
+      },
+      "result": "fail"
+    },
+    "fun_check": {
+      "type": "check",
+      "text": "가벼운 마음으로 들어간 예선. 긴장감은 없지만, 대신 즐거운 장면을 만들어야 한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 68,
+        "traitBonus": {
+          "spontaneous": 10,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "{member}가 엉뚱한 작전으로 상대를 당황시키며 예선 몇 판을 이겼다.",
+          "next": "b_end_fun_clip"
+        },
+        "partial": {
+          "text": "이길 때와 질 때가 반반이었다. 재미있는 장면은 있었지만 하이라이트로 쓰기엔 조금 짧았다.",
+          "next": "b_end_fun_mid"
+        },
+        "fail": {
+          "text": "첫 경기에서 바로 탈락했다. {member}가 \"참가에 의의를 둔다\"며 웃었다.",
+          "next": "b_end_fun_flop"
+        }
+      }
+    },
+    "b_end_fun_clip": {
+      "type": "end",
+      "text": "\"재미로 나갔다더니 제일 재밌었다\"는 반응이 이어졌다. 짧은 예선이 의외로 채널 분위기를 띄웠다.",
+      "effects": {
+        "fans": 50,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    },
+    "b_end_fun_mid": {
+      "type": "end",
+      "text": "부담 없이 즐긴 덕에 몸은 가벼웠다. 다만 기억에 남을 만한 장면은 많지 않았다.",
+      "effects": {
+        "fans": 35,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "partial"
+    },
+    "b_end_fun_flop": {
+      "type": "end",
+      "text": "첫 경기 탈락 장면은 팬들 사이에서 작은 밈이 됐다. {member}는 다음 대회 때는 연습을 조금 하고 가겠다고 했다.",
+      "effects": {
+        "fans": 15,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "fail"
+    },
+    "pass_story": {
+      "type": "story",
+      "text": "대회 날, {member}는 참가 대신 쉬는 시간을 가졌다. 휴대폰에는 대회 중계 알림이 떠 있다.",
+      "next": "pass_choice"
+    },
+    "pass_choice": {
+      "type": "choice",
+      "text": "중계를 볼지, 아예 잊고 쉴지 정해야 한다.",
+      "choices": [
+        {
+          "text": "대회 중계를 보며 팬 커뮤니티에 감상을 남긴다",
+          "story": "{member}가 경기마다 짧은 감상글을 올리며 팬들과 함께 대회를 지켜봤다.",
+          "next": "b_end_watch"
+        },
+        {
+          "text": "알림을 끄고 푹 쉰다",
+          "story": "{member}가 휴대폰을 뒤집어 놓았다. 오랜만에 아무 일정 없는 시간이다.",
+          "next": "b_end_rest"
+        }
+      ]
+    },
+    "b_end_watch": {
+      "type": "end",
+      "text": "경기를 같이 보며 남긴 감상글에 팬들이 반응했다. 대회에 나가지 않은 아쉬움은 조금 덜었지만, 쉬는 시간도 그만큼 줄었다.",
+      "effects": {
+        "hp": 4,
+        "fans": -5,
+        "fame": -1
+      },
+      "result": "partial"
+    },
+    "b_end_rest": {
+      "type": "end",
+      "text": "푹 쉬고 나니 머리가 맑아졌다. 대회 소식을 뒤늦게 확인한 {member}는 다음 시즌 일정을 달력에 적어 두었다.",
+      "effects": {
+        "hp": 8,
+        "fans": -25,
+        "fame": -1
+      },
+      "result": "neutral"
+    },
+    "sponsor_check": {
+      "type": "check",
+      "text": "후원사 담당자와의 통화. 채널의 장점을 짧고 분명하게 전해야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "host": 10,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "담당자가 참가비의 절반 이상을 부담하겠다고 했다. 대회 유니폼에 로고 하나만 달면 된다.",
+          "next": "b_end_sponsor"
+        },
+        "partial": {
+          "text": "작은 후원사 한 곳이 장비 대여비만 맡아 주기로 했다. 나머지는 직접 내야 한다.",
+          "next": "b_end_sponsor_half"
+        },
+        "fail": {
+          "text": "두 곳 모두 \"이번 분기 예산이 끝났다\"고 했다. 대회 신청 마감까지 남은 시간이 없다.",
+          "next": "b_end_sponsor_none"
+        }
+      }
+    },
+    "b_end_sponsor": {
+      "type": "end",
+      "text": "후원 덕에 부담을 덜고 대회에 나갔다. 예선을 무난히 통과하며 후원사 로고와 함께 {member}의 이름이 중계에 몇 번 비쳤다.",
+      "effects": {
+        "money": -40000,
+        "fans": 70,
+        "fame": 1,
+        "stats": {
+          "Ga": 2
+        },
+        "hp": -6
+      },
+      "result": "success"
+    },
+    "b_end_sponsor_half": {
+      "type": "end",
+      "text": "반쪽 후원으로 대회에 나갔다. 성적은 무난했지만, 비용 걱정에 준비 기간을 줄인 게 내내 아쉬웠다.",
+      "effects": {
+        "money": -80000,
+        "fans": 50,
+        "stats": {
+          "Ga": 2
+        },
+        "hp": -5
+      },
+      "result": "partial"
+    },
+    "b_end_sponsor_none": {
+      "type": "end",
+      "text": "이번 대회는 결국 접었다. {member}는 후원 제안서를 버리지 않고 \"다음 시즌용\"이라는 이름으로 저장해 두었다. 코치도 다음 시즌엔 일찍 연락하겠다고 답했다.",
+      "effects": {
+        "fans": 10,
+        "hp": -2,
+        "memberFlags": {
+          "tourneySeasonRetry": true
+        }
+      },
+      "result": "fail"
+    }
+  }
+}

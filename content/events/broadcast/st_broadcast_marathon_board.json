@@ -1,0 +1,335 @@
+{
+  "id": "st_broadcast_marathon_board",
+  "title": "장시간 방송의 목표 게시판",
+  "category": "broadcast",
+  "group": "marathon_stream",
+  "description": "멈출 수 없는 장시간 방송(event_201) 변형 B. 남은 체력에 따라 첫 장면이 갈리고, 목표 게시판에서 고른 목표마다 판정 위치와 마무리가 다르다.",
+  "meta": {
+    "theme": "broadcast_live",
+    "setting": "longstream_goal_board",
+    "conflict": "audience_reaction",
+    "resolution": "steady_success",
+    "activity": "long_stream",
+    "tone": "calm"
+  },
+  "timeSlot": "lateNight",
+  "conditions": {
+    "activity": [
+      "longStream"
+    ],
+    "cooldown": 3
+  },
+  "weight": 2,
+  "start": "hp_gate",
+  "steps": {
+    "hp_gate": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "maxHp": 39
+          },
+          "next": "worn_intro"
+        },
+        {
+          "when": {
+            "anyTraits": [
+              "longStream"
+            ]
+          },
+          "next": "veteran_intro"
+        }
+      ],
+      "next": "normal_intro"
+    },
+    "worn_intro": {
+      "type": "story",
+      "text": "{member}의 방송이 벌써 여덟 시간째다. 채팅은 여전히 뜨겁고 시청자 수도 늘고 있지만, 목소리가 눈에 띄게 갈라지기 시작했다. 매니저 메시지 창에 \"괜찮아요?\"가 떴다.",
+      "next": "board"
+    },
+    "veteran_intro": {
+      "type": "story",
+      "text": "{member}의 방송이 벌써 여덟 시간째다. 장시간 방송에 익숙한 {member}에게는 이제 막 몸이 풀린 시간이다. 그래도 목소리에 피로가 조금씩 묻어나기 시작했다.",
+      "next": "board"
+    },
+    "normal_intro": {
+      "type": "story",
+      "text": "{member}의 방송이 벌써 여덟 시간째다. 채팅은 여전히 뜨겁고 시청자 수는 오히려 늘고 있다. 다만 목소리에 피로가 조금씩 묻어나기 시작했다.",
+      "next": "board"
+    },
+    "board": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "memberFlags": [
+              "marathonRetry"
+            ]
+          },
+          "text": "화면 한쪽 목표 게시판에 지난번 미뤄 둔 \"최장 기록\"이 아직 적혀 있다. 그 아래로 \"후원 목표\", \"시청자 신청 코너\"가 이어진다. 채팅창이 다음엔 뭘 하냐고 묻고 있다."
+        },
+        {
+          "text": "화면 한쪽 목표 게시판에는 \"최장 기록\", \"후원 목표\", \"시청자 신청 코너\"가 적혀 있다. 채팅창이 다음엔 뭘 하냐고 묻고 있다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "분위기를 살려 기록 방송으로 밀어붙인다",
+          "effects": {
+            "hp": -14
+          },
+          "story": "{member}가 게시판의 \"최장 기록\"에 동그라미를 쳤다. 채팅창이 응원 이모티콘으로 가득 찼다.",
+          "next": "record_check"
+        },
+        {
+          "text": "목표 하나만 달성하고 마무리한다",
+          "effects": {
+            "hp": -6
+          },
+          "story": "{member}가 \"후원 목표\"를 가리켰다. \"이것만 채우고 끝낼게.\"",
+          "next": "goal_story"
+        },
+        {
+          "text": "무리하지 않고 지금 끝낸다",
+          "story": "{member}가 게시판을 내리고 종료 화면을 띄웠다. \"오늘은 여기까지!\"",
+          "next": "stop_story"
+        },
+        {
+          "text": "시청자 신청 코너로 분위기를 바꿔 한 시간만 더 간다",
+          "effects": {
+            "hp": -8
+          },
+          "story": "{member}가 신청 코너를 열자 \"이거 해 줘\", \"저거 해 줘\"가 쏟아졌다.",
+          "next": "request_check"
+        }
+      ]
+    },
+    "record_check": {
+      "type": "check",
+      "text": "기록까지 남은 시간은 세 시간. 처음부터 끝까지 텐션을 유지할 수 있을지가 관건이다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 80,
+        "traitBonus": {
+          "longStream": 15,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "기록 직전, {member}가 \"다 같이 카운트다운!\"을 외쳤다. 시청자 수가 오늘 최고치를 찍었다.",
+          "effects": {
+            "fans": 110,
+            "fame": 1,
+            "money": 20000
+          },
+          "next": "finale_choice"
+        },
+        "success": {
+          "text": "페이스를 지킨 {member}가 기록 시간을 넘겼다. 채팅창이 축하로 뒤덮였다.",
+          "next": "finale_choice"
+        },
+        "partial": {
+          "text": "기록은 넘겼지만 마지막 한 시간은 거의 말이 없었다. 그래도 화면 속 시간이 기록을 넘긴 순간 채팅이 다시 살아났다.",
+          "next": "record_close"
+        },
+        "fail": {
+          "text": "두 시간을 남기고 목소리가 완전히 잠겼다. 채팅창이 \"그만 쉬어\"로 가득 차자 {member}도 결국 고개를 끄덕였다.",
+          "next": "record_fall"
+        }
+      }
+    },
+    "finale_choice": {
+      "type": "choice",
+      "text": "기록을 넘겼다. 마지막 인사를 어떻게 할까?",
+      "choices": [
+        {
+          "text": "함께해 준 시청자 이름을 한 명씩 불러 준다",
+          "story": "{member}가 채팅창을 거슬러 올라가며 이름을 하나하나 불렀다.",
+          "next": "finale_names"
+        },
+        {
+          "text": "기록 화면을 캡처하고 바로 마무리한다",
+          "story": "{member}가 기록 화면을 캡처해 고정하고 짧게 인사했다.",
+          "next": "finale_clean"
+        }
+      ]
+    },
+    "finale_names": {
+      "type": "end",
+      "text": "이름을 불린 시청자들이 차례로 감사 인사를 남겼다. 기록보다 그 마지막 30분이 더 오래 회자됐다. 대신 {member}는 거의 아침이 돼서야 잠들었다.",
+      "effects": {
+        "fans": 170,
+        "fame": 1,
+        "money": 40000,
+        "hp": -2,
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "success"
+    },
+    "finale_clean": {
+      "type": "end",
+      "text": "고정된 기록 화면 아래로 축하 댓글이 줄줄이 달렸다. 깔끔하게 끝냈지만 피로는 그대로 남았다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1,
+        "money": 40000,
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "success"
+    },
+    "record_close": {
+      "type": "end",
+      "text": "기록은 넘겼다. 하지만 다시보기의 마지막 한 시간은 조용했고, {member}는 다음 날 목이 쉬어 있었다.",
+      "effects": {
+        "fans": 90,
+        "money": 20000,
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "partial"
+    },
+    "record_fall": {
+      "type": "end",
+      "text": "기록은 다음으로 미뤘다. 쉰 목으로 인사하는 {member}에게 팬들은 \"다음엔 같이 페이스 조절해서 깨자\"고 답했다. {member}는 다음 장시간 방송부터 쉬는 시간을 정해 두기로 했다.",
+      "effects": {
+        "fans": 40,
+        "memberFlags": {
+          "stayedUpLate": true,
+          "marathonPacing": true
+        }
+      },
+      "result": "fail"
+    },
+    "goal_story": {
+      "type": "story",
+      "text": "후원 목표까지 남은 건 30퍼센트. 마침 오래 방송을 본 시청자가 \"목표 채우면 노래 한 소절 해 줘요\"라는 조건을 걸었다.",
+      "next": "goal_check"
+    },
+    "goal_check": {
+      "type": "check",
+      "text": "남은 체력을 끌어모아 목표까지 분위기를 끌고 가야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 70,
+        "traitBonus": {
+          "chatter": 5,
+          "host": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "게이지가 차오르자 {member}가 약속대로 한 소절을 불렀다. 채팅창이 박수로 가득 찼다.",
+          "next": "goal_done"
+        },
+        "partial": {
+          "text": "게이지는 다 찼지만, 시간이 꽤 걸려 마무리 인사가 짧아졌다.",
+          "next": "goal_half"
+        },
+        "fail": {
+          "text": "게이지가 좀처럼 오르지 않았다. {member}가 \"다음 방송에서 이어서 채우자\"고 정리했다.",
+          "next": "goal_short"
+        }
+      }
+    },
+    "goal_done": {
+      "type": "end",
+      "text": "목표를 채우고 약속까지 지킨 마무리에 \"깔끔한 장방\"이라는 반응이 이어졌다.",
+      "effects": {
+        "fans": 70,
+        "money": 20000
+      },
+      "result": "success"
+    },
+    "goal_half": {
+      "type": "end",
+      "text": "목표는 채웠지만 마무리가 급했다. 몇몇 시청자는 인사를 못 하고 나갔다며 아쉬워했다.",
+      "effects": {
+        "fans": 50,
+        "money": 15000
+      },
+      "result": "partial"
+    },
+    "goal_short": {
+      "type": "end",
+      "text": "목표는 다음 방송으로 넘어갔다. 그래도 \"다음에 같이 채우자\"는 채팅이 많아, 다음 장시간 방송을 기다리는 사람이 늘었다.",
+      "effects": {
+        "fans": 30,
+        "money": 10000
+      },
+      "result": "fail"
+    },
+    "stop_story": {
+      "type": "story",
+      "text": "방송을 끈 뒤, {member}가 남은 채팅 기록을 훑어봤다. \"오늘 딱 좋았다\"와 \"더 보고 싶었다\"가 섞여 있다.",
+      "next": "stop_end"
+    },
+    "stop_end": {
+      "type": "end",
+      "text": "무리하지 않고 끝낸 덕에 다음 날 컨디션이 가벼웠다. 아쉬워하던 시청자들도 다음 장시간 방송 일정을 묻는 것으로 인사를 대신했다.",
+      "effects": {
+        "fans": 10,
+        "hp": 4
+      },
+      "result": "neutral"
+    },
+    "request_check": {
+      "type": "check",
+      "text": "쏟아지는 신청 중에서 무엇을 골라 어떻게 살리느냐가 남은 한 시간을 정한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "spontaneous": 10,
+          "chatter": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "{member}가 엉뚱한 신청을 골라 즉흥 코너로 만들자 채팅창이 다시 불붙었다.",
+          "next": "request_hit"
+        },
+        "partial": {
+          "text": "재밌는 신청도 있었지만, 고르는 데 시간이 오래 걸려 흐름이 몇 번 끊겼다.",
+          "next": "request_mid"
+        },
+        "fail": {
+          "text": "피곤한 탓에 신청을 제대로 살리지 못했다. 채팅창이 점점 조용해졌다.",
+          "next": "request_drag"
+        }
+      }
+    },
+    "request_hit": {
+      "type": "end",
+      "text": "신청 코너가 오늘 방송의 하이라이트가 됐다. \"장방 마지막 한 시간이 제일 재밌었다\"는 후기가 올라왔다.",
+      "effects": {
+        "fans": 110,
+        "money": 30000
+      },
+      "result": "success"
+    },
+    "request_mid": {
+      "type": "end",
+      "text": "한 시간을 꽉 채웠지만 기억에 남는 코너는 한두 개뿐이었다. 그래도 신청이 받아들여진 시청자들은 만족했다.",
+      "effects": {
+        "fans": 70,
+        "money": 20000
+      },
+      "result": "partial"
+    },
+    "request_drag": {
+      "type": "end",
+      "text": "연장한 한 시간이 길게 느껴졌다. {member}는 다음엔 신청 코너를 방송 초반에 하겠다고 했고, 팬들은 \"그때 신청할 거 미리 생각해 둔다\"고 답했다.",
+      "effects": {
+        "fans": 30,
+        "money": 5000
+      },
+      "result": "fail"
+    }
+  }
+}

@@ -1,0 +1,402 @@
+{
+  "id": "st_fan_viewer_rule_prep",
+  "title": "참여 콘텐츠 준비실",
+  "category": "fan",
+  "group": "viewer_participation",
+  "description": "시청자 참여 콘텐츠(event_205) 변형 B. 컨디션과 친한 멤버의 도움에 따라 첫 장면이 갈리고, 크게 열기로 하면 규칙 준비 판정 결과에 따라 본 방송의 판정 장면과 결말이 달라진다.",
+  "meta": {
+    "theme": "fan_event",
+    "setting": "participation_rule_prep",
+    "conflict": "budget_limit",
+    "resolution": "teamwork",
+    "activity": "viewer_participation",
+    "tone": "warm"
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "cooldown": 2
+  },
+  "activityWeights": {
+    "talk": 2
+  },
+  "weight": 1,
+  "traitWeights": {
+    "host": 2,
+    "chatter": 2
+  },
+  "start": "energy",
+  "steps": {
+    "energy": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "maxHp": 39
+          },
+          "next": "tired_intro"
+        },
+        {
+          "when": {
+            "minRelationship": 40
+          },
+          "next": "helper_intro"
+        }
+      ],
+      "next": "plain_intro"
+    },
+    "tired_intro": {
+      "type": "story",
+      "text": "{member}의 방송에서 시청자 참여 콘텐츠를 해 보자는 의견이 모였다. 하고 싶은 마음은 크지만, 요즘 쌓인 피로 때문에 준비할 힘이 남아 있을지 걱정이다.",
+      "next": "prep_choice"
+    },
+    "helper_intro": {
+      "type": "story",
+      "text": "{member}의 방송에서 시청자 참여 콘텐츠를 해 보자는 의견이 모였다. 이야기를 들은 친한 멤버가 \"규칙 정리 도와줄까?\"라며 먼저 연락해 왔다.",
+      "next": "prep_choice"
+    },
+    "plain_intro": {
+      "type": "story",
+      "text": "{member}의 방송에서 시청자 참여 콘텐츠를 해 보자는 의견이 모였다. 준비는 번거롭지만 채팅 참여가 확 늘어날 기회다.",
+      "next": "prep_choice"
+    },
+    "prep_choice": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "memberFlags": [
+              "viewerShowRetry"
+            ]
+          },
+          "text": "지난번 참여 판이 한 사람의 독무대로 끝난 뒤로 {member}는 규칙을 다시 짜고 싶어 했다. 다만 예산은 넉넉하지 않다. 어떻게 할까?"
+        },
+        {
+          "when": {
+            "activityCategories": [
+              "game"
+            ]
+          },
+          "text": "시청자와 함께 붙는 참여 게임 판이 후보다. 참가 신청, 대진, 상품까지 준비하려면 예산이 꽤 든다. 어떻게 할까?"
+        },
+        {
+          "when": {
+            "activity": [
+              "sing"
+            ]
+          },
+          "text": "시청자가 고른 곡을 이어 부르는 참여 코너가 후보다. 곡 목록과 점수판, 상품까지 준비하려면 예산이 꽤 든다. 어떻게 할까?"
+        },
+        {
+          "text": "시청자 퀴즈 대회가 후보다. 문제 출제와 점수판, 상품까지 준비하려면 예산이 꽤 든다. 어떻게 할까?"
+        }
+      ],
+      "choices": [
+        {
+          "text": "제대로 준비해서 크게 연다",
+          "effects": {
+            "money": -50000,
+            "hp": -6
+          },
+          "story": "{member}가 예산표를 펼쳤다. 상품은 줄이고, 규칙과 진행에 힘을 쓰기로 했다.",
+          "next": "rule_check"
+        },
+        {
+          "text": "가벼운 투표 정도로만 진행한다",
+          "effects": {
+            "hp": -2
+          },
+          "story": "\"크게는 다음에. 오늘은 투표로!\" {member}가 투표 주제를 채팅에서 받기 시작했다.",
+          "next": "poll_story"
+        }
+      ]
+    },
+    "rule_check": {
+      "type": "check",
+      "text": "방송 전, 규칙을 정리하고 리허설을 해 볼 시간이다. 규칙이 허술하면 본 방송에서 판이 흔들린다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "diligent": 10,
+          "brain": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "규칙이 한 장에 깔끔하게 정리됐다. 리허설에서 나온 허점도 미리 막았다.",
+          "next": "show_tight"
+        },
+        "partial": {
+          "text": "규칙은 정리했지만 리허설할 시간이 부족했다. 몇 군데는 현장에서 정해야 한다.",
+          "next": "show_loose"
+        },
+        "fail": {
+          "text": "규칙 정리가 끝나기도 전에 방송 시간이 됐다. 거의 즉흥으로 판을 열어야 한다.",
+          "next": "show_bare"
+        }
+      }
+    },
+    "show_tight": {
+      "type": "check",
+      "text": "탄탄한 규칙 위에서 판이 열렸다. 이제 진행으로 분위기를 끌어올릴 차례다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 78,
+        "traitBonus": {
+          "host": 10,
+          "chatter": 5,
+          "roleplay": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "규칙이 매끄러우니 진행에 여유가 생겼다. {member}의 즉석 멘트마다 채팅창이 터졌다.",
+          "effects": {
+            "fans": 90,
+            "fame": 1
+          },
+          "next": "show_tight_hit"
+        },
+        "success": {
+          "text": "참가자들이 규칙을 금방 이해하고 판에 빠져들었다. 채팅 참여가 평소의 몇 배로 늘었다.",
+          "next": "show_tight_hit"
+        },
+        "partial": {
+          "text": "규칙은 매끄러웠지만 진행 템포가 느려 중반에 살짝 늘어졌다.",
+          "next": "show_tight_mid"
+        },
+        "fail": {
+          "text": "규칙은 완벽했는데 정작 참가 신청이 몰리지 않았다. 빈자리가 눈에 띄었다.",
+          "next": "show_tight_low"
+        }
+      }
+    },
+    "show_tight_hit": {
+      "type": "end",
+      "text": "\"이거 정기 코너로 해 주세요\"라는 요청이 쏟아졌다. 꼼꼼한 준비가 그대로 재미로 돌아왔다.",
+      "effects": {
+        "fans": 130,
+        "fame": 1,
+        "memberFlags": {
+          "viewerShowRegular": true
+        }
+      },
+      "result": "success"
+    },
+    "show_tight_mid": {
+      "type": "end",
+      "text": "참가자들은 만족했지만, 구경하던 시청자 일부는 중간에 빠져나갔다. 다음엔 템포를 올리기로 했다.",
+      "effects": {
+        "fans": 80
+      },
+      "result": "partial"
+    },
+    "show_tight_low": {
+      "type": "end",
+      "text": "준비한 규칙집이 아까울 만큼 참여가 적었다. {member}는 \"다음엔 공지를 일찍 하겠다\"고 했고, 팬들은 그때는 꼭 신청하겠다고 답했다.",
+      "effects": {
+        "fans": 30
+      },
+      "result": "fail"
+    },
+    "show_loose": {
+      "type": "check",
+      "text": "규칙 몇 군데가 비어 있는 채로 판이 열렸다. 현장에서 빈틈을 메우며 진행해야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 78,
+        "traitBonus": {
+          "host": 10,
+          "chatter": 5,
+          "roleplay": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 빈 규칙을 시청자 투표로 채우자 그 과정이 오히려 하이라이트가 됐다.",
+          "effects": {
+            "fans": 90,
+            "fame": 1
+          },
+          "next": "show_loose_hit"
+        },
+        "success": {
+          "text": "빈틈이 생길 때마다 {member}가 재치 있게 규칙을 만들어 냈다. 시청자들도 함께 규칙을 정하는 재미에 빠졌다.",
+          "next": "show_loose_hit"
+        },
+        "partial": {
+          "text": "규칙을 정하느라 진행이 몇 번 멈췄다. 그래도 참가자들은 끝까지 함께했다.",
+          "next": "show_loose_mid"
+        },
+        "fail": {
+          "text": "규칙을 두고 채팅창에서 논쟁이 붙었다. 판이 산만해졌다.",
+          "next": "show_loose_low"
+        }
+      }
+    },
+    "show_loose_hit": {
+      "type": "end",
+      "text": "\"즉석 규칙 만들기\"까지 콘텐츠가 됐다. 시청자들이 직접 만든 규칙에 애착을 보였다.",
+      "effects": {
+        "fans": 120,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "show_loose_mid": {
+      "type": "end",
+      "text": "재미는 있었지만 멈추는 순간이 잦았다. 다시보기 댓글에는 \"규칙집 좀 만들자\"는 농담이 많았다.",
+      "effects": {
+        "fans": 70
+      },
+      "result": "partial"
+    },
+    "show_loose_low": {
+      "type": "end",
+      "text": "논쟁 끝에 판을 일찍 정리했다. {member}는 다음 방송 공지에 규칙을 미리 올리겠다고 약속했다.",
+      "effects": {
+        "fans": 25
+      },
+      "result": "fail"
+    },
+    "show_bare": {
+      "type": "check",
+      "text": "규칙도 리허설도 없이 판이 열렸다. 오롯이 {member}의 진행 실력에 달렸다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 78,
+        "traitBonus": {
+          "host": 10,
+          "chatter": 5,
+          "roleplay": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 무계획을 숨기지 않고 \"오늘은 다 같이 만든다\"를 선언하자, 시청자들이 신나서 규칙부터 상품까지 함께 정했다.",
+          "effects": {
+            "fans": 90,
+            "fame": 1
+          },
+          "next": "show_bare_hit"
+        },
+        "success": {
+          "text": "즉흥 진행이 오히려 자연스러웠다. 채팅과 주고받는 맛이 살아 있었다.",
+          "next": "show_bare_hit"
+        },
+        "partial": {
+          "text": "즉흥 진행이 몇 번 꼬였다. 웃음은 있었지만 정돈되지 않은 판이었다.",
+          "next": "show_bare_mid"
+        },
+        "fail": {
+          "text": "규칙이 없으니 참가자마다 하는 말이 달랐다. 판이 금방 흐지부지됐다.",
+          "next": "show_bare_low"
+        }
+      }
+    },
+    "show_bare_hit": {
+      "type": "end",
+      "text": "\"계획 없이 이게 된다고?\"라는 반응과 함께 방송이 끝났다. 다만 매니저는 다음엔 꼭 규칙부터 정하자고 했다.",
+      "effects": {
+        "fans": 110,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "show_bare_mid": {
+      "type": "end",
+      "text": "시끌벅적한 판이었다. 즐거웠다는 시청자와 정신없었다는 시청자가 반반이었다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "partial"
+    },
+    "show_bare_low": {
+      "type": "end",
+      "text": "흐지부지 끝난 판에 {member}가 먼저 \"준비가 부족했다\"고 사과했다. 팬들은 다음 참여 판의 규칙을 같이 짜 주겠다며 아이디어를 보내왔다.",
+      "effects": {
+        "fans": 20,
+        "memberFlags": {
+          "viewerRulebook": true
+        }
+      },
+      "result": "fail"
+    },
+    "poll_story": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activityCategories": [
+              "game"
+            ]
+          },
+          "text": "투표 주제가 모였다. 1위는 \"다음에 할 게임 정하기\". 그런데 선택지 하나에 장난 표가 몰리고 있다."
+        },
+        {
+          "when": {
+            "activity": [
+              "sing"
+            ]
+          },
+          "text": "투표 주제가 모였다. 1위는 \"마지막 곡 정하기\". 그런데 선택지 하나에 장난 표가 몰리고 있다."
+        },
+        {
+          "text": "투표 주제가 모였다. 1위는 \"다음 방송 주제 정하기\". 그런데 선택지 하나에 장난 표가 몰리고 있다."
+        }
+      ],
+      "next": "poll_check"
+    },
+    "poll_check": {
+      "type": "check",
+      "text": "장난 표까지 웃음으로 받아 줄 수 있느냐가 관건이다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 64,
+        "traitBonus": {
+          "chatter": 10
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "{member}가 장난 표를 받아들여 \"그럼 진짜 해 볼까?\"라고 하자 채팅창이 신났다.",
+          "next": "poll_lively"
+        },
+        "partial": {
+          "text": "투표는 무난하게 끝났다. 장난 표를 어떻게 처리할지 고민하다 흐지부지 넘어갔다.",
+          "next": "poll_plain"
+        },
+        "fail": {
+          "text": "장난 표 때문에 결과를 두고 실랑이가 붙었다. {member}가 서둘러 투표를 닫았다.",
+          "next": "poll_flop"
+        }
+      }
+    },
+    "poll_lively": {
+      "type": "end",
+      "text": "가벼운 투표가 예상 밖의 웃음으로 이어졌다. \"투표 또 해요\"라는 채팅이 마지막을 장식했다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "success"
+    },
+    "poll_plain": {
+      "type": "end",
+      "text": "투표는 무난했다. 크게 기억에 남진 않았지만 채팅 참여는 평소보다 늘었다.",
+      "effects": {
+        "fans": 45
+      },
+      "result": "partial"
+    },
+    "poll_flop": {
+      "type": "end",
+      "text": "어수선하게 끝난 투표에 {member}가 \"다음엔 장난 표 금지!\"라며 웃었다. 팬들은 그 말에 또 장난을 쳤다.",
+      "effects": {
+        "fans": 20
+      },
+      "result": "fail"
+    }
+  }
+}

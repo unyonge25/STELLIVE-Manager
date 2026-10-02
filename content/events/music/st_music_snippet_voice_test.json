@@ -1,0 +1,368 @@
+{
+  "id": "st_music_snippet_voice_test",
+  "title": "한 소절, 다시 한 번",
+  "category": "music",
+  "group": "impromptu_sing",
+  "description": "즉석 노래 방송 제안(event_101) 변형 B. 방송이 끝난 뒤 같은 소절을 다시 불러 보는 판정이 먼저 오고, 목 상태에 따라 같은 선택도 다른 결과로 이어진다.",
+  "meta": {
+    "theme": "music_production",
+    "setting": "after_stream_voice_test",
+    "conflict": "nervousness",
+    "resolution": "quiet_growth",
+    "activity": "cover_planning",
+    "tone": "calm"
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ]
+  },
+  "activityWeights": {
+    "music": 2
+  },
+  "weight": 1,
+  "start": "voice_test",
+  "steps": {
+    "voice_test": {
+      "type": "check",
+      "text": [
+        {
+          "when": {
+            "memberFlags": [
+              "coverPromise"
+            ]
+          },
+          "text": "지난번 미뤄 둔 커버 약속이 아직 고정 댓글에 걸려 있다. 오늘 방송 중 {member}가 부른 한 소절에 그 댓글이 다시 끌어올려졌다. 방송이 끝나자 매니저가 조용히 말했다. \"지금, 한 번만 다시 불러 볼래요?\""
+        },
+        {
+          "when": {
+            "activity": [
+              "sing"
+            ]
+          },
+          "text": "노래 방송 도중, 신청곡 사이에 {member}가 즉흥으로 목청을 뽑아 부른 한 소절이 채팅을 뒤집어 놓았다. 팬들은 커버 프로젝트를 하자고 성화다. 방송이 끝나자 매니저가 그 소절을 한 번만 다시 불러 보라고 했다. 흥분이 가라앉은 뒤에도 그 소리가 나오는지 확인하려는 것이다."
+        },
+        {
+          "when": {
+            "activityCategories": [
+              "game"
+            ]
+          },
+          "text": "게임 방송 도중, 배경 음악을 따라 {member}가 목청을 뽑아 부른 한 소절이 채팅을 뒤집어 놓았다. 플레이는 잠시 뒷전이 됐다. 팬들은 커버 프로젝트를 하자고 성화다. 방송이 끝나자 매니저가 그 소절을 한 번만 다시 불러 보라고 했다. 흥분이 가라앉은 뒤에도 그 소리가 나오는지 확인하려는 것이다."
+        },
+        {
+          "text": "방송에서 이야기를 나누던 중, {member}가 장난처럼 목청을 뽑아 부른 한 소절이 채팅을 뒤집어 놓았다. 팬들은 커버 프로젝트를 하자고 성화다. 방송이 끝나자 매니저가 그 소절을 한 번만 다시 불러 보라고 했다. 흥분이 가라앉은 뒤에도 그 소리가 나오는지 확인하려는 것이다."
+        }
+      ],
+      "check": {
+        "stat": "Vc",
+        "difficulty": 72,
+        "traitBonus": {
+          "cover": 5,
+          "instrument": 5,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "긴장한 기색도 없이 같은 소리가 나왔다. 매니저가 고개를 끄덕였다. \"이거면 바로 시작해도 되겠는데요.\"",
+          "next": "ready_choice"
+        },
+        "partial": {
+          "text": "음은 맞았지만 끝음이 살짝 떨렸다. 방송의 흥이 빠지자 긴장이 올라온 모양이다.",
+          "next": "shaky_choice"
+        },
+        "fail": {
+          "text": "두 번째 소절에서 목이 갈라졌다. {member}가 목을 쓰다듬으며 \"방송 땐 됐는데...\"라고 중얼거렸다.",
+          "next": "strained_choice"
+        }
+      }
+    },
+    "ready_choice": {
+      "type": "choice",
+      "text": "목 상태는 확인됐다. 이제 무엇을 할지 정할 차례다.",
+      "choices": [
+        {
+          "text": "정식 커버 프로젝트를 바로 시작한다",
+          "effects": {
+            "money": -300000,
+            "hp": -3
+          },
+          "story": "편곡자와 바로 일정이 잡혔다. {member}가 작업실로 향하며 같은 소절을 몇 번이고 속으로 되뇌었다.",
+          "next": "ready_record"
+        },
+        {
+          "text": "팬 요청곡으로 가볍게 즉석 방송을 한다",
+          "effects": {
+            "hp": -9
+          },
+          "story": "다음 방송을 바로 노래 방송으로 바꿨다. 공지가 올라가자 신청곡이 쏟아졌다.",
+          "next": "ready_request_end"
+        },
+        {
+          "text": "오늘은 목을 아끼고 다음 방송을 준비한다",
+          "story": "\"좋은 소리 났을 때 아껴 둘게요.\" {member}가 목 관리 루틴을 메모했다.",
+          "next": "ready_save_end"
+        }
+      ]
+    },
+    "ready_record": {
+      "type": "check",
+      "text": "작업실의 정적 속에서 {member}가 헤드폰을 썼다. 방송 때의 그 소리를 다시 담아야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 78,
+        "traitBonus": {
+          "perfectionist": 10,
+          "cover": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "세 번째 테이크에서 편곡자가 손을 들었다. 방송 때보다 더 단단한 소리가 담겼다.",
+          "next": "ready_release"
+        },
+        "partial": {
+          "text": "좋은 테이크가 나왔지만 몇 군데는 다음 작업일에 다시 손보기로 했다.",
+          "next": "ready_delay"
+        },
+        "fail": {
+          "text": "작업실에서는 같은 소리가 나오지 않았다. {member}가 헤드폰을 벗고 한숨을 쉬었다.",
+          "next": "ready_retake"
+        }
+      }
+    },
+    "ready_release": {
+      "type": "end",
+      "text": "공개한 커버가 천천히, 그러나 꾸준히 퍼졌다. \"방송에서 들은 그 소리\"를 찾아온 사람들이 댓글을 남겼다.",
+      "effects": {
+        "fans": 160,
+        "fame": 2,
+        "stats": {
+          "Vc": 3
+        },
+        "hp": -4
+      },
+      "result": "success"
+    },
+    "ready_delay": {
+      "type": "end",
+      "text": "공개는 조금 늦어졌지만 완성도는 높았다. 다만 기다리다 지친 몇몇 팬은 다른 커버로 관심을 옮긴 뒤였다.",
+      "effects": {
+        "fans": 110,
+        "fame": 1,
+        "stats": {
+          "Vc": 2
+        },
+        "hp": -4
+      },
+      "result": "partial"
+    },
+    "ready_retake": {
+      "type": "end",
+      "text": "데모는 다시 따기로 했다. 들인 비용이 아까웠지만, {member}는 \"어설픈 걸 내긴 싫다\"며 날짜를 다시 잡았다. 팬들은 기다리겠다는 댓글로 답했다.",
+      "effects": {
+        "fans": 60,
+        "fame": 1,
+        "stats": {
+          "Vc": 2
+        },
+        "hp": -4,
+        "memberFlags": {
+          "coverDemoRetake": true
+        }
+      },
+      "result": "fail"
+    },
+    "ready_request_end": {
+      "type": "end",
+      "text": "목 상태가 좋은 날 연 즉석 노래 방송은 신청곡을 하나하나 소화하며 길게 이어졌다.",
+      "effects": {
+        "fans": 110,
+        "stats": {
+          "Vc": 1
+        }
+      },
+      "result": "success"
+    },
+    "ready_save_end": {
+      "type": "end",
+      "text": "좋은 컨디션을 아껴 두기로 했다. 당장 화제는 식었지만, 다음 노래 방송을 기다리는 팬들의 기대는 남았다.",
+      "effects": {
+        "hp": 8,
+        "fans": -20
+      },
+      "result": "neutral"
+    },
+    "shaky_choice": {
+      "type": "choice",
+      "text": "소리가 흔들린 걸 {member}도 느꼈다. \"그래도 해 보고 싶어요.\" 무엇을 할지 정해야 한다.",
+      "choices": [
+        {
+          "text": "정식 커버 프로젝트를 바로 시작한다",
+          "effects": {
+            "money": -300000,
+            "hp": -3
+          },
+          "story": "흔들린 끝음을 잡는 연습부터 시작하기로 했다. 작업 일정은 넉넉하게 잡았다.",
+          "next": "shaky_project_end"
+        },
+        {
+          "text": "팬 요청곡으로 가볍게 즉석 방송을 한다",
+          "effects": {
+            "hp": -9
+          },
+          "story": "즉석 노래 방송을 열었다. 첫 곡은 오늘 그 한 소절이 들어간 곡이다.",
+          "next": "shaky_live"
+        },
+        {
+          "text": "오늘은 목을 아끼고 다음 방송을 준비한다",
+          "story": "{member}가 고개를 끄덕였다. \"떨린 채로 하는 것보다 제대로 준비할게요.\"",
+          "next": "shaky_save_end"
+        }
+      ]
+    },
+    "shaky_project_end": {
+      "type": "end",
+      "text": "연습에 시간을 들인 만큼 소리는 단단해졌다. 다만 공개 시점이 늦어져 화제성은 많이 식었다.",
+      "effects": {
+        "fans": 130,
+        "fame": 2,
+        "stats": {
+          "Vc": 3
+        },
+        "hp": -4
+      },
+      "result": "partial"
+    },
+    "shaky_live": {
+      "type": "check",
+      "text": "첫 곡의 그 소절이 다가온다. 매니저 앞에서 떨렸던 끝음이 다시 걸린다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 70,
+        "traitBonus": {
+          "highTension": 5,
+          "spontaneous": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "이번엔 흔들리지 않았다. 채팅창이 \"아까보다 더 좋다\"로 가득 찼다.",
+          "next": "shaky_live_ok"
+        },
+        "partial": {
+          "text": "끝음은 또 살짝 흔들렸지만, 노래 전체의 분위기는 좋았다.",
+          "next": "shaky_live_mid"
+        },
+        "fail": {
+          "text": "같은 곳에서 또 흔들렸다. {member}가 웃으며 넘겼지만 표정에 아쉬움이 묻어났다.",
+          "next": "shaky_live_bad"
+        }
+      }
+    },
+    "shaky_live_ok": {
+      "type": "end",
+      "text": "흔들림을 넘어선 노래에 팬들이 더 크게 반응했다. 방송이 끝나고 {member}가 \"이제 좀 자신감이 생겼다\"고 했다.",
+      "effects": {
+        "fans": 110,
+        "stats": {
+          "Vc": 1
+        }
+      },
+      "result": "success"
+    },
+    "shaky_live_mid": {
+      "type": "end",
+      "text": "노래 방송은 즐거웠다. 다만 그 소절만큼은 아직 숙제로 남았다.",
+      "effects": {
+        "fans": 70,
+        "stats": {
+          "Vc": 1
+        }
+      },
+      "result": "partial"
+    },
+    "shaky_live_bad": {
+      "type": "end",
+      "text": "방송은 무난하게 끝났지만 같은 실수가 마음에 걸렸다. 팬들은 \"다음엔 될 거야\"라며 다음 노래 방송을 기다리겠다고 했다.",
+      "effects": {
+        "fans": 30,
+        "stats": {
+          "Vc": 1
+        }
+      },
+      "result": "fail"
+    },
+    "shaky_save_end": {
+      "type": "end",
+      "text": "하루 쉬며 목을 풀자 흔들리던 끝음이 잡혔다. 다음 방송에서 그 소절을 다시 부르자 팬들이 \"기다린 보람이 있다\"고 했다.",
+      "effects": {
+        "hp": 8,
+        "fans": -20
+      },
+      "result": "success"
+    },
+    "strained_choice": {
+      "type": "choice",
+      "text": "목이 갈라진 걸 확인한 매니저가 걱정스러운 얼굴이다. 그래도 팬들의 기대는 여전히 뜨겁다.",
+      "choices": [
+        {
+          "text": "정식 커버 프로젝트를 바로 시작한다",
+          "effects": {
+            "money": -300000,
+            "hp": -3
+          },
+          "story": "\"일정 잡아 두면 그때까진 괜찮아질 거예요.\" {member}가 작업 일정을 밀어붙였다.",
+          "next": "strained_project_end"
+        },
+        {
+          "text": "팬 요청곡으로 가볍게 즉석 방송을 한다",
+          "effects": {
+            "hp": -9
+          },
+          "story": "{member}가 고집스럽게 즉석 노래 방송을 켰다. 첫 곡부터 목을 가다듬는 소리가 잦았다.",
+          "next": "strained_request_end"
+        },
+        {
+          "text": "오늘은 목을 아끼고 다음 방송을 준비한다",
+          "story": "{member}가 순순히 고개를 끄덕였다. \"오늘은 쉴게요. 대신 꼭 다시 들려줄게요.\"",
+          "next": "strained_rest_end"
+        }
+      ]
+    },
+    "strained_project_end": {
+      "type": "end",
+      "text": "목이 다 낫지 않은 채 들어간 작업은 생각처럼 풀리지 않았다. 결과물은 나왔지만 {member} 스스로도 아쉬움이 컸다. 팬들은 \"다음 커버가 더 기대된다\"며 다독였다.",
+      "effects": {
+        "fans": 90,
+        "fame": 1,
+        "stats": {
+          "Vc": 2
+        },
+        "hp": -4
+      },
+      "result": "fail"
+    },
+    "strained_request_end": {
+      "type": "end",
+      "text": "노래 방송은 몇 곡 만에 끝났다. 팬들은 \"목 상태가 안 좋아 보이니 쉬어 달라\"는 말을 더 많이 남겼다. {member}는 회복하면 제대로 다시 열겠다고 약속했다.",
+      "effects": {
+        "fans": 60,
+        "stats": {
+          "Vc": 1
+        }
+      },
+      "result": "fail"
+    },
+    "strained_rest_end": {
+      "type": "end",
+      "text": "쉬기로 한 결정에 팬들이 오히려 안심했다. 며칠 뒤 회복된 목으로 부른 그 소절이 다시 작은 화제가 됐다.",
+      "effects": {
+        "hp": 8,
+        "fans": -10
+      },
+      "result": "success"
+    }
+  }
+}

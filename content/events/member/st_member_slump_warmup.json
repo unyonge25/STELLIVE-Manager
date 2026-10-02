@@ -1,0 +1,411 @@
+{
+  "id": "st_member_slump_warmup",
+  "title": "괜찮다는 발성 연습",
+  "category": "member",
+  "group": "condition_slump",
+  "description": "컨디션 난조(event_204) 변형 B. \"괜찮다\"는 말을 확인하는 발성 판정이 먼저 오고, 목 상태에 따라 같은 선택도 다른 장면과 결말로 이어진다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "warmup_voice_test",
+    "conflict": "miscommunication",
+    "resolution": "compromise",
+    "activity": "rest_day",
+    "tone": "warm"
+  },
+  "conditions": {
+    "maxHp": 29
+  },
+  "weight": 4,
+  "urgent": true,
+  "start": "warmup",
+  "steps": {
+    "warmup": {
+      "type": "check",
+      "text": [
+        {
+          "when": {
+            "memberFlags": [
+              "slumpVoiceCheck"
+            ]
+          },
+          "text": "지난번 약속대로 {member}가 먼저 목 상태를 말하러 왔다. \"조금 가라앉긴 했는데, 들어 보세요.\" {member}가 매니저 앞에서 발성을 해 보인다. 정말 괜찮은지, 괜찮다고 믿고 싶은 건지 확인해야 한다."
+        },
+        {
+          "when": {
+            "activity": [
+              "rest"
+            ]
+          },
+          "text": "휴방이 잡힌 날인데도 {member}가 사무실에 왔다. 목소리가 평소보다 가라앉아 있는데도 \"괜찮아요, 들어 보세요\"라며 발성을 해 보인다. 본인은 괜찮다고 하지만, 누가 봐도 지쳐 보인다."
+        },
+        {
+          "text": "{member}의 목소리가 평소보다 가라앉아 있다. \"괜찮아요, 들어 보세요.\" {member}가 매니저 앞에서 발성을 해 보인다. 본인은 괜찮다고 하지만, 누가 봐도 지쳐 보인다."
+        }
+      ],
+      "check": {
+        "stat": "Vc",
+        "difficulty": 70,
+        "traitBonus": {
+          "calm": 5,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "소리는 생각보다 또렷했다. 다만 발성이 끝나자마자 의자에 털썩 주저앉았다. 목보다 몸이 먼저 지친 것이다.",
+          "next": "ok_choice"
+        },
+        "partial": {
+          "text": "첫 소리는 괜찮았는데 길게 끄는 음에서 숨이 모자랐다. {member}는 \"이 정도면 되죠?\"라며 웃었다.",
+          "next": "thin_choice"
+        },
+        "fail": {
+          "text": "두 번째 음에서 목소리가 갈라졌다. {member}가 민망한 듯 헛기침을 했다. \"어제까진 괜찮았는데...\"",
+          "next": "cracked_choice"
+        }
+      }
+    },
+    "ok_choice": {
+      "type": "choice",
+      "text": "목은 버티지만 몸은 지쳐 있다. 오늘을 어떻게 할까?",
+      "choices": [
+        {
+          "text": "하루 푹 쉬게 한다",
+          "story": "\"목이 괜찮을 때 쉬어야 오래 가요.\" 매니저의 말에 {member}가 순순히 웃었다.",
+          "next": "ok_rest"
+        },
+        {
+          "text": "짧게 인사 방송만 한다",
+          "story": "{member}가 \"목 괜찮으니까 인사만 할게요\"라며 짧은 방송을 켰다.",
+          "next": "ok_greet"
+        },
+        {
+          "text": "괜찮다는 말을 믿고 평소대로 방송한다",
+          "effects": {
+            "hp": -8
+          },
+          "story": "\"목 멀쩡한 거 들으셨죠?\" {member}가 평소 방송 준비를 시작했다.",
+          "next": "ok_stream"
+        }
+      ]
+    },
+    "ok_rest": {
+      "type": "end",
+      "text": "하루를 쉬고 나자 몸도 목소리만큼 회복됐다. 팬들도 \"쉴 때 쉬는 게 최고\"라며 반겼다.",
+      "effects": {
+        "hp": 20,
+        "fans": -30
+      },
+      "result": "success"
+    },
+    "ok_greet": {
+      "type": "end",
+      "text": "또렷한 목소리로 짧게 인사하자 팬들이 반가워했다. 방송을 끄고 {member}는 바로 쉬었다.",
+      "effects": {
+        "hp": 8,
+        "fans": 15
+      },
+      "result": "success"
+    },
+    "ok_stream": {
+      "type": "check",
+      "text": "목은 괜찮다. 문제는 지친 몸으로 평소 같은 텐션을 끝까지 끌고 갈 수 있느냐다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 75
+      },
+      "outcomes": {
+        "great": {
+          "text": "목 상태가 좋아서인지 {member}의 입담이 평소보다 더 살아났다. 피곤함을 잊게 하는 방송이었다.",
+          "effects": {
+            "fans": 60,
+            "fame": 1
+          },
+          "next": "ok_stream_good"
+        },
+        "success": {
+          "text": "{member}가 지친 몸을 다독이며 평소 방송을 끝까지 해냈다.",
+          "next": "ok_stream_good"
+        },
+        "partial": {
+          "text": "목소리는 끝까지 괜찮았지만 후반부 반응이 눈에 띄게 느려졌다.",
+          "next": "ok_stream_tired"
+        },
+        "fail": {
+          "text": "목은 버텼지만 몸이 먼저 무너졌다. 방송 도중 어지럽다며 일찍 끝냈다.",
+          "next": "ok_stream_drop"
+        }
+      }
+    },
+    "ok_stream_good": {
+      "type": "end",
+      "text": "\"오늘도 재밌었다\"는 반응 속에 방송이 끝났다. {member}는 다음 날 늦잠으로 피로를 풀었다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "success"
+    },
+    "ok_stream_tired": {
+      "type": "end",
+      "text": "방송은 지켰지만, 팬들 사이에서 \"오늘 좀 피곤해 보였다\"는 이야기가 나왔다.",
+      "effects": {
+        "fans": 20
+      },
+      "result": "partial"
+    },
+    "ok_stream_drop": {
+      "type": "end",
+      "text": "급히 끝난 방송에 걱정하는 글이 이어졌다. 회복 후 {member}는 \"목만 보고 괜찮다고 했던 게 실수였다\"고 털어놨고, 이후 방송 전 점검을 몸 상태까지 넓혔다.",
+      "effects": {
+        "fans": -40,
+        "fame": -1,
+        "memberFlags": {
+          "slumpWarmupNote": true
+        }
+      },
+      "result": "fail"
+    },
+    "thin_choice": {
+      "type": "choice",
+      "text": "숨이 모자란 걸 {member}도 알고 있다. 그래도 \"할 수 있다\"는 눈빛이다.",
+      "choices": [
+        {
+          "text": "하루 푹 쉬게 한다",
+          "story": "\"숨이 차는 건 쉬라는 신호예요.\" {member}가 잠깐 머뭇거리다 고개를 끄덕였다.",
+          "next": "thin_rest"
+        },
+        {
+          "text": "짧게 인사 방송만 한다",
+          "story": "{member}가 \"진짜 인사만\"이라고 몇 번이나 강조하며 방송을 켰다.",
+          "next": "thin_greet"
+        },
+        {
+          "text": "괜찮다는 말을 믿고 평소대로 방송한다",
+          "effects": {
+            "hp": -8
+          },
+          "story": "{member}가 물병을 두 개 챙겨 평소 방송을 시작했다.",
+          "next": "thin_stream"
+        }
+      ]
+    },
+    "thin_rest": {
+      "type": "end",
+      "text": "쉬는 동안 숨이 차는 증상이 가라앉았다. 다음 방송에서 {member}가 \"그때 쉬길 잘했다\"고 말했다.",
+      "effects": {
+        "hp": 20,
+        "fans": -30
+      },
+      "result": "success"
+    },
+    "thin_greet": {
+      "type": "check",
+      "text": "숨이 짧은 채로 인사를 마쳐야 한다. 짧고 밝게 끝낼 수 있을까?",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 66,
+        "traitBonus": {
+          "calm": 10
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "숨 고를 틈을 잘 섞어 가며 {member}가 짧은 인사를 무사히 마쳤다.",
+          "next": "thin_greet_ok"
+        },
+        "partial": {
+          "text": "인사는 마쳤지만 중간중간 숨을 고르는 소리가 마이크에 담겼다.",
+          "next": "thin_greet_cough"
+        },
+        "fail": {
+          "text": "말을 잇다 숨이 차서 몇 번이나 멈췄다. 채팅창에 걱정이 쏟아졌다.",
+          "next": "thin_greet_worry"
+        }
+      }
+    },
+    "thin_greet_ok": {
+      "type": "end",
+      "text": "짧은 인사로 근황을 전했다. 팬들도 \"얼른 쉬어\"라며 웃으며 보내 주었다.",
+      "effects": {
+        "hp": 8,
+        "fans": 10
+      },
+      "result": "success"
+    },
+    "thin_greet_cough": {
+      "type": "end",
+      "text": "팬들은 반가워하면서도 숨소리를 걱정했다. 인사는 했지만 쉬는 시간은 그만큼 줄었다.",
+      "effects": {
+        "hp": 6
+      },
+      "result": "partial"
+    },
+    "thin_greet_worry": {
+      "type": "end",
+      "text": "걱정 섞인 반응에 {member}가 미안해했다. 다음 날 매니저가 휴방 공지를 대신 올리며 \"충분히 쉬고 돌아온다\"고 전했다.",
+      "effects": {
+        "hp": 6,
+        "fans": -15
+      },
+      "result": "fail"
+    },
+    "thin_stream": {
+      "type": "check",
+      "text": "숨이 짧은 채로 평소 분량을 소화해야 한다. 말이 끊기지 않게 버틸 수 있을까?",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 75
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 숨이 찰 때마다 채팅을 읽는 시간으로 바꾸며 흐름을 지켰다. 오히려 채팅 참여가 늘었다.",
+          "effects": {
+            "fans": 60,
+            "fame": 1
+          },
+          "next": "thin_stream_good"
+        },
+        "success": {
+          "text": "숨을 고르는 틈을 잘 숨기며 평소 방송을 끝까지 해냈다.",
+          "next": "thin_stream_good"
+        },
+        "partial": {
+          "text": "방송은 끝까지 갔지만 말이 자주 끊겼다.",
+          "next": "thin_stream_tired"
+        },
+        "fail": {
+          "text": "숨이 차서 말을 잇지 못하는 순간이 늘었다. 결국 일찍 방송을 접었다.",
+          "next": "thin_stream_drop"
+        }
+      }
+    },
+    "thin_stream_good": {
+      "type": "end",
+      "text": "끝까지 해낸 방송에 팬들이 박수를 보냈다. {member}는 방송을 끄자마자 물을 한 병 다 비웠다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "success"
+    },
+    "thin_stream_tired": {
+      "type": "end",
+      "text": "방송은 지켰지만 \"숨소리가 신경 쓰였다\"는 댓글이 달렸다.",
+      "effects": {
+        "fans": 20
+      },
+      "result": "partial"
+    },
+    "thin_stream_drop": {
+      "type": "end",
+      "text": "일찍 끝난 방송에 팬들이 걱정을 쏟아냈다. {member}는 회복 후 \"숨찬 걸 알면서도 버틴 게 욕심이었다\"고 말했다.",
+      "effects": {
+        "fans": -40,
+        "fame": -1,
+        "memberFlags": {
+          "slumpWarmupNote": true
+        }
+      },
+      "result": "fail"
+    },
+    "cracked_choice": {
+      "type": "choice",
+      "text": "갈라진 목소리에 매니저도 {member}도 잠시 말이 없었다.",
+      "choices": [
+        {
+          "text": "하루 푹 쉬게 한다",
+          "story": "\"오늘은 쉬어요. 목소리가 먼저예요.\" {member}가 말없이 고개를 끄덕였다.",
+          "next": "cracked_rest"
+        },
+        {
+          "text": "짧게 인사 방송만 한다",
+          "story": "{member}가 \"목소리 안 좋은 것만 알려 드리고 올게요\"라며 짧은 방송을 켰다.",
+          "next": "cracked_greet"
+        },
+        {
+          "text": "괜찮다는 말을 믿고 평소대로 방송한다",
+          "effects": {
+            "hp": -8
+          },
+          "story": "{member}가 목캔디를 한 줌 집어 들고 평소 방송 준비를 시작했다.",
+          "next": "cracked_stream"
+        }
+      ]
+    },
+    "cracked_rest": {
+      "type": "end",
+      "text": "하루를 푹 쉬자 갈라졌던 목소리가 돌아왔다. 팬들은 \"무리 안 해서 다행\"이라며 복귀를 반겼다.",
+      "effects": {
+        "hp": 20,
+        "fans": -30
+      },
+      "result": "success"
+    },
+    "cracked_greet": {
+      "type": "end",
+      "text": "갈라진 목소리로 짧게 사정을 전했다. 팬들은 이해해 주었지만, 목소리를 직접 들은 만큼 걱정도 더 커졌다.",
+      "effects": {
+        "hp": 8,
+        "fans": 5
+      },
+      "result": "partial"
+    },
+    "cracked_stream": {
+      "type": "check",
+      "text": "갈라진 목소리로 평소 방송을 해내야 한다. 목을 아끼면서도 분위기를 지킬 수 있을까?",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 75
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 목소리 대신 리액션과 채팅 읽기로 방송을 채웠다. \"오늘 새로운 매력 발견\"이라는 반응이 나왔다.",
+          "effects": {
+            "fans": 60,
+            "fame": 1
+          },
+          "next": "cracked_stream_good"
+        },
+        "success": {
+          "text": "{member}가 목을 아끼며 조용한 진행으로 방송을 끝까지 이끌었다.",
+          "next": "cracked_stream_good"
+        },
+        "partial": {
+          "text": "목을 아끼느라 말수가 줄었고, 방송은 평소보다 한참 조용했다.",
+          "next": "cracked_stream_tired"
+        },
+        "fail": {
+          "text": "방송 30분 만에 목소리가 거의 나오지 않게 됐다. 급히 방송을 끝냈다.",
+          "next": "cracked_stream_drop"
+        }
+      }
+    },
+    "cracked_stream_good": {
+      "type": "end",
+      "text": "갈라진 목으로 해낸 방송이 오히려 화제가 됐다. 다만 매니저는 다음엔 꼭 쉬게 하겠다고 다짐했다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "success"
+    },
+    "cracked_stream_tired": {
+      "type": "end",
+      "text": "조용한 방송도 나쁘지 않았다는 팬들이 있었지만, 목 상태를 걱정하는 목소리가 더 컸다.",
+      "effects": {
+        "fans": 20
+      },
+      "result": "partial"
+    },
+    "cracked_stream_drop": {
+      "type": "end",
+      "text": "목소리가 나오지 않아 끝난 방송에 팬들의 걱정이 이어졌다. 회복 후 {member}는 매니저와 함께 \"목이 갈라지면 그날은 쉰다\"는 약속을 정했다.",
+      "effects": {
+        "fans": -40,
+        "fame": -1,
+        "memberFlags": {
+          "slumpWarmupNote": true
+        }
+      },
+      "result": "fail"
+    }
+  }
+}

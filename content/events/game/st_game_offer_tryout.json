@@ -1,0 +1,386 @@
+{
+  "id": "st_game_offer_tryout",
+  "title": "대회 제안 전 연습 경기",
+  "category": "game",
+  "group": "game_tournament_offer",
+  "description": "게임 대회 참가 제안(event_002) 변형 A. 게임단과의 연습 경기 판정이 먼저 오고, 그 결과에 따라 코치의 제안과 본선 도전의 난이도가 달라진다.",
+  "meta": {
+    "theme": "game_tournament",
+    "setting": "pro_team_tryout_scrim",
+    "conflict": "early_disadvantage",
+    "resolution": "clutch_moment",
+    "activity": "online_tournament",
+    "tone": "tense"
+  },
+  "conditions": {
+    "blockedActivityCategories": [
+      "music",
+      "rest"
+    ]
+  },
+  "activityWeights": {
+    "game": 3
+  },
+  "weight": 1,
+  "start": "tryout",
+  "steps": {
+    "tryout": {
+      "type": "check",
+      "text": [
+        {
+          "when": {
+            "memberFlags": [
+              "tourneySeasonRetry"
+            ]
+          },
+          "text": "지난번 후원사를 못 구해 대회를 접었던 {member}에게 게임단이 다시 연락해 왔다. 이번에는 제안서보다 연습 경기가 먼저다. 상대는 게임단 2군. 시작하자마자 {member} 쪽이 밀리기 시작했다."
+        },
+        {
+          "when": {
+            "activity": [
+              "fps"
+            ]
+          },
+          "text": "{member}에게 게임단에서 FPS 온라인 대회 참가 제안이 들어왔다. 조건은 하나, 먼저 게임단 2군과 연습 경기를 한 판 해 보자는 것. 첫 라운드부터 상대의 합이 맞아 {member} 쪽이 내리 점수를 내줬다."
+        },
+        {
+          "when": {
+            "activity": [
+              "fighting"
+            ]
+          },
+          "text": "{member}에게 게임단에서 격투게임 온라인 대회 참가 제안이 들어왔다. 조건은 하나, 먼저 게임단 소속 선수와 연습 대전을 해 보자는 것. 첫 두 판을 내리 내주며 {member}가 크게 밀렸다."
+        },
+        {
+          "when": {
+            "activity": [
+              "rhythm"
+            ]
+          },
+          "text": "{member}에게 게임단에서 리듬게임 온라인 대회 참가 제안이 들어왔다. 조건은 하나, 먼저 게임단 선수와 같은 곡으로 점수 대결을 해 보자는 것. 첫 곡부터 점수 차이가 크게 벌어졌다."
+        },
+        {
+          "text": "{member}에게 게임단에서 온라인 게임 대회 참가 제안이 들어왔다. 조건은 하나, 먼저 게임단 2군과 연습 경기를 해 보자는 것. 시작하자마자 상대의 합이 맞아 {member} 쪽이 크게 밀렸다."
+        }
+      ],
+      "check": {
+        "stat": "Ga",
+        "difficulty": 74,
+        "traitBonus": {
+          "competitive": 10,
+          "brain": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "마지막 고비에서 {member}의 집중력이 터졌다. 벌어졌던 점수를 끝내 뒤집자, 지켜보던 코치가 \"본선도 노려볼 만하다\"고 말했다.",
+          "next": "offer_hot"
+        },
+        "partial": {
+          "text": "끝까지 따라붙었지만 한 끗 차이로 졌다. 코치는 가능성은 봤다면서도, 본선을 노리려면 준비가 꽤 필요하다고 했다.",
+          "next": "offer_mid"
+        },
+        "fail": {
+          "text": "초반 열세를 끝내 뒤집지 못했다. 코치는 정중하게 \"재미로 나와도 환영\"이라고 말했다.",
+          "next": "offer_low"
+        }
+      }
+    },
+    "offer_hot": {
+      "type": "choice",
+      "text": "코치가 대회 일정표를 내밀었다. 준비에 시간과 비용이 꽤 들지만, 지금 감이라면 채널에 큰 자극이 될 수 있다. 무리하면 다른 일정이 밀린다는 점도 생각해야 한다.",
+      "choices": [
+        {
+          "text": "본선을 노리고 진지하게 준비한다",
+          "effects": {
+            "money": -120000,
+            "hp": -6
+          },
+          "story": "게임단 연습실에서 일주일 집중 훈련이 잡혔다. 첫날부터 코치가 {member}의 습관을 하나하나 짚어 줬다.",
+          "next": "hot_final"
+        },
+        {
+          "text": "재미로 가볍게 참가한다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "\"좋은 감 잡았을 때 즐기고 올게요.\" {member}가 가벼운 마음으로 참가 신청서를 냈다.",
+          "next": "hot_end_fun"
+        },
+        {
+          "text": "이번엔 쉬어가고 다음 기회를 노린다",
+          "story": "\"지금은 다른 일정이 많아서요.\" 코치는 아쉬워하면서도 다음 시즌에 꼭 다시 연락하겠다고 했다.",
+          "next": "hot_end_pass"
+        }
+      ]
+    },
+    "hot_final": {
+      "type": "check",
+      "text": "본선 진출이 걸린 마지막 예선 경기. 상대는 연습 경기 때보다 훨씬 단단하다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 80,
+        "traitBonus": {
+          "competitive": 10,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "팽팽하던 마지막 순간, {member}가 결정적인 한 수를 꽂았다. 본선 진출이 확정되자 응원하던 팬들의 메시지가 쏟아졌다.",
+          "next": "hot_end_final"
+        },
+        "partial": {
+          "text": "본선 문턱에서 아깝게 멈췄다. 그래도 예선 마지막 경기는 대회 하이라이트에 실렸다.",
+          "next": "hot_end_semi"
+        },
+        "fail": {
+          "text": "긴장한 탓인지 초반 실수가 계속 이어졌다. 예선 탈락. 대기실에서 {member}가 한참 리플레이를 돌려 봤다.",
+          "next": "hot_end_out"
+        }
+      }
+    },
+    "hot_end_final": {
+      "type": "end",
+      "text": "본선 무대에 선 {member}의 이름이 대회 중계 화면에 떴다. 연습 경기의 역전극까지 함께 회자되며 채널이 활기를 띠었다.",
+      "effects": {
+        "fans": 90,
+        "fame": 2,
+        "stats": {
+          "Ga": 3
+        }
+      },
+      "result": "success"
+    },
+    "hot_end_semi": {
+      "type": "end",
+      "text": "본선은 놓쳤지만 실력이 늘었다는 건 모두가 알았다. 다만 집중 훈련에 쓴 시간만큼 다른 일정이 줄줄이 밀렸다.",
+      "effects": {
+        "fans": 60,
+        "fame": 2,
+        "stats": {
+          "Ga": 2
+        }
+      },
+      "result": "partial"
+    },
+    "hot_end_out": {
+      "type": "end",
+      "text": "탈락 후 {member}는 \"다음 시즌엔 연습 경기부터 다시\"라고 짧게 남겼다. 팬들은 리플레이를 같이 돌려 보며 응원했고, 코치도 다음 시즌 연락을 약속했다.",
+      "effects": {
+        "fans": 30,
+        "fame": 1,
+        "stats": {
+          "Ga": 2
+        },
+        "memberFlags": {
+          "tourneyCoachInvite": true
+        }
+      },
+      "result": "fail"
+    },
+    "hot_end_fun": {
+      "type": "end",
+      "text": "가볍게 나간 대회에서 {member}는 연습 경기의 감을 그대로 살렸다. 성적보다 즐기는 모습이 더 많이 회자됐다.",
+      "effects": {
+        "fans": 45,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    },
+    "hot_end_pass": {
+      "type": "end",
+      "text": "몸은 아꼈지만, 좋은 감을 살릴 기회를 넘긴 게 조금 아쉽다. 팬들도 \"다음엔 꼭 나가 줘\"라는 반응이었다.",
+      "effects": {
+        "hp": 8,
+        "fans": -25,
+        "fame": -1,
+        "memberFlags": {
+          "tourneyCoachInvite": true
+        }
+      },
+      "result": "partial"
+    },
+    "offer_mid": {
+      "type": "choice",
+      "text": "코치가 일정표를 내밀며 조심스럽게 말했다. \"본선을 노리려면 남은 기간을 다 써야 할 거예요.\" 준비에 시간과 비용이 꽤 든다. 무리하면 다른 일정도 밀린다.",
+      "choices": [
+        {
+          "text": "본선을 노리고 진지하게 준비한다",
+          "effects": {
+            "money": -120000,
+            "hp": -6
+          },
+          "story": "{member}가 고개를 끄덕였다. 남은 기간 동안 매일 게임단 선수들과 연습 경기를 잡았다.",
+          "next": "mid_final"
+        },
+        {
+          "text": "재미로 가볍게 참가한다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "\"본선은 다음에. 이번엔 즐기러 갈게요.\" 코치도 웃으며 신청서를 받아 줬다.",
+          "next": "mid_end_fun"
+        },
+        {
+          "text": "이번엔 쉬어가고 다음 기회를 노린다",
+          "story": "\"지금은 준비할 시간이 부족한 것 같아요.\" 코치는 연습 경기 영상을 보내 주며 다음을 약속했다.",
+          "next": "mid_end_pass"
+        }
+      ]
+    },
+    "mid_final": {
+      "type": "check",
+      "text": "준비 기간이 짧았던 만큼 예선 마지막 경기는 버거운 상대다. 그래도 연습 경기 때보다는 손이 훨씬 빨라졌다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 84,
+        "traitBonus": {
+          "competitive": 10,
+          "diligent": 10
+        }
+      },
+      "outcomes": {
+        "success": {
+          "text": "아무도 기대하지 않던 역전승. {member}의 이름이 예선 이변으로 대회 커뮤니티에 올라왔다.",
+          "next": "mid_end_cinderella"
+        },
+        "partial": {
+          "text": "두 세트를 따내며 접전을 만들었지만 마지막 세트를 내줬다. 상대 선수가 경기 후 {member}의 플레이를 칭찬했다.",
+          "next": "mid_end_respect"
+        },
+        "fail": {
+          "text": "짧은 준비의 한계가 드러났다. 예선 첫 경기 탈락. {member}가 \"준비 기간이 부족했던 건 내 선택\"이라며 담담하게 받아들였다.",
+          "next": "mid_end_lesson"
+        }
+      }
+    },
+    "mid_end_cinderella": {
+      "type": "end",
+      "text": "\"연습 경기에서 진 그 사람이 맞냐\"는 반응과 함께 {member}의 채널에 새로운 시청자가 몰렸다.",
+      "effects": {
+        "fans": 120,
+        "fame": 2,
+        "stats": {
+          "Ga": 3
+        }
+      },
+      "result": "success"
+    },
+    "mid_end_respect": {
+      "type": "end",
+      "text": "본선은 놓쳤지만 상대 선수의 칭찬 덕에 경기 영상이 꽤 돌았다. 다만 강행군의 피로는 며칠 갔다.",
+      "effects": {
+        "fans": 70,
+        "fame": 2,
+        "stats": {
+          "Ga": 2
+        },
+        "hp": -3
+      },
+      "result": "partial"
+    },
+    "mid_end_lesson": {
+      "type": "end",
+      "text": "탈락 영상 아래에는 \"다음엔 더 길게 준비해서 나와 달라\"는 댓글이 줄을 이었다. {member}는 그 댓글들을 캡처해 연습 메모 맨 위에 붙였다.",
+      "effects": {
+        "fans": 30,
+        "fame": 1,
+        "stats": {
+          "Ga": 2
+        },
+        "memberFlags": {
+          "tourneyCoachInvite": true
+        }
+      },
+      "result": "fail"
+    },
+    "mid_end_fun": {
+      "type": "end",
+      "text": "부담을 내려놓자 오히려 경기가 잘 풀렸다. 예선 몇 판을 이기며 즐거운 장면을 여럿 남겼다.",
+      "effects": {
+        "fans": 35,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    },
+    "mid_end_pass": {
+      "type": "end",
+      "text": "대회는 다음으로 미뤘다. 아쉬워하는 팬들도 있었지만, 연습 경기 영상이 그 빈자리를 조금 채웠다.",
+      "effects": {
+        "hp": 8,
+        "fans": -25,
+        "fame": -1
+      },
+      "result": "neutral"
+    },
+    "offer_low": {
+      "type": "choice",
+      "text": "코치는 본선보다는 즐기는 참가를 권했다. 그래도 결정은 {member}의 몫이다. 준비에는 시간과 비용이 들고, 무리하면 다른 일정이 밀린다.",
+      "choices": [
+        {
+          "text": "본선을 노리고 진지하게 준비한다",
+          "effects": {
+            "money": -120000,
+            "hp": -6
+          },
+          "story": "\"그래도 본선을 노려 볼래요.\" 코치가 놀란 얼굴로 연습 일정을 다시 짰다.",
+          "next": "low_end_underdog"
+        },
+        {
+          "text": "재미로 가볍게 참가한다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "\"그럼 재미로 나가 볼게요!\" 부담을 내려놓자 {member}의 표정이 한결 밝아졌다.",
+          "next": "low_end_fun"
+        },
+        {
+          "text": "이번엔 쉬어가고 다음 기회를 노린다",
+          "story": "\"이번엔 실력부터 쌓을게요.\" {member}가 연습 경기 영상을 저장해 두었다.",
+          "next": "low_end_pass"
+        }
+      ]
+    },
+    "low_end_underdog": {
+      "type": "end",
+      "text": "예선 두 번째 경기에서 멈췄지만, 연습 경기 때와는 다른 사람처럼 싸웠다. 비용과 시간은 많이 들었어도 실력만큼은 확실히 늘었다.",
+      "effects": {
+        "fans": 70,
+        "fame": 2,
+        "stats": {
+          "Ga": 3
+        }
+      },
+      "result": "partial"
+    },
+    "low_end_fun": {
+      "type": "end",
+      "text": "\"재미로\" 나간 대회에서 {member}는 엉뚱한 플레이로 하이라이트를 여러 개 만들었다. 코치도 웃으며 박수를 쳤다.",
+      "effects": {
+        "fans": 45,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    },
+    "low_end_pass": {
+      "type": "end",
+      "text": "대회는 넘겼다. 저장해 둔 연습 경기 영상은 다음 시즌 준비의 첫 자료가 됐다.",
+      "effects": {
+        "hp": 8,
+        "fans": -25,
+        "fame": -1,
+        "memberFlags": {
+          "tourneyCoachInvite": true
+        }
+      },
+      "result": "neutral"
+    }
+  }
+}
