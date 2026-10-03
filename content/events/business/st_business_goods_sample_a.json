@@ -1,0 +1,144 @@
+{
+  "id": "st_business_goods_sample_a",
+  "title": "시안과 다른 색의 샘플",
+  "category": "business",
+  "group": "biz_goods_sample",
+  "description": "굿즈 샘플 검수 (변형 A). 한정 굿즈 샘플의 색이 시안과 다르게 나온 날, 재작업을 요청할지 다른 색을 살릴지 고른다.",
+  "meta": {
+    "theme": "merchandise",
+    "setting": "goods_sample_color_check",
+    "conflict": "miscommunication",
+    "resolution": "compromise",
+    "activity": "goods_review",
+    "tone": "comedic"
+  },
+  "conditions": {
+    "blockedActivityCategories": [
+      "broadcast"
+    ],
+    "minDay": 4,
+    "cooldown": 7
+  },
+  "weight": 0.5,
+  "start": "arrive",
+  "steps": {
+    "arrive": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "rest"
+            ]
+          },
+          "text": "쉬는 날, 사무실에 한정 굿즈 샘플 상자가 도착했다. {member}가 상자를 열자마자 고개를 갸웃했다. 시안에서는 하늘색이던 아크릴 스탠드가 연두색으로 나왔다."
+        },
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "녹음을 마친 {member}에게 한정 굿즈 샘플 상자가 전해졌다. 상자를 열자마자 고개를 갸웃했다. 시안에서는 하늘색이던 아크릴 스탠드가 연두색으로 나왔다."
+        },
+        {
+          "text": "쉬는 날, 사무실에 한정 굿즈 샘플 상자가 도착했다. {member}가 상자를 열자마자 고개를 갸웃했다. 시안에서는 하늘색이던 아크릴 스탠드가 연두색으로 나왔다."
+        }
+      ],
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "제작 업체에 연락하기 전에 방향을 정해야 한다.",
+      "choices": [
+        {
+          "text": "업체에 재작업을 요청한다",
+          "conditions": {
+            "minMoney": 60000
+          },
+          "effects": {
+            "money": -60000
+          },
+          "story": "{member}가 시안과 샘플을 나란히 찍어 업체에 보냈다. 재작업에는 추가 비용이 든다.",
+          "next": "call"
+        },
+        {
+          "text": "연두색을 \"한정 컬러\"로 살려 그대로 진행한다",
+          "story": "{member}가 연두색 샘플을 한참 보더니, 이것도 나쁘지 않다며 웃었다.",
+          "next": "keep_end"
+        }
+      ]
+    },
+    "call": {
+      "type": "story",
+      "text": "업체 담당자가 일정이 빠듯하다며 난처해했다. 재작업 일정과 품질을 함께 지키려면 꼼꼼하게 조율해야 한다.",
+      "next": "nego"
+    },
+    "nego": {
+      "type": "check",
+      "text": "색 번호와 출고 일정을 하나씩 맞춰 나가야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "perfectionist": 10,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 색 번호를 정확히 짚어 내자, 업체가 일정을 앞당겨 주겠다고 했다.",
+          "effects": {
+            "fans": 40,
+            "fame": 1
+          },
+          "next": "nego_ok"
+        },
+        "success": {
+          "text": "색 번호와 출고 일정을 하나씩 맞췄다. 재작업 샘플은 시안과 똑같이 나왔다.",
+          "next": "nego_ok"
+        },
+        "partial": {
+          "text": "색은 맞췄지만 출고가 일주일 늦어졌다.",
+          "next": "nego_late"
+        },
+        "fail": {
+          "text": "조율이 꼬여 재작업 샘플도 미묘하게 색이 달랐다.",
+          "next": "nego_miss"
+        }
+      }
+    },
+    "nego_ok": {
+      "type": "end",
+      "text": "시안 그대로 나온 굿즈 공지에 \"기다린 보람이 있다\"는 반응이 이어졌다. 사전 예약도 순조로웠다.",
+      "effects": {
+        "fans": 110
+      },
+      "result": "success"
+    },
+    "nego_late": {
+      "type": "end",
+      "text": "색은 완벽했지만 출고가 늦어졌다는 공지에 아쉬워하는 팬들이 있었다. 그래도 받은 사람들의 후기는 좋았다.",
+      "effects": {
+        "fans": 90
+      },
+      "result": "partial"
+    },
+    "nego_miss": {
+      "type": "end",
+      "text": "두 번째 샘플도 색이 미묘하게 달랐다. {member}는 다음 굿즈부터 색 견본을 직접 확인하겠다고 공지했고, 팬들은 \"그래도 기다린다\"고 답했다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "keep_end": {
+      "type": "end",
+      "text": "\"한정 컬러\"라는 이름이 붙은 연두색 스탠드는 의외로 반응이 좋았다. 다만 원래 색을 기다린 팬들은 조금 아쉬워했다.",
+      "effects": {
+        "fans": 80
+      },
+      "result": "neutral"
+    }
+  }
+}

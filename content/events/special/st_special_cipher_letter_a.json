@@ -1,0 +1,118 @@
+{
+  "id": "st_special_cipher_letter_a",
+  "title": "숫자로 가득한 팬레터",
+  "category": "special",
+  "group": "special_cipher_letter",
+  "description": "수수께끼 팬레터 (변형 A). 숫자 암호가 적힌 팬레터가 도착한 날, 시청자와 함께 풀지 혼자 차분히 풀지 고른다.",
+  "meta": {
+    "theme": "unexpected",
+    "setting": "number_cipher_fan_letter",
+    "conflict": "unexpected_guest",
+    "resolution": "audience_help",
+    "activity": "puzzle_letter",
+    "tone": "comedic"
+  },
+  "conditions": {
+    "activityCategories": [
+      "talk"
+    ],
+    "cooldown": 7
+  },
+  "weight": 0.5,
+  "start": "letter",
+  "steps": {
+    "letter": {
+      "type": "story",
+      "text": "잡담 방송 도중, {member}가 오늘 도착한 팬레터를 열었다. 편지 안에는 인사 대신 숫자로 가득한 표 한 장과 \"다 풀면 다음 편지가 갑니다\"라는 한 줄만 있었다.",
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "채팅창이 벌써 숫자를 받아 적고 있다. 어떻게 할까?",
+      "choices": [
+        {
+          "text": "방송에서 시청자와 함께 푼다",
+          "story": "{member}가 표를 화면에 띄우고 \"다 같이 풀어 보자\"고 했다.",
+          "next": "solve_check"
+        },
+        {
+          "text": "방송이 끝나고 혼자 차분히 풀어 본다",
+          "story": "{member}가 편지를 조심스럽게 접어 책상 위에 올려 두었다.",
+          "next": "later_story"
+        }
+      ]
+    },
+    "solve_check": {
+      "type": "check",
+      "text": "숫자가 글자의 순서를 뜻한다는 추측이 나왔다. 규칙을 찾아 문장을 완성해야 한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 74,
+        "traitBonus": {
+          "brain": 10,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 규칙을 찾자마자 문장이 한 번에 풀렸다. \"다음 편지는 일주일 뒤\"라는 문장에 채팅창이 환호했다.",
+          "effects": {
+            "fans": 40,
+            "fame": 1
+          },
+          "next": "solve_hit"
+        },
+        "success": {
+          "text": "시청자들의 추측을 하나씩 확인한 끝에 문장이 완성됐다.",
+          "next": "solve_hit"
+        },
+        "partial": {
+          "text": "문장 절반은 풀었지만 마지막 줄은 끝내 풀리지 않았다.",
+          "next": "solve_half"
+        },
+        "fail": {
+          "text": "추측이 엇갈리며 표가 오히려 더 복잡해 보이기 시작했다.",
+          "next": "solve_stuck"
+        }
+      }
+    },
+    "solve_hit": {
+      "type": "end",
+      "text": "함께 푼 암호 장면이 클립으로 퍼지며 \"다음 편지를 기다린다\"는 반응이 이어졌다.",
+      "effects": {
+        "fans": 140,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "solve_half": {
+      "type": "end",
+      "text": "마지막 줄은 다음 방송 숙제로 남았다. 시청자들은 각자 풀이를 정리해 두겠다고 했다.",
+      "effects": {
+        "fans": 100
+      },
+      "result": "partial"
+    },
+    "solve_stuck": {
+      "type": "end",
+      "text": "오늘은 풀지 못했다. {member}가 표를 고정해 두자 시청자들이 방송이 끝난 뒤에도 풀이를 이어 갔다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "later_story": {
+      "type": "story",
+      "text": "방송이 끝나고, {member}가 숫자 표를 한참 들여다보다 첫 줄을 풀어 냈다.",
+      "next": "later_end"
+    },
+    "later_end": {
+      "type": "end",
+      "text": "풀어 낸 첫 줄을 커뮤니티에 올리자 팬들이 나머지를 풀어 보겠다며 모여들었다.",
+      "effects": {
+        "fans": 70
+      },
+      "result": "neutral"
+    }
+  }
+}

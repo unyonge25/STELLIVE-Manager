@@ -1,0 +1,161 @@
+{
+  "id": "st_business_fan_funding_mv_b",
+  "title": "촬영 규모 정하기",
+  "category": "business",
+  "group": "biz_fan_funding_mv",
+  "description": "팬 펀딩 뮤직비디오 회의 (변형 B). 남은 체력에 따라 첫 장면이 갈리고, 촬영 규모를 정한 뒤 노래 촬영에 도전한다.",
+  "meta": {
+    "theme": "investment_project",
+    "setting": "mv_scale_decision",
+    "conflict": "high_expectations",
+    "resolution": "risky_gamble",
+    "activity": "mv_production",
+    "tone": "tense"
+  },
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "minDay": 5,
+    "cooldown": 8
+  },
+  "weight": 0.5,
+  "start": "condition",
+  "steps": {
+    "condition": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "minHp": 50
+          },
+          "next": "fresh_intro"
+        }
+      ],
+      "next": "tired_intro"
+    },
+    "fresh_intro": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "녹음 날, 팬 펀딩으로 뮤직비디오를 만들자는 제안이 들어왔다. 컨디션이 좋은 {member}는 기획서를 보며 눈을 반짝였다."
+        },
+        {
+          "text": "노래 방송 날, 팬 펀딩으로 뮤직비디오를 만들자는 제안이 들어왔다. 컨디션이 좋은 {member}는 기획서를 보며 눈을 반짝였다."
+        }
+      ],
+      "next": "decide"
+    },
+    "tired_intro": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "녹음 날, 팬 펀딩으로 뮤직비디오를 만들자는 제안이 들어왔다. 요즘 일정이 빡빡했던 {member}가 기획서를 천천히 넘겼다."
+        },
+        {
+          "text": "노래 방송 날, 팬 펀딩으로 뮤직비디오를 만들자는 제안이 들어왔다. 요즘 일정이 빡빡했던 {member}가 기획서를 천천히 넘겼다."
+        }
+      ],
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "촬영 규모를 정해야 한다.",
+      "choices": [
+        {
+          "text": "야외 촬영까지 넣어 크게 찍는다",
+          "conditions": {
+            "minMoney": 120000
+          },
+          "effects": {
+            "money": -120000
+          },
+          "story": "{member}가 야외 장면까지 넣은 촬영 계획에 서명했다.",
+          "next": "big_check"
+        },
+        {
+          "text": "펀딩 금액을 팬 선물로 돌려준다",
+          "story": "{member}가 펀딩 대신 팬들에게 작은 선물을 보내기로 했다.",
+          "next": "gift_end"
+        }
+      ]
+    },
+    "big_check": {
+      "type": "check",
+      "text": "야외 촬영 날 바람이 거세다. 노래와 동선을 한 번에 맞춰야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 76,
+        "traitBonus": {
+          "cover": 10
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "바람마저 연출처럼 보였다. 촬영 감독이 \"이 장면이 메인\"이라고 외쳤다.",
+          "effects": {
+            "fans": 60,
+            "fame": 1
+          },
+          "next": "big_hit"
+        },
+        "success": {
+          "text": "바람 속에서도 노래가 흔들리지 않았다. 계획한 장면을 모두 담았다.",
+          "next": "big_hit"
+        },
+        "partial": {
+          "text": "실내 장면은 좋았지만 야외 장면 일부는 바람 때문에 쓰지 못했다.",
+          "next": "big_half"
+        },
+        "fail": {
+          "text": "바람 탓에 야외 촬영을 접어야 했다. 남은 장면만으로 편집하기로 했다.",
+          "next": "big_cut"
+        }
+      }
+    },
+    "big_hit": {
+      "type": "end",
+      "text": "야외 장면까지 담긴 뮤직비디오가 펀딩 참여자들에게 큰 감동을 줬다. 새로 찾아온 팬도 많았다.",
+      "effects": {
+        "fans": 160,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "big_half": {
+      "type": "end",
+      "text": "야외 장면이 줄었지만 완성도는 괜찮았다. 다만 큰 규모에 비해 아쉬움이 남았다.",
+      "effects": {
+        "fans": 110,
+        "fame": 1
+      },
+      "result": "partial"
+    },
+    "big_cut": {
+      "type": "end",
+      "text": "예정보다 작아진 뮤직비디오가 공개됐다. {member}는 펀딩 참여자들에게 미공개 촬영 장면을 따로 보내며 고마움을 전했다.",
+      "effects": {
+        "fans": 70
+      },
+      "result": "fail"
+    },
+    "gift_end": {
+      "type": "end",
+      "text": "펀딩 대신 보낸 작은 선물에 팬들이 따뜻한 인증 글을 올렸다.",
+      "effects": {
+        "fans": 90
+      },
+      "result": "neutral"
+    }
+  }
+}

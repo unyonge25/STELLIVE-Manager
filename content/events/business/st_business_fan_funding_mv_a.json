@@ -1,0 +1,137 @@
+{
+  "id": "st_business_fan_funding_mv_a",
+  "title": "팬들이 모은 뮤직비디오 제작비",
+  "category": "business",
+  "group": "biz_fan_funding_mv",
+  "description": "팬 펀딩 뮤직비디오 회의 (변형 A). 팬들이 짧은 뮤직비디오 제작비를 모으자고 제안한 날, 정식 촬영을 할지 감사 영상으로 대신할지 고른다.",
+  "meta": {
+    "theme": "investment_project",
+    "setting": "fan_funded_mv_meeting",
+    "conflict": "budget_limit",
+    "resolution": "teamwork",
+    "activity": "mv_production",
+    "tone": "warm"
+  },
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "minDay": 5,
+    "cooldown": 8
+  },
+  "weight": 0.5,
+  "start": "proposal",
+  "steps": {
+    "proposal": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "녹음을 마친 {member}에게 팬 커뮤니티의 제안이 전해졌다. 팬들이 짧은 뮤직비디오 제작비를 함께 모아 보자고 한다. 모자라는 금액은 회사가 채워야 한다."
+        },
+        {
+          "text": "노래 방송이 끝날 무렵, 팬들이 짧은 뮤직비디오 제작비를 함께 모아 보자고 제안했다. 채팅창이 응원으로 가득 찼다. 모자라는 금액은 회사가 채워야 한다."
+        }
+      ],
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "제안을 어떻게 받을까?",
+      "choices": [
+        {
+          "text": "정식으로 펀딩을 열고 촬영을 준비한다",
+          "conditions": {
+            "minMoney": 120000
+          },
+          "effects": {
+            "money": -120000
+          },
+          "story": "{member}가 펀딩 공지를 올리고, 모자라는 제작비는 회사가 맡기로 했다.",
+          "next": "shoot_story"
+        },
+        {
+          "text": "펀딩 대신 감사 영상을 찍어 올린다",
+          "story": "{member}가 제안해 준 팬들에게 고맙다는 짧은 영상을 찍기로 했다.",
+          "next": "thanks_end"
+        }
+      ]
+    },
+    "shoot_story": {
+      "type": "story",
+      "text": "촬영 당일, 세트는 소박하지만 팬들이 보내 준 응원 문구가 벽 한쪽을 가득 채웠다.",
+      "next": "shoot_check"
+    },
+    "shoot_check": {
+      "type": "check",
+      "text": "한 번의 촬영으로 노래와 표정을 모두 담아야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 76,
+        "traitBonus": {
+          "cover": 10
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "첫 테이크부터 노래와 표정이 완벽하게 맞았다. 촬영 팀이 박수를 쳤다.",
+          "effects": {
+            "fans": 60,
+            "fame": 1
+          },
+          "next": "mv_hit"
+        },
+        "success": {
+          "text": "몇 번의 테이크 끝에 마음에 드는 장면이 담겼다.",
+          "next": "mv_hit"
+        },
+        "partial": {
+          "text": "노래는 좋았지만 몇 장면은 다시 찍을 시간이 없어 그대로 쓰기로 했다.",
+          "next": "mv_ok"
+        },
+        "fail": {
+          "text": "긴장한 탓에 노래가 흔들렸고, 촬영 시간도 모자랐다.",
+          "next": "mv_rough"
+        }
+      }
+    },
+    "mv_hit": {
+      "type": "end",
+      "text": "팬들과 함께 만든 뮤직비디오가 공개되자 \"우리가 만든 영상\"이라는 댓글이 줄을 이었다.",
+      "effects": {
+        "fans": 160,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "mv_ok": {
+      "type": "end",
+      "text": "아쉬운 장면도 있었지만 팬들은 결과물을 반겼다. 다만 기대만큼 크게 퍼지지는 않았다.",
+      "effects": {
+        "fans": 110,
+        "fame": 1
+      },
+      "result": "partial"
+    },
+    "mv_rough": {
+      "type": "end",
+      "text": "결과물은 소박하게 마무리됐다. {member}는 펀딩에 참여한 팬들에게 다음엔 더 좋은 영상으로 보답하겠다고 약속했고, 팬들은 그 약속을 응원했다.",
+      "effects": {
+        "fans": 70
+      },
+      "result": "fail"
+    },
+    "thanks_end": {
+      "type": "end",
+      "text": "짧은 감사 영상이지만 진심이 전해졌다. 펀딩 제안은 다음 기회로 미뤘다.",
+      "effects": {
+        "fans": 90
+      },
+      "result": "neutral"
+    }
+  }
+}

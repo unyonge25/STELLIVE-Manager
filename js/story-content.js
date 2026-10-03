@@ -1,6 +1,6 @@
 // story-content.js — 자동 생성 파일. 직접 고치지 말 것.
 // 원본: content/events/**/*.json → node tools/events.mjs build
-// 이벤트 102개
+// 이벤트 110개
 export const STORY_EVENTS = [
   {
     "id": "st_game_aos_league",
@@ -10413,6 +10413,304 @@ export const STORY_EVENTS = [
     }
   },
   {
+    "id": "st_business_fan_funding_mv_a",
+    "title": "팬들이 모은 뮤직비디오 제작비",
+    "category": "business",
+    "group": "biz_fan_funding_mv",
+    "description": "팬 펀딩 뮤직비디오 회의 (변형 A). 팬들이 짧은 뮤직비디오 제작비를 모으자고 제안한 날, 정식 촬영을 할지 감사 영상으로 대신할지 고른다.",
+    "meta": {
+      "theme": "investment_project",
+      "setting": "fan_funded_mv_meeting",
+      "conflict": "budget_limit",
+      "resolution": "teamwork",
+      "activity": "mv_production",
+      "tone": "warm"
+    },
+    "conditions": {
+      "activityCategories": [
+        "music"
+      ],
+      "minDay": 5,
+      "cooldown": 8
+    },
+    "weight": 0.5,
+    "start": "proposal",
+    "steps": {
+      "proposal": {
+        "type": "story",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "녹음을 마친 {member}에게 팬 커뮤니티의 제안이 전해졌다. 팬들이 짧은 뮤직비디오 제작비를 함께 모아 보자고 한다. 모자라는 금액은 회사가 채워야 한다."
+          },
+          {
+            "text": "노래 방송이 끝날 무렵, 팬들이 짧은 뮤직비디오 제작비를 함께 모아 보자고 제안했다. 채팅창이 응원으로 가득 찼다. 모자라는 금액은 회사가 채워야 한다."
+          }
+        ],
+        "next": "decide"
+      },
+      "decide": {
+        "type": "choice",
+        "text": "제안을 어떻게 받을까?",
+        "choices": [
+          {
+            "text": "정식으로 펀딩을 열고 촬영을 준비한다",
+            "conditions": {
+              "minMoney": 120000
+            },
+            "effects": {
+              "money": -120000
+            },
+            "story": "{member}가 펀딩 공지를 올리고, 모자라는 제작비는 회사가 맡기로 했다.",
+            "next": "shoot_story"
+          },
+          {
+            "text": "펀딩 대신 감사 영상을 찍어 올린다",
+            "story": "{member}가 제안해 준 팬들에게 고맙다는 짧은 영상을 찍기로 했다.",
+            "next": "thanks_end"
+          }
+        ]
+      },
+      "shoot_story": {
+        "type": "story",
+        "text": "촬영 당일, 세트는 소박하지만 팬들이 보내 준 응원 문구가 벽 한쪽을 가득 채웠다.",
+        "next": "shoot_check"
+      },
+      "shoot_check": {
+        "type": "check",
+        "text": "한 번의 촬영으로 노래와 표정을 모두 담아야 한다.",
+        "check": {
+          "stat": "Vc",
+          "difficulty": 76,
+          "traitBonus": {
+            "cover": 10
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "첫 테이크부터 노래와 표정이 완벽하게 맞았다. 촬영 팀이 박수를 쳤다.",
+            "effects": {
+              "fans": 60,
+              "fame": 1
+            },
+            "next": "mv_hit"
+          },
+          "success": {
+            "text": "몇 번의 테이크 끝에 마음에 드는 장면이 담겼다.",
+            "next": "mv_hit"
+          },
+          "partial": {
+            "text": "노래는 좋았지만 몇 장면은 다시 찍을 시간이 없어 그대로 쓰기로 했다.",
+            "next": "mv_ok"
+          },
+          "fail": {
+            "text": "긴장한 탓에 노래가 흔들렸고, 촬영 시간도 모자랐다.",
+            "next": "mv_rough"
+          }
+        }
+      },
+      "mv_hit": {
+        "type": "end",
+        "text": "팬들과 함께 만든 뮤직비디오가 공개되자 \"우리가 만든 영상\"이라는 댓글이 줄을 이었다.",
+        "effects": {
+          "fans": 160,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "mv_ok": {
+        "type": "end",
+        "text": "아쉬운 장면도 있었지만 팬들은 결과물을 반겼다. 다만 기대만큼 크게 퍼지지는 않았다.",
+        "effects": {
+          "fans": 110,
+          "fame": 1
+        },
+        "result": "partial"
+      },
+      "mv_rough": {
+        "type": "end",
+        "text": "결과물은 소박하게 마무리됐다. {member}는 펀딩에 참여한 팬들에게 다음엔 더 좋은 영상으로 보답하겠다고 약속했고, 팬들은 그 약속을 응원했다.",
+        "effects": {
+          "fans": 70
+        },
+        "result": "fail"
+      },
+      "thanks_end": {
+        "type": "end",
+        "text": "짧은 감사 영상이지만 진심이 전해졌다. 펀딩 제안은 다음 기회로 미뤘다.",
+        "effects": {
+          "fans": 90
+        },
+        "result": "neutral"
+      }
+    }
+  },
+  {
+    "id": "st_business_fan_funding_mv_b",
+    "title": "촬영 규모 정하기",
+    "category": "business",
+    "group": "biz_fan_funding_mv",
+    "description": "팬 펀딩 뮤직비디오 회의 (변형 B). 남은 체력에 따라 첫 장면이 갈리고, 촬영 규모를 정한 뒤 노래 촬영에 도전한다.",
+    "meta": {
+      "theme": "investment_project",
+      "setting": "mv_scale_decision",
+      "conflict": "high_expectations",
+      "resolution": "risky_gamble",
+      "activity": "mv_production",
+      "tone": "tense"
+    },
+    "conditions": {
+      "activityCategories": [
+        "music"
+      ],
+      "minDay": 5,
+      "cooldown": 8
+    },
+    "weight": 0.5,
+    "start": "condition",
+    "steps": {
+      "condition": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "minHp": 50
+            },
+            "next": "fresh_intro"
+          }
+        ],
+        "next": "tired_intro"
+      },
+      "fresh_intro": {
+        "type": "story",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "녹음 날, 팬 펀딩으로 뮤직비디오를 만들자는 제안이 들어왔다. 컨디션이 좋은 {member}는 기획서를 보며 눈을 반짝였다."
+          },
+          {
+            "text": "노래 방송 날, 팬 펀딩으로 뮤직비디오를 만들자는 제안이 들어왔다. 컨디션이 좋은 {member}는 기획서를 보며 눈을 반짝였다."
+          }
+        ],
+        "next": "decide"
+      },
+      "tired_intro": {
+        "type": "story",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "녹음 날, 팬 펀딩으로 뮤직비디오를 만들자는 제안이 들어왔다. 요즘 일정이 빡빡했던 {member}가 기획서를 천천히 넘겼다."
+          },
+          {
+            "text": "노래 방송 날, 팬 펀딩으로 뮤직비디오를 만들자는 제안이 들어왔다. 요즘 일정이 빡빡했던 {member}가 기획서를 천천히 넘겼다."
+          }
+        ],
+        "next": "decide"
+      },
+      "decide": {
+        "type": "choice",
+        "text": "촬영 규모를 정해야 한다.",
+        "choices": [
+          {
+            "text": "야외 촬영까지 넣어 크게 찍는다",
+            "conditions": {
+              "minMoney": 120000
+            },
+            "effects": {
+              "money": -120000
+            },
+            "story": "{member}가 야외 장면까지 넣은 촬영 계획에 서명했다.",
+            "next": "big_check"
+          },
+          {
+            "text": "펀딩 금액을 팬 선물로 돌려준다",
+            "story": "{member}가 펀딩 대신 팬들에게 작은 선물을 보내기로 했다.",
+            "next": "gift_end"
+          }
+        ]
+      },
+      "big_check": {
+        "type": "check",
+        "text": "야외 촬영 날 바람이 거세다. 노래와 동선을 한 번에 맞춰야 한다.",
+        "check": {
+          "stat": "Vc",
+          "difficulty": 76,
+          "traitBonus": {
+            "cover": 10
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "바람마저 연출처럼 보였다. 촬영 감독이 \"이 장면이 메인\"이라고 외쳤다.",
+            "effects": {
+              "fans": 60,
+              "fame": 1
+            },
+            "next": "big_hit"
+          },
+          "success": {
+            "text": "바람 속에서도 노래가 흔들리지 않았다. 계획한 장면을 모두 담았다.",
+            "next": "big_hit"
+          },
+          "partial": {
+            "text": "실내 장면은 좋았지만 야외 장면 일부는 바람 때문에 쓰지 못했다.",
+            "next": "big_half"
+          },
+          "fail": {
+            "text": "바람 탓에 야외 촬영을 접어야 했다. 남은 장면만으로 편집하기로 했다.",
+            "next": "big_cut"
+          }
+        }
+      },
+      "big_hit": {
+        "type": "end",
+        "text": "야외 장면까지 담긴 뮤직비디오가 펀딩 참여자들에게 큰 감동을 줬다. 새로 찾아온 팬도 많았다.",
+        "effects": {
+          "fans": 160,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "big_half": {
+        "type": "end",
+        "text": "야외 장면이 줄었지만 완성도는 괜찮았다. 다만 큰 규모에 비해 아쉬움이 남았다.",
+        "effects": {
+          "fans": 110,
+          "fame": 1
+        },
+        "result": "partial"
+      },
+      "big_cut": {
+        "type": "end",
+        "text": "예정보다 작아진 뮤직비디오가 공개됐다. {member}는 펀딩 참여자들에게 미공개 촬영 장면을 따로 보내며 고마움을 전했다.",
+        "effects": {
+          "fans": 70
+        },
+        "result": "fail"
+      },
+      "gift_end": {
+        "type": "end",
+        "text": "펀딩 대신 보낸 작은 선물에 팬들이 따뜻한 인증 글을 올렸다.",
+        "effects": {
+          "fans": 90
+        },
+        "result": "neutral"
+      }
+    }
+  },
+  {
     "id": "st_business_gear_review_a",
     "title": "기어포지 신제품 상자",
     "category": "business",
@@ -10607,6 +10905,289 @@ export const STORY_EVENTS = [
           "money": 40000
         },
         "result": "neutral"
+      }
+    }
+  },
+  {
+    "id": "st_business_goods_sample_a",
+    "title": "시안과 다른 색의 샘플",
+    "category": "business",
+    "group": "biz_goods_sample",
+    "description": "굿즈 샘플 검수 (변형 A). 한정 굿즈 샘플의 색이 시안과 다르게 나온 날, 재작업을 요청할지 다른 색을 살릴지 고른다.",
+    "meta": {
+      "theme": "merchandise",
+      "setting": "goods_sample_color_check",
+      "conflict": "miscommunication",
+      "resolution": "compromise",
+      "activity": "goods_review",
+      "tone": "comedic"
+    },
+    "conditions": {
+      "blockedActivityCategories": [
+        "broadcast"
+      ],
+      "minDay": 4,
+      "cooldown": 7
+    },
+    "weight": 0.5,
+    "start": "arrive",
+    "steps": {
+      "arrive": {
+        "type": "story",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "rest"
+              ]
+            },
+            "text": "쉬는 날, 사무실에 한정 굿즈 샘플 상자가 도착했다. {member}가 상자를 열자마자 고개를 갸웃했다. 시안에서는 하늘색이던 아크릴 스탠드가 연두색으로 나왔다."
+          },
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "녹음을 마친 {member}에게 한정 굿즈 샘플 상자가 전해졌다. 상자를 열자마자 고개를 갸웃했다. 시안에서는 하늘색이던 아크릴 스탠드가 연두색으로 나왔다."
+          },
+          {
+            "text": "쉬는 날, 사무실에 한정 굿즈 샘플 상자가 도착했다. {member}가 상자를 열자마자 고개를 갸웃했다. 시안에서는 하늘색이던 아크릴 스탠드가 연두색으로 나왔다."
+          }
+        ],
+        "next": "decide"
+      },
+      "decide": {
+        "type": "choice",
+        "text": "제작 업체에 연락하기 전에 방향을 정해야 한다.",
+        "choices": [
+          {
+            "text": "업체에 재작업을 요청한다",
+            "conditions": {
+              "minMoney": 60000
+            },
+            "effects": {
+              "money": -60000
+            },
+            "story": "{member}가 시안과 샘플을 나란히 찍어 업체에 보냈다. 재작업에는 추가 비용이 든다.",
+            "next": "call"
+          },
+          {
+            "text": "연두색을 \"한정 컬러\"로 살려 그대로 진행한다",
+            "story": "{member}가 연두색 샘플을 한참 보더니, 이것도 나쁘지 않다며 웃었다.",
+            "next": "keep_end"
+          }
+        ]
+      },
+      "call": {
+        "type": "story",
+        "text": "업체 담당자가 일정이 빠듯하다며 난처해했다. 재작업 일정과 품질을 함께 지키려면 꼼꼼하게 조율해야 한다.",
+        "next": "nego"
+      },
+      "nego": {
+        "type": "check",
+        "text": "색 번호와 출고 일정을 하나씩 맞춰 나가야 한다.",
+        "check": {
+          "stat": "Bs",
+          "difficulty": 72,
+          "traitBonus": {
+            "perfectionist": 10,
+            "diligent": 5
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 색 번호를 정확히 짚어 내자, 업체가 일정을 앞당겨 주겠다고 했다.",
+            "effects": {
+              "fans": 40,
+              "fame": 1
+            },
+            "next": "nego_ok"
+          },
+          "success": {
+            "text": "색 번호와 출고 일정을 하나씩 맞췄다. 재작업 샘플은 시안과 똑같이 나왔다.",
+            "next": "nego_ok"
+          },
+          "partial": {
+            "text": "색은 맞췄지만 출고가 일주일 늦어졌다.",
+            "next": "nego_late"
+          },
+          "fail": {
+            "text": "조율이 꼬여 재작업 샘플도 미묘하게 색이 달랐다.",
+            "next": "nego_miss"
+          }
+        }
+      },
+      "nego_ok": {
+        "type": "end",
+        "text": "시안 그대로 나온 굿즈 공지에 \"기다린 보람이 있다\"는 반응이 이어졌다. 사전 예약도 순조로웠다.",
+        "effects": {
+          "fans": 110
+        },
+        "result": "success"
+      },
+      "nego_late": {
+        "type": "end",
+        "text": "색은 완벽했지만 출고가 늦어졌다는 공지에 아쉬워하는 팬들이 있었다. 그래도 받은 사람들의 후기는 좋았다.",
+        "effects": {
+          "fans": 90
+        },
+        "result": "partial"
+      },
+      "nego_miss": {
+        "type": "end",
+        "text": "두 번째 샘플도 색이 미묘하게 달랐다. {member}는 다음 굿즈부터 색 견본을 직접 확인하겠다고 공지했고, 팬들은 \"그래도 기다린다\"고 답했다.",
+        "effects": {
+          "fans": 60
+        },
+        "result": "fail"
+      },
+      "keep_end": {
+        "type": "end",
+        "text": "\"한정 컬러\"라는 이름이 붙은 연두색 스탠드는 의외로 반응이 좋았다. 다만 원래 색을 기다린 팬들은 조금 아쉬워했다.",
+        "effects": {
+          "fans": 80
+        },
+        "result": "neutral"
+      }
+    }
+  },
+  {
+    "id": "st_business_goods_sample_b",
+    "title": "두 가지 색 샘플 투표",
+    "category": "business",
+    "group": "biz_goods_sample",
+    "description": "굿즈 샘플 검수 (변형 B). 검수 방식을 먼저 정하고, 팬 커뮤니티 투표로 색을 정하거나 비용을 들여 다시 찍는다.",
+    "meta": {
+      "theme": "merchandise",
+      "setting": "goods_color_vote",
+      "conflict": "audience_reaction",
+      "resolution": "audience_help",
+      "activity": "goods_review",
+      "tone": "warm"
+    },
+    "conditions": {
+      "blockedActivityCategories": [
+        "broadcast"
+      ],
+      "minDay": 4,
+      "cooldown": 7
+    },
+    "weight": 0.5,
+    "start": "decide",
+    "steps": {
+      "decide": {
+        "type": "choice",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "rest"
+              ]
+            },
+            "text": "쉬는 날, 한정 굿즈 샘플이 두 가지 색으로 도착했다. 시안 색과 업체가 추천한 색이다. {member}가 둘을 나란히 놓고 고민한다."
+          },
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "녹음을 마친 뒤, 한정 굿즈 샘플이 두 가지 색으로 도착했다. 시안 색과 업체가 추천한 색이다. {member}가 둘을 나란히 놓고 고민한다."
+          },
+          {
+            "text": "한정 굿즈 샘플이 두 가지 색으로 도착했다. 시안 색과 업체가 추천한 색이다. {member}가 둘을 나란히 놓고 고민한다."
+          }
+        ],
+        "choices": [
+          {
+            "text": "팬 커뮤니티에 두 색을 올려 투표를 받는다",
+            "story": "{member}가 두 샘플 사진을 커뮤니티에 올리고 투표를 열었다.",
+            "next": "vote_story"
+          },
+          {
+            "text": "추가 비용을 들여 시안 색으로 다시 찍는다",
+            "conditions": {
+              "minMoney": 40000
+            },
+            "effects": {
+              "money": -40000
+            },
+            "story": "{member}가 시안 색으로 다시 찍어 달라고 업체에 요청했다.",
+            "next": "redo_end"
+          }
+        ]
+      },
+      "vote_story": {
+        "type": "story",
+        "text": "투표가 시작되자 두 색의 표가 엎치락뒤치락했다. 마감 직전까지 결과를 알 수 없다.",
+        "next": "vote_check"
+      },
+      "vote_check": {
+        "type": "check",
+        "text": "투표 결과를 정리해 공지해야 한다. 진 쪽 팬들까지 납득시킬 수 있을까?",
+        "check": {
+          "stat": "Bs",
+          "difficulty": 72,
+          "traitBonus": {
+            "perfectionist": 10,
+            "diligent": 5
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 진 색을 \"한정 재판 색\"으로 남기겠다고 약속하자, 양쪽 팬 모두 박수를 보냈다.",
+            "effects": {
+              "fans": 40,
+              "fame": 1
+            },
+            "next": "vote_ok"
+          },
+          "success": {
+            "text": "결과 공지와 함께 두 색의 장점을 정리하자 반응이 깔끔하게 모였다.",
+            "next": "vote_ok"
+          },
+          "partial": {
+            "text": "결과는 정했지만 근소한 차이에 아쉬워하는 목소리가 남았다.",
+            "next": "vote_split"
+          },
+          "fail": {
+            "text": "공지 문구가 애매해서 결과를 두고 오해가 생겼다.",
+            "next": "vote_confused"
+          }
+        }
+      },
+      "vote_ok": {
+        "type": "end",
+        "text": "팬들이 직접 고른 색이라 사전 예약이 빠르게 찼다. \"우리가 만든 굿즈\"라는 말이 오갔다.",
+        "effects": {
+          "fans": 110
+        },
+        "result": "success"
+      },
+      "vote_split": {
+        "type": "end",
+        "text": "근소한 차이로 정해진 색에 대해 아쉬움이 남았다. {member}는 다음 굿즈에서 진 색을 다시 고려하겠다고 했다.",
+        "effects": {
+          "fans": 90
+        },
+        "result": "partial"
+      },
+      "vote_confused": {
+        "type": "end",
+        "text": "오해를 풀기 위해 정정 공지를 올려야 했다. 그래도 팬들은 \"다음엔 더 깔끔하게\"라며 응원했다.",
+        "effects": {
+          "fans": 60
+        },
+        "result": "fail"
+      },
+      "redo_end": {
+        "type": "end",
+        "text": "시안 그대로 다시 찍은 샘플은 깔끔했다. 비용은 들었지만 처음 약속한 굿즈를 지킬 수 있었다.",
+        "effects": {
+          "fans": 90
+        },
+        "result": "success"
       }
     }
   },
@@ -20843,6 +21424,500 @@ export const STORY_EVENTS = [
             "percentage": 2
           }
         }
+      }
+    }
+  },
+  {
+    "id": "st_special_cipher_letter_a",
+    "title": "숫자로 가득한 팬레터",
+    "category": "special",
+    "group": "special_cipher_letter",
+    "description": "수수께끼 팬레터 (변형 A). 숫자 암호가 적힌 팬레터가 도착한 날, 시청자와 함께 풀지 혼자 차분히 풀지 고른다.",
+    "meta": {
+      "theme": "unexpected",
+      "setting": "number_cipher_fan_letter",
+      "conflict": "unexpected_guest",
+      "resolution": "audience_help",
+      "activity": "puzzle_letter",
+      "tone": "comedic"
+    },
+    "conditions": {
+      "activityCategories": [
+        "talk"
+      ],
+      "cooldown": 7
+    },
+    "weight": 0.5,
+    "start": "letter",
+    "steps": {
+      "letter": {
+        "type": "story",
+        "text": "잡담 방송 도중, {member}가 오늘 도착한 팬레터를 열었다. 편지 안에는 인사 대신 숫자로 가득한 표 한 장과 \"다 풀면 다음 편지가 갑니다\"라는 한 줄만 있었다.",
+        "next": "decide"
+      },
+      "decide": {
+        "type": "choice",
+        "text": "채팅창이 벌써 숫자를 받아 적고 있다. 어떻게 할까?",
+        "choices": [
+          {
+            "text": "방송에서 시청자와 함께 푼다",
+            "story": "{member}가 표를 화면에 띄우고 \"다 같이 풀어 보자\"고 했다.",
+            "next": "solve_check"
+          },
+          {
+            "text": "방송이 끝나고 혼자 차분히 풀어 본다",
+            "story": "{member}가 편지를 조심스럽게 접어 책상 위에 올려 두었다.",
+            "next": "later_story"
+          }
+        ]
+      },
+      "solve_check": {
+        "type": "check",
+        "text": "숫자가 글자의 순서를 뜻한다는 추측이 나왔다. 규칙을 찾아 문장을 완성해야 한다.",
+        "check": {
+          "stat": "Ga",
+          "difficulty": 74,
+          "traitBonus": {
+            "brain": 10,
+            "calm": 5
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 규칙을 찾자마자 문장이 한 번에 풀렸다. \"다음 편지는 일주일 뒤\"라는 문장에 채팅창이 환호했다.",
+            "effects": {
+              "fans": 40,
+              "fame": 1
+            },
+            "next": "solve_hit"
+          },
+          "success": {
+            "text": "시청자들의 추측을 하나씩 확인한 끝에 문장이 완성됐다.",
+            "next": "solve_hit"
+          },
+          "partial": {
+            "text": "문장 절반은 풀었지만 마지막 줄은 끝내 풀리지 않았다.",
+            "next": "solve_half"
+          },
+          "fail": {
+            "text": "추측이 엇갈리며 표가 오히려 더 복잡해 보이기 시작했다.",
+            "next": "solve_stuck"
+          }
+        }
+      },
+      "solve_hit": {
+        "type": "end",
+        "text": "함께 푼 암호 장면이 클립으로 퍼지며 \"다음 편지를 기다린다\"는 반응이 이어졌다.",
+        "effects": {
+          "fans": 140,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "solve_half": {
+        "type": "end",
+        "text": "마지막 줄은 다음 방송 숙제로 남았다. 시청자들은 각자 풀이를 정리해 두겠다고 했다.",
+        "effects": {
+          "fans": 100
+        },
+        "result": "partial"
+      },
+      "solve_stuck": {
+        "type": "end",
+        "text": "오늘은 풀지 못했다. {member}가 표를 고정해 두자 시청자들이 방송이 끝난 뒤에도 풀이를 이어 갔다.",
+        "effects": {
+          "fans": 60
+        },
+        "result": "fail"
+      },
+      "later_story": {
+        "type": "story",
+        "text": "방송이 끝나고, {member}가 숫자 표를 한참 들여다보다 첫 줄을 풀어 냈다.",
+        "next": "later_end"
+      },
+      "later_end": {
+        "type": "end",
+        "text": "풀어 낸 첫 줄을 커뮤니티에 올리자 팬들이 나머지를 풀어 보겠다며 모여들었다.",
+        "effects": {
+          "fans": 70
+        },
+        "result": "neutral"
+      }
+    }
+  },
+  {
+    "id": "st_special_cipher_letter_b",
+    "title": "두 번째 수수께끼 편지",
+    "category": "special",
+    "group": "special_cipher_letter",
+    "description": "수수께끼 팬레터 (변형 B). 풀이 방식을 먼저 정하고, 지도처럼 그려진 두 번째 편지의 단서를 따라간다.",
+    "meta": {
+      "theme": "unexpected",
+      "setting": "map_clue_letter",
+      "conflict": "time_pressure",
+      "resolution": "clutch_moment",
+      "activity": "puzzle_letter",
+      "tone": "tense"
+    },
+    "conditions": {
+      "activityCategories": [
+        "talk"
+      ],
+      "cooldown": 7
+    },
+    "weight": 0.5,
+    "start": "decide",
+    "steps": {
+      "decide": {
+        "type": "choice",
+        "text": "잡담 방송 중 또 수수께끼 편지가 도착했다. 이번에는 칸이 나뉜 지도 그림과 \"자정 전까지\"라는 문구가 적혀 있다.",
+        "choices": [
+          {
+            "text": "제한 시간 안에 방송에서 풀어 본다",
+            "story": "{member}가 지도 그림을 화면에 크게 띄우고 타이머를 켰다.",
+            "next": "map_story"
+          },
+          {
+            "text": "타이머 없이 천천히 단서를 모은다",
+            "story": "{member}가 시간 제한은 신경 쓰지 않고 단서부터 모으기로 했다.",
+            "next": "slow_story"
+          }
+        ]
+      },
+      "map_story": {
+        "type": "story",
+        "text": "지도의 칸마다 작은 기호가 그려져 있다. 기호를 따라가면 하나의 단어가 나올 것 같다.",
+        "next": "map_check"
+      },
+      "map_check": {
+        "type": "check",
+        "text": "남은 시간은 10분. 기호의 순서를 찾아 단어를 완성해야 한다.",
+        "check": {
+          "stat": "Ga",
+          "difficulty": 74,
+          "traitBonus": {
+            "brain": 10,
+            "calm": 5
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "마지막 1분을 남기고 단어가 완성됐다. 채팅창이 카운트다운과 함께 폭발했다.",
+            "effects": {
+              "fans": 40,
+              "fame": 1
+            },
+            "next": "map_hit"
+          },
+          "success": {
+            "text": "아슬아슬하게 시간 안에 단어를 맞혔다.",
+            "next": "map_hit"
+          },
+          "partial": {
+            "text": "단어는 맞혔지만 제한 시간을 조금 넘겼다.",
+            "next": "map_late"
+          },
+          "fail": {
+            "text": "시간이 다 됐다. 기호의 순서를 끝내 찾지 못했다.",
+            "next": "map_timeout"
+          }
+        }
+      },
+      "map_hit": {
+        "type": "end",
+        "text": "시간 안에 푼 장면이 오늘의 명장면이 됐다. 다음 편지를 기다리는 사람이 눈에 띄게 늘었다.",
+        "effects": {
+          "fans": 140,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "map_late": {
+        "type": "end",
+        "text": "시간은 넘겼지만 풀이 과정이 재밌었다는 반응이 많았다.",
+        "effects": {
+          "fans": 100
+        },
+        "result": "partial"
+      },
+      "map_timeout": {
+        "type": "end",
+        "text": "시간 안에 풀지는 못했지만, {member}가 다음 편지가 오면 꼭 다시 도전하겠다고 하자 채팅창이 응원으로 가득 찼다.",
+        "effects": {
+          "fans": 60
+        },
+        "result": "fail"
+      },
+      "slow_story": {
+        "type": "story",
+        "text": "천천히 단서를 모으다 보니 지도 한쪽 구석에 작은 글씨로 힌트가 숨어 있었다.",
+        "next": "slow_end"
+      },
+      "slow_end": {
+        "type": "end",
+        "text": "숨은 힌트를 찾은 장면에 \"역시 꼼꼼하다\"는 채팅이 이어졌다. 단어는 다음 방송에서 완성하기로 했다.",
+        "effects": {
+          "fans": 70
+        },
+        "result": "neutral"
+      }
+    }
+  },
+  {
+    "id": "st_special_contest_judge_a",
+    "title": "스타라이트 보이스 심사위원 제안",
+    "category": "special",
+    "group": "special_contest_judge",
+    "description": "가상 경연 프로그램 심사위원 초대 (변형 A). 노래 경연 프로그램 \"스타라이트 보이스\"의 일일 심사위원 제안을 받은 날, 수락하면 녹화 현장에서 심사평을 해낸다.",
+    "meta": {
+      "theme": "special_event",
+      "setting": "singing_contest_judge_desk",
+      "conflict": "nervousness",
+      "resolution": "steady_success",
+      "activity": "contest_judging",
+      "tone": "warm"
+    },
+    "conditions": {
+      "blockedActivityCategories": [
+        "rest"
+      ],
+      "minDay": 8,
+      "cooldown": 10
+    },
+    "weight": 0.3,
+    "start": "invite",
+    "steps": {
+      "invite": {
+        "type": "story",
+        "text": "노래 경연 프로그램 \"스타라이트 보이스\" 제작진에게서 연락이 왔다. 다음 회 녹화에 {member}를 일일 심사위원으로 모시고 싶다고 한다. 출연료도 준비돼 있다.",
+        "next": "decide"
+      },
+      "decide": {
+        "type": "choice",
+        "text": "제안을 받을까?",
+        "choices": [
+          {
+            "text": "심사위원 제안을 수락한다",
+            "story": "{member}가 제작진에게 참가자 명단과 경연 순서를 받아 미리 살펴봤다.",
+            "next": "studio"
+          },
+          {
+            "text": "이번엔 정중히 거절한다",
+            "story": "{member}가 일정 때문에 이번에는 어렵다고 정중히 답장을 보냈다.",
+            "next": "decline_end"
+          }
+        ]
+      },
+      "studio": {
+        "type": "story",
+        "text": "녹화 당일, 무대 위 참가자들이 차례로 노래를 마쳤다. 이제 심사평을 말할 차례다. 관객석의 시선이 {member}에게 모였다.",
+        "next": "review_check"
+      },
+      "review_check": {
+        "type": "check",
+        "text": "참가자를 존중하면서도 분명한 심사평을 해야 한다.",
+        "check": {
+          "stat": "Bs",
+          "difficulty": 74,
+          "traitBonus": {
+            "host": 10,
+            "calm": 5
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}의 심사평이 참가자와 관객 모두를 웃게 만들었다. 제작진이 다음 회에도 와 달라고 했다.",
+            "effects": {
+              "fans": 60,
+              "fame": 1
+            },
+            "next": "judge_hit"
+          },
+          "success": {
+            "text": "짧지만 정확한 심사평에 참가자가 고개를 끄덕였다.",
+            "next": "judge_hit"
+          },
+          "partial": {
+            "text": "심사평은 따뜻했지만 조금 길어져 편집에서 많이 잘렸다.",
+            "next": "judge_cut"
+          },
+          "fail": {
+            "text": "긴장한 탓에 하고 싶은 말을 다 하지 못했다.",
+            "next": "judge_shy"
+          }
+        }
+      },
+      "judge_hit": {
+        "type": "end",
+        "text": "심사위원 장면이 공개되자 \"심사평이 따뜻하고 정확하다\"는 반응이 이어졌다. 새로 알게 된 사람도 많았다.",
+        "effects": {
+          "fans": 140,
+          "fame": 1,
+          "money": 30000
+        },
+        "result": "success"
+      },
+      "judge_cut": {
+        "type": "end",
+        "text": "편집으로 분량은 줄었지만, 남은 장면만으로도 좋은 인상을 남겼다.",
+        "effects": {
+          "fans": 100,
+          "fame": 1,
+          "money": 30000
+        },
+        "result": "partial"
+      },
+      "judge_shy": {
+        "type": "end",
+        "text": "아쉬운 녹화였지만, 제작진은 \"다음엔 더 편하게 와 달라\"고 했다. 팬들도 다음 출연을 기대한다고 응원했다.",
+        "effects": {
+          "fans": 60,
+          "money": 30000
+        },
+        "result": "fail"
+      },
+      "decline_end": {
+        "type": "end",
+        "text": "정중한 거절에 제작진이 다음 기회를 약속했다. 일정은 계획대로 이어졌다.",
+        "effects": {
+          "fans": 20
+        },
+        "result": "neutral"
+      }
+    }
+  },
+  {
+    "id": "st_special_contest_judge_b",
+    "title": "심사위원석의 하루",
+    "category": "special",
+    "group": "special_contest_judge",
+    "description": "가상 경연 프로그램 심사위원 초대 (변형 B). 심사 방식을 먼저 정하고, 남은 체력에 따라 녹화 전 준비 장면이 갈린 뒤 결승 무대를 심사한다.",
+    "meta": {
+      "theme": "special_event",
+      "setting": "contest_final_judging",
+      "conflict": "high_expectations",
+      "resolution": "lesson_learned",
+      "activity": "contest_judging",
+      "tone": "tense"
+    },
+    "conditions": {
+      "blockedActivityCategories": [
+        "rest"
+      ],
+      "minDay": 8,
+      "cooldown": 10
+    },
+    "weight": 0.3,
+    "start": "decide",
+    "steps": {
+      "decide": {
+        "type": "choice",
+        "text": "가상 노래 경연 프로그램 \"스타라이트 보이스\" 결승 녹화에 {member}가 심사위원으로 초대됐다. 어떤 마음가짐으로 갈까?",
+        "choices": [
+          {
+            "text": "참가자 무대를 미리 다 보고 꼼꼼히 준비한다",
+            "story": "{member}가 지난 회 무대 영상을 처음부터 다시 보며 메모를 남겼다.",
+            "next": "prep_branch"
+          },
+          {
+            "text": "결승 대신 응원 영상 메시지만 보낸다",
+            "story": "{member}가 결승 진출자들에게 짧은 응원 영상을 찍어 보냈다.",
+            "next": "message_end"
+          }
+        ]
+      },
+      "prep_branch": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "minHp": 50
+            },
+            "next": "prep_fresh"
+          }
+        ],
+        "next": "prep_tired"
+      },
+      "prep_fresh": {
+        "type": "story",
+        "text": "녹화장에 일찍 도착한 {member}가 메모를 다시 훑었다. 결승 진출자 셋의 무대가 모두 기대된다.",
+        "next": "final_check"
+      },
+      "prep_tired": {
+        "type": "story",
+        "text": "빡빡한 일정 끝에 녹화장에 도착한 {member}가 물을 한 모금 마셨다. 메모는 충분하지만 집중력이 관건이다.",
+        "next": "final_check"
+      },
+      "final_check": {
+        "type": "check",
+        "text": "결승 무대가 끝났다. 세 참가자에게 각각 다른 심사평을 남겨야 한다.",
+        "check": {
+          "stat": "Bs",
+          "difficulty": 74,
+          "traitBonus": {
+            "host": 10,
+            "calm": 5
+          }
+        },
+        "outcomes": {
+          "great": {
+            "text": "{member}가 세 무대의 장점을 정확히 짚자 관객석에서 박수가 터졌다.",
+            "effects": {
+              "fans": 60,
+              "fame": 1
+            },
+            "next": "final_hit"
+          },
+          "success": {
+            "text": "메모를 바탕으로 세 참가자에게 각각 의미 있는 심사평을 남겼다.",
+            "next": "final_hit"
+          },
+          "partial": {
+            "text": "두 참가자에게는 좋은 심사평을 남겼지만 마지막 참가자에게는 말이 짧았다.",
+            "next": "final_uneven"
+          },
+          "fail": {
+            "text": "긴장한 탓에 심사평이 비슷비슷해졌다.",
+            "next": "final_flat"
+          }
+        }
+      },
+      "final_hit": {
+        "type": "end",
+        "text": "결승 심사 장면이 화제가 되며 \"심사위원 {member}\"라는 말이 오갔다.",
+        "effects": {
+          "fans": 140,
+          "fame": 1,
+          "money": 30000
+        },
+        "result": "success"
+      },
+      "final_uneven": {
+        "type": "end",
+        "text": "아쉬운 부분도 있었지만, 참가자 한 명이 나중에 \"그 한마디가 힘이 됐다\"고 인사를 전해 왔다.",
+        "effects": {
+          "fans": 100,
+          "fame": 1,
+          "money": 30000
+        },
+        "result": "partial"
+      },
+      "final_flat": {
+        "type": "end",
+        "text": "{member}는 녹화가 끝난 뒤 \"다음엔 더 구체적으로 말하겠다\"고 메모했다. 제작진은 그래도 다시 초대하고 싶다고 했다.",
+        "effects": {
+          "fans": 60,
+          "money": 30000
+        },
+        "result": "fail"
+      },
+      "message_end": {
+        "type": "end",
+        "text": "응원 영상이 결승 무대 전에 소개되며 참가자들에게 힘이 됐다는 소식이 전해졌다.",
+        "effects": {
+          "fans": 30
+        },
+        "result": "neutral"
       }
     }
   }

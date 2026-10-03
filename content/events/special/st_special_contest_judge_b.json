@@ -1,0 +1,135 @@
+{
+  "id": "st_special_contest_judge_b",
+  "title": "심사위원석의 하루",
+  "category": "special",
+  "group": "special_contest_judge",
+  "description": "가상 경연 프로그램 심사위원 초대 (변형 B). 심사 방식을 먼저 정하고, 남은 체력에 따라 녹화 전 준비 장면이 갈린 뒤 결승 무대를 심사한다.",
+  "meta": {
+    "theme": "special_event",
+    "setting": "contest_final_judging",
+    "conflict": "high_expectations",
+    "resolution": "lesson_learned",
+    "activity": "contest_judging",
+    "tone": "tense"
+  },
+  "conditions": {
+    "blockedActivityCategories": [
+      "rest"
+    ],
+    "minDay": 8,
+    "cooldown": 10
+  },
+  "weight": 0.3,
+  "start": "decide",
+  "steps": {
+    "decide": {
+      "type": "choice",
+      "text": "가상 노래 경연 프로그램 \"스타라이트 보이스\" 결승 녹화에 {member}가 심사위원으로 초대됐다. 어떤 마음가짐으로 갈까?",
+      "choices": [
+        {
+          "text": "참가자 무대를 미리 다 보고 꼼꼼히 준비한다",
+          "story": "{member}가 지난 회 무대 영상을 처음부터 다시 보며 메모를 남겼다.",
+          "next": "prep_branch"
+        },
+        {
+          "text": "결승 대신 응원 영상 메시지만 보낸다",
+          "story": "{member}가 결승 진출자들에게 짧은 응원 영상을 찍어 보냈다.",
+          "next": "message_end"
+        }
+      ]
+    },
+    "prep_branch": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "minHp": 50
+          },
+          "next": "prep_fresh"
+        }
+      ],
+      "next": "prep_tired"
+    },
+    "prep_fresh": {
+      "type": "story",
+      "text": "녹화장에 일찍 도착한 {member}가 메모를 다시 훑었다. 결승 진출자 셋의 무대가 모두 기대된다.",
+      "next": "final_check"
+    },
+    "prep_tired": {
+      "type": "story",
+      "text": "빡빡한 일정 끝에 녹화장에 도착한 {member}가 물을 한 모금 마셨다. 메모는 충분하지만 집중력이 관건이다.",
+      "next": "final_check"
+    },
+    "final_check": {
+      "type": "check",
+      "text": "결승 무대가 끝났다. 세 참가자에게 각각 다른 심사평을 남겨야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "host": 10,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 세 무대의 장점을 정확히 짚자 관객석에서 박수가 터졌다.",
+          "effects": {
+            "fans": 60,
+            "fame": 1
+          },
+          "next": "final_hit"
+        },
+        "success": {
+          "text": "메모를 바탕으로 세 참가자에게 각각 의미 있는 심사평을 남겼다.",
+          "next": "final_hit"
+        },
+        "partial": {
+          "text": "두 참가자에게는 좋은 심사평을 남겼지만 마지막 참가자에게는 말이 짧았다.",
+          "next": "final_uneven"
+        },
+        "fail": {
+          "text": "긴장한 탓에 심사평이 비슷비슷해졌다.",
+          "next": "final_flat"
+        }
+      }
+    },
+    "final_hit": {
+      "type": "end",
+      "text": "결승 심사 장면이 화제가 되며 \"심사위원 {member}\"라는 말이 오갔다.",
+      "effects": {
+        "fans": 140,
+        "fame": 1,
+        "money": 30000
+      },
+      "result": "success"
+    },
+    "final_uneven": {
+      "type": "end",
+      "text": "아쉬운 부분도 있었지만, 참가자 한 명이 나중에 \"그 한마디가 힘이 됐다\"고 인사를 전해 왔다.",
+      "effects": {
+        "fans": 100,
+        "fame": 1,
+        "money": 30000
+      },
+      "result": "partial"
+    },
+    "final_flat": {
+      "type": "end",
+      "text": "{member}는 녹화가 끝난 뒤 \"다음엔 더 구체적으로 말하겠다\"고 메모했다. 제작진은 그래도 다시 초대하고 싶다고 했다.",
+      "effects": {
+        "fans": 60,
+        "money": 30000
+      },
+      "result": "fail"
+    },
+    "message_end": {
+      "type": "end",
+      "text": "응원 영상이 결승 무대 전에 소개되며 참가자들에게 힘이 됐다는 소식이 전해졌다.",
+      "effects": {
+        "fans": 30
+      },
+      "result": "neutral"
+    }
+  }
+}

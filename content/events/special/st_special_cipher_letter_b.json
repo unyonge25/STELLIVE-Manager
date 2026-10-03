@@ -1,0 +1,118 @@
+{
+  "id": "st_special_cipher_letter_b",
+  "title": "두 번째 수수께끼 편지",
+  "category": "special",
+  "group": "special_cipher_letter",
+  "description": "수수께끼 팬레터 (변형 B). 풀이 방식을 먼저 정하고, 지도처럼 그려진 두 번째 편지의 단서를 따라간다.",
+  "meta": {
+    "theme": "unexpected",
+    "setting": "map_clue_letter",
+    "conflict": "time_pressure",
+    "resolution": "clutch_moment",
+    "activity": "puzzle_letter",
+    "tone": "tense"
+  },
+  "conditions": {
+    "activityCategories": [
+      "talk"
+    ],
+    "cooldown": 7
+  },
+  "weight": 0.5,
+  "start": "decide",
+  "steps": {
+    "decide": {
+      "type": "choice",
+      "text": "잡담 방송 중 또 수수께끼 편지가 도착했다. 이번에는 칸이 나뉜 지도 그림과 \"자정 전까지\"라는 문구가 적혀 있다.",
+      "choices": [
+        {
+          "text": "제한 시간 안에 방송에서 풀어 본다",
+          "story": "{member}가 지도 그림을 화면에 크게 띄우고 타이머를 켰다.",
+          "next": "map_story"
+        },
+        {
+          "text": "타이머 없이 천천히 단서를 모은다",
+          "story": "{member}가 시간 제한은 신경 쓰지 않고 단서부터 모으기로 했다.",
+          "next": "slow_story"
+        }
+      ]
+    },
+    "map_story": {
+      "type": "story",
+      "text": "지도의 칸마다 작은 기호가 그려져 있다. 기호를 따라가면 하나의 단어가 나올 것 같다.",
+      "next": "map_check"
+    },
+    "map_check": {
+      "type": "check",
+      "text": "남은 시간은 10분. 기호의 순서를 찾아 단어를 완성해야 한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 74,
+        "traitBonus": {
+          "brain": 10,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "마지막 1분을 남기고 단어가 완성됐다. 채팅창이 카운트다운과 함께 폭발했다.",
+          "effects": {
+            "fans": 40,
+            "fame": 1
+          },
+          "next": "map_hit"
+        },
+        "success": {
+          "text": "아슬아슬하게 시간 안에 단어를 맞혔다.",
+          "next": "map_hit"
+        },
+        "partial": {
+          "text": "단어는 맞혔지만 제한 시간을 조금 넘겼다.",
+          "next": "map_late"
+        },
+        "fail": {
+          "text": "시간이 다 됐다. 기호의 순서를 끝내 찾지 못했다.",
+          "next": "map_timeout"
+        }
+      }
+    },
+    "map_hit": {
+      "type": "end",
+      "text": "시간 안에 푼 장면이 오늘의 명장면이 됐다. 다음 편지를 기다리는 사람이 눈에 띄게 늘었다.",
+      "effects": {
+        "fans": 140,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "map_late": {
+      "type": "end",
+      "text": "시간은 넘겼지만 풀이 과정이 재밌었다는 반응이 많았다.",
+      "effects": {
+        "fans": 100
+      },
+      "result": "partial"
+    },
+    "map_timeout": {
+      "type": "end",
+      "text": "시간 안에 풀지는 못했지만, {member}가 다음 편지가 오면 꼭 다시 도전하겠다고 하자 채팅창이 응원으로 가득 찼다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "slow_story": {
+      "type": "story",
+      "text": "천천히 단서를 모으다 보니 지도 한쪽 구석에 작은 글씨로 힌트가 숨어 있었다.",
+      "next": "slow_end"
+    },
+    "slow_end": {
+      "type": "end",
+      "text": "숨은 힌트를 찾은 장면에 \"역시 꼼꼼하다\"는 채팅이 이어졌다. 단어는 다음 방송에서 완성하기로 했다.",
+      "effects": {
+        "fans": 70
+      },
+      "result": "neutral"
+    }
+  }
+}

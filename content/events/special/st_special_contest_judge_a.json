@@ -1,0 +1,123 @@
+{
+  "id": "st_special_contest_judge_a",
+  "title": "스타라이트 보이스 심사위원 제안",
+  "category": "special",
+  "group": "special_contest_judge",
+  "description": "가상 경연 프로그램 심사위원 초대 (변형 A). 노래 경연 프로그램 \"스타라이트 보이스\"의 일일 심사위원 제안을 받은 날, 수락하면 녹화 현장에서 심사평을 해낸다.",
+  "meta": {
+    "theme": "special_event",
+    "setting": "singing_contest_judge_desk",
+    "conflict": "nervousness",
+    "resolution": "steady_success",
+    "activity": "contest_judging",
+    "tone": "warm"
+  },
+  "conditions": {
+    "blockedActivityCategories": [
+      "rest"
+    ],
+    "minDay": 8,
+    "cooldown": 10
+  },
+  "weight": 0.3,
+  "start": "invite",
+  "steps": {
+    "invite": {
+      "type": "story",
+      "text": "노래 경연 프로그램 \"스타라이트 보이스\" 제작진에게서 연락이 왔다. 다음 회 녹화에 {member}를 일일 심사위원으로 모시고 싶다고 한다. 출연료도 준비돼 있다.",
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "제안을 받을까?",
+      "choices": [
+        {
+          "text": "심사위원 제안을 수락한다",
+          "story": "{member}가 제작진에게 참가자 명단과 경연 순서를 받아 미리 살펴봤다.",
+          "next": "studio"
+        },
+        {
+          "text": "이번엔 정중히 거절한다",
+          "story": "{member}가 일정 때문에 이번에는 어렵다고 정중히 답장을 보냈다.",
+          "next": "decline_end"
+        }
+      ]
+    },
+    "studio": {
+      "type": "story",
+      "text": "녹화 당일, 무대 위 참가자들이 차례로 노래를 마쳤다. 이제 심사평을 말할 차례다. 관객석의 시선이 {member}에게 모였다.",
+      "next": "review_check"
+    },
+    "review_check": {
+      "type": "check",
+      "text": "참가자를 존중하면서도 분명한 심사평을 해야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "host": 10,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}의 심사평이 참가자와 관객 모두를 웃게 만들었다. 제작진이 다음 회에도 와 달라고 했다.",
+          "effects": {
+            "fans": 60,
+            "fame": 1
+          },
+          "next": "judge_hit"
+        },
+        "success": {
+          "text": "짧지만 정확한 심사평에 참가자가 고개를 끄덕였다.",
+          "next": "judge_hit"
+        },
+        "partial": {
+          "text": "심사평은 따뜻했지만 조금 길어져 편집에서 많이 잘렸다.",
+          "next": "judge_cut"
+        },
+        "fail": {
+          "text": "긴장한 탓에 하고 싶은 말을 다 하지 못했다.",
+          "next": "judge_shy"
+        }
+      }
+    },
+    "judge_hit": {
+      "type": "end",
+      "text": "심사위원 장면이 공개되자 \"심사평이 따뜻하고 정확하다\"는 반응이 이어졌다. 새로 알게 된 사람도 많았다.",
+      "effects": {
+        "fans": 140,
+        "fame": 1,
+        "money": 30000
+      },
+      "result": "success"
+    },
+    "judge_cut": {
+      "type": "end",
+      "text": "편집으로 분량은 줄었지만, 남은 장면만으로도 좋은 인상을 남겼다.",
+      "effects": {
+        "fans": 100,
+        "fame": 1,
+        "money": 30000
+      },
+      "result": "partial"
+    },
+    "judge_shy": {
+      "type": "end",
+      "text": "아쉬운 녹화였지만, 제작진은 \"다음엔 더 편하게 와 달라\"고 했다. 팬들도 다음 출연을 기대한다고 응원했다.",
+      "effects": {
+        "fans": 60,
+        "money": 30000
+      },
+      "result": "fail"
+    },
+    "decline_end": {
+      "type": "end",
+      "text": "정중한 거절에 제작진이 다음 기회를 약속했다. 일정은 계획대로 이어졌다.",
+      "effects": {
+        "fans": 20
+      },
+      "result": "neutral"
+    }
+  }
+}
