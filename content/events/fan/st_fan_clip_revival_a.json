@@ -1,0 +1,101 @@
+{
+  "id": "st_fan_clip_revival_a",
+  "title": "몇 주 전 클립의 역주행",
+  "category": "fan",
+  "group": "news_clip_revival",
+  "description": "클립 역주행(ev_c04) 변형 A. 숏폼 플랫폼 클립트리에서 몇 주 전 클립이 역주행한 날, 기념 방송을 열지 관련 클립을 정리해 올릴지 고른다.",
+  "meta": {
+    "theme": "fan_event",
+    "setting": "shortform_clip_revival",
+    "conflict": "big_opportunity",
+    "resolution": "viral_moment",
+    "activity": "clip_celebration",
+    "tone": "hype"
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "minDay": 3,
+    "cooldown": 7
+  },
+  "weight": 1,
+  "stockEffect": {
+    "ticker": "CLIP",
+    "percentage": 4
+  },
+  "start": "trend",
+  "steps": {
+    "trend": {
+      "type": "story",
+      "text": "몇 주 전 {member}의 방송 클립이 숏폼 플랫폼 클립트리에서 갑자기 역주행하기 시작했다. 처음 보는 닉네임들이 클립 아래에 댓글을 달고 있다.",
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "역주행의 기세를 어떻게 이어 갈까?",
+      "choices": [
+        {
+          "text": "역주행 기념 방송을 연다",
+          "effects": {
+            "hp": -5
+          },
+          "story": "{member}가 방송 제목에 \"역주행 기념\"을 달고 방송을 켰다.",
+          "next": "party"
+        },
+        {
+          "text": "관련 클립을 정리해 올린다",
+          "story": "{member}가 비슷한 장면들을 모아 클립 모음을 만들었다.",
+          "next": "curate_end"
+        }
+      ]
+    },
+    "party": {
+      "type": "story",
+      "text": "기념 방송에 처음 온 시청자가 가득하다. 채팅창에 \"그 장면 다시 해 주세요\"라는 요청이 쏟아진다.",
+      "next": "how"
+    },
+    "how": {
+      "type": "choice",
+      "text": "기념 방송을 어떻게 꾸릴까?",
+      "choices": [
+        {
+          "text": "역주행한 장면을 그대로 재현해 본다",
+          "story": "{member}가 그때 그 장면을 다시 해 보이자 채팅창이 폭발했다.",
+          "next": "party_hit"
+        },
+        {
+          "text": "처음 온 시청자들과 이야기를 나눈다",
+          "story": "{member}가 클립을 보고 온 사람들의 사연을 하나씩 읽었다.",
+          "next": "party_talk"
+        }
+      ]
+    },
+    "party_hit": {
+      "type": "end",
+      "text": "재현 장면이 또 하나의 클립이 되어 다시 퍼졌다. 역주행이 새 팬으로 이어졌다.",
+      "effects": {
+        "fans": 240,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "party_talk": {
+      "type": "end",
+      "text": "처음 온 시청자들과의 대화가 따뜻하게 이어졌다. 다만 재현을 기대한 사람들은 조금 아쉬워했다.",
+      "effects": {
+        "fans": 220,
+        "fame": 1
+      },
+      "result": "partial"
+    },
+    "curate_end": {
+      "type": "end",
+      "text": "정리된 클립 모음이 역주행 클립과 함께 꾸준히 재생됐다.",
+      "effects": {
+        "fans": 150
+      },
+      "result": "neutral"
+    }
+  }
+}

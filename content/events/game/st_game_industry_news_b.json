@@ -1,0 +1,95 @@
+{
+  "id": "st_game_industry_news_b",
+  "title": "행사 소식에 들뜬 채팅창",
+  "category": "game",
+  "group": "news_game_industry",
+  "description": "게임 업계 호재 뉴스(ev_m01) 변형 B. 방송 방향을 먼저 정하고, 소개하기로 하면 남은 체력에 따라 해설의 마무리가 달라진다.",
+  "meta": {
+    "theme": "broadcast_live",
+    "setting": "game_event_chat_buzz",
+    "conflict": "schedule_clash",
+    "resolution": "compromise",
+    "activity": "news_recap",
+    "tone": "warm"
+  },
+  "conditions": {
+    "activityCategories": [
+      "game"
+    ],
+    "minDay": 2,
+    "cooldown": 7
+  },
+  "weight": 0.75,
+  "stockEffect": {
+    "ticker": "PXLG",
+    "percentage": 6
+  },
+  "start": "decide",
+  "steps": {
+    "decide": {
+      "type": "choice",
+      "text": "픽셀게이트의 대형 게임 행사 소식이 전해지자 {member}의 게임 방송 채팅창이 행사 이야기로 들썩인다. 오늘 하려던 게임 진도도 남아 있다.",
+      "choices": [
+        {
+          "text": "행사 소식을 정리해 방송에서 소개한다",
+          "effects": {
+            "hp": -2
+          },
+          "story": "{member}가 행사 공식 일정표를 띄우고 설명을 시작했다.",
+          "next": "explain"
+        },
+        {
+          "text": "평소처럼 게임에 집중한다",
+          "story": "{member}가 행사 이야기는 짧게 받아 주고 게임을 이어 갔다.",
+          "next": "focus_story"
+        }
+      ]
+    },
+    "explain": {
+      "type": "story",
+      "text": "설명이 길어질수록 질문도 늘었다. 행사 일정, 참가 게임, 현장 이벤트까지 질문이 끝없이 이어진다.",
+      "next": "stamina"
+    },
+    "stamina": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "minHp": 50
+          },
+          "next": "explain_full"
+        }
+      ],
+      "next": "explain_tired"
+    },
+    "explain_full": {
+      "type": "end",
+      "text": "{member}의 친절한 해설에 \"행사 가이드 방송\"이라는 별명이 붙었다. 새로 들어온 시청자도 많았다.",
+      "effects": {
+        "fans": 120
+      },
+      "result": "success"
+    },
+    "explain_tired": {
+      "type": "end",
+      "text": "해설은 좋았지만 후반부는 조금 지친 기색이었다. 그래도 궁금증을 풀었다는 채팅이 많았다.",
+      "effects": {
+        "fans": 105
+      },
+      "result": "partial"
+    },
+    "focus_story": {
+      "type": "story",
+      "text": "게임 진도가 쭉쭉 나가자 행사 이야기를 하던 시청자들도 다시 게임에 빠져들었다.",
+      "next": "focus_end"
+    },
+    "focus_end": {
+      "type": "end",
+      "text": "평소대로 게임에 집중한 하루였다. 행사 소식은 다음 방송에서 다루기로 했다.",
+      "effects": {
+        "fans": 50
+      },
+      "result": "neutral"
+    }
+  }
+}

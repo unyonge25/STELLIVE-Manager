@@ -1,0 +1,97 @@
+{
+  "id": "st_fan_clip_revival_b",
+  "title": "알고리즘이 데려온 사람들",
+  "category": "fan",
+  "group": "news_clip_revival",
+  "description": "클립 역주행(ev_c04) 변형 B. 대응 방식을 먼저 정하고, 기념 방송을 열면 남은 체력에 따라 방송의 길이와 반응이 달라진다.",
+  "meta": {
+    "theme": "fan_event",
+    "setting": "algorithm_newcomers",
+    "conflict": "unexpected_guest",
+    "resolution": "audience_help",
+    "activity": "clip_celebration",
+    "tone": "warm"
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "minDay": 3,
+    "cooldown": 7
+  },
+  "weight": 1,
+  "stockEffect": {
+    "ticker": "CLIP",
+    "percentage": 4
+  },
+  "start": "decide",
+  "steps": {
+    "decide": {
+      "type": "choice",
+      "text": "클립트리 알고리즘이 {member}의 옛 방송 클립을 갑자기 많은 사람에게 보여 주기 시작했다. 클립 아래 댓글이 몇 시간 만에 몇 배로 늘었다.",
+      "choices": [
+        {
+          "text": "역주행 기념 방송을 연다",
+          "effects": {
+            "hp": -5
+          },
+          "story": "{member}가 \"역주행 기념 방송\"을 공지하고 바로 방송을 켰다.",
+          "next": "party_story"
+        },
+        {
+          "text": "관련 클립을 정리해 올린다",
+          "story": "{member}가 그 클립과 이어지는 장면들을 찾아 정리하기 시작했다.",
+          "next": "curate_story"
+        }
+      ]
+    },
+    "party_story": {
+      "type": "story",
+      "text": "알고리즘을 타고 온 시청자들이 기존 팬들과 섞였다. 기존 팬들이 먼저 방송 소개를 해 주기 시작했다.",
+      "next": "stamina"
+    },
+    "stamina": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "minHp": 50
+          },
+          "next": "party_long"
+        }
+      ],
+      "next": "party_short"
+    },
+    "party_long": {
+      "type": "end",
+      "text": "기존 팬과 새 시청자가 함께 만든 기념 방송이 길게 이어졌다. 역주행이 새 팬으로 이어졌다.",
+      "effects": {
+        "fans": 240,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "party_short": {
+      "type": "end",
+      "text": "지친 탓에 기념 방송은 짧게 끝났지만, 새 시청자들에게 인사를 건넨 것만으로도 충분했다.",
+      "effects": {
+        "fans": 210,
+        "fame": 1
+      },
+      "result": "partial"
+    },
+    "curate_story": {
+      "type": "story",
+      "text": "이어지는 장면들을 모아 올리자 클립을 타고 온 사람들이 다음 장면을 찾아 나섰다.",
+      "next": "curate_end"
+    },
+    "curate_end": {
+      "type": "end",
+      "text": "클립 모음이 역주행의 길잡이가 됐다. 꾸준한 재생이 이어졌다.",
+      "effects": {
+        "fans": 150
+      },
+      "result": "neutral"
+    }
+  }
+}

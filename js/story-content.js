@@ -1,6 +1,6 @@
 // story-content.js — 자동 생성 파일. 직접 고치지 말 것.
 // 원본: content/events/**/*.json → node tools/events.mjs build
-// 이벤트 92개
+// 이벤트 102개
 export const STORY_EVENTS = [
   {
     "id": "st_game_aos_league",
@@ -730,6 +730,200 @@ export const STORY_EVENTS = [
             "fpsCupRematch": false
           }
         }
+      }
+    }
+  },
+  {
+    "id": "st_game_industry_news_a",
+    "title": "픽셀게이트 행사 발표",
+    "category": "game",
+    "group": "news_game_industry",
+    "description": "게임 업계 호재 뉴스(ev_m01) 변형 A. 픽셀게이트의 대형 행사 발표가 난 날, 행사 소식을 정리해 소개할지 게임에 집중할지 고른다.",
+    "meta": {
+      "theme": "game_content",
+      "setting": "publisher_showcase_news",
+      "conflict": "audience_reaction",
+      "resolution": "steady_success",
+      "activity": "news_recap",
+      "tone": "hype"
+    },
+    "conditions": {
+      "activityCategories": [
+        "game"
+      ],
+      "minDay": 2,
+      "cooldown": 7
+    },
+    "weight": 0.75,
+    "stockEffect": {
+      "ticker": "PXLG",
+      "percentage": 6
+    },
+    "start": "news",
+    "steps": {
+      "news": {
+        "type": "story",
+        "text": "게임 퍼블리셔 픽셀게이트가 대형 게임 행사를 연다고 발표했다. {member}의 게임 방송 채팅창에도 \"행사 봤어요?\"라는 질문이 연달아 올라온다.",
+        "next": "decide"
+      },
+      "decide": {
+        "type": "choice",
+        "text": "질문이 계속 쌓인다. 어떻게 할까?",
+        "choices": [
+          {
+            "text": "행사 소식을 정리해 방송에서 소개한다",
+            "effects": {
+              "hp": -2
+            },
+            "story": "{member}가 게임을 잠시 멈추고 행사 발표 내용을 하나씩 짚기 시작했다.",
+            "next": "recap"
+          },
+          {
+            "text": "평소처럼 게임에 집중한다",
+            "story": "{member}가 \"소식은 나중에 정리해서 올릴게\"라며 게임으로 돌아갔다.",
+            "next": "focus_end"
+          }
+        ]
+      },
+      "recap": {
+        "type": "story",
+        "text": "발표 내용을 정리하던 중, 채팅창에서 기대작 이름이 하나 둘 오르내리기 시작했다.",
+        "next": "present"
+      },
+      "present": {
+        "type": "choice",
+        "text": "정리한 소식을 어떻게 보여 줄까?",
+        "choices": [
+          {
+            "text": "기대작 목록을 표로 만들어 하나씩 소개한다",
+            "story": "{member}가 기대작을 표로 정리해 화면에 띄웠다.",
+            "next": "recap_full"
+          },
+          {
+            "text": "핵심만 세 줄로 요약하고 게임으로 돌아간다",
+            "story": "{member}가 핵심 세 가지만 짚고 다시 게임을 켰다.",
+            "next": "recap_short"
+          }
+        ]
+      },
+      "recap_full": {
+        "type": "end",
+        "text": "정리된 기대작 표가 커뮤니티에 공유되며 \"행사 소식은 여기서 본다\"는 반응이 이어졌다.",
+        "effects": {
+          "fans": 120
+        },
+        "result": "success"
+      },
+      "recap_short": {
+        "type": "end",
+        "text": "깔끔한 요약 덕에 흐름은 끊기지 않았다. 다만 더 자세한 정리를 원하던 시청자들은 조금 아쉬워했다.",
+        "effects": {
+          "fans": 100
+        },
+        "result": "partial"
+      },
+      "focus_end": {
+        "type": "end",
+        "text": "게임에 집중한 방송은 평소처럼 즐겁게 흘러갔다. 행사 이야기는 다음 방송으로 넘어갔다.",
+        "effects": {
+          "fans": 50
+        },
+        "result": "neutral"
+      }
+    }
+  },
+  {
+    "id": "st_game_industry_news_b",
+    "title": "행사 소식에 들뜬 채팅창",
+    "category": "game",
+    "group": "news_game_industry",
+    "description": "게임 업계 호재 뉴스(ev_m01) 변형 B. 방송 방향을 먼저 정하고, 소개하기로 하면 남은 체력에 따라 해설의 마무리가 달라진다.",
+    "meta": {
+      "theme": "broadcast_live",
+      "setting": "game_event_chat_buzz",
+      "conflict": "schedule_clash",
+      "resolution": "compromise",
+      "activity": "news_recap",
+      "tone": "warm"
+    },
+    "conditions": {
+      "activityCategories": [
+        "game"
+      ],
+      "minDay": 2,
+      "cooldown": 7
+    },
+    "weight": 0.75,
+    "stockEffect": {
+      "ticker": "PXLG",
+      "percentage": 6
+    },
+    "start": "decide",
+    "steps": {
+      "decide": {
+        "type": "choice",
+        "text": "픽셀게이트의 대형 게임 행사 소식이 전해지자 {member}의 게임 방송 채팅창이 행사 이야기로 들썩인다. 오늘 하려던 게임 진도도 남아 있다.",
+        "choices": [
+          {
+            "text": "행사 소식을 정리해 방송에서 소개한다",
+            "effects": {
+              "hp": -2
+            },
+            "story": "{member}가 행사 공식 일정표를 띄우고 설명을 시작했다.",
+            "next": "explain"
+          },
+          {
+            "text": "평소처럼 게임에 집중한다",
+            "story": "{member}가 행사 이야기는 짧게 받아 주고 게임을 이어 갔다.",
+            "next": "focus_story"
+          }
+        ]
+      },
+      "explain": {
+        "type": "story",
+        "text": "설명이 길어질수록 질문도 늘었다. 행사 일정, 참가 게임, 현장 이벤트까지 질문이 끝없이 이어진다.",
+        "next": "stamina"
+      },
+      "stamina": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "minHp": 50
+            },
+            "next": "explain_full"
+          }
+        ],
+        "next": "explain_tired"
+      },
+      "explain_full": {
+        "type": "end",
+        "text": "{member}의 친절한 해설에 \"행사 가이드 방송\"이라는 별명이 붙었다. 새로 들어온 시청자도 많았다.",
+        "effects": {
+          "fans": 120
+        },
+        "result": "success"
+      },
+      "explain_tired": {
+        "type": "end",
+        "text": "해설은 좋았지만 후반부는 조금 지친 기색이었다. 그래도 궁금증을 풀었다는 채팅이 많았다.",
+        "effects": {
+          "fans": 105
+        },
+        "result": "partial"
+      },
+      "focus_story": {
+        "type": "story",
+        "text": "게임 진도가 쭉쭉 나가자 행사 이야기를 하던 시청자들도 다시 게임에 빠져들었다.",
+        "next": "focus_end"
+      },
+      "focus_end": {
+        "type": "end",
+        "text": "평소대로 게임에 집중한 하루였다. 행사 소식은 다음 방송에서 다루기로 했다.",
+        "effects": {
+          "fans": 50
+        },
+        "result": "neutral"
       }
     }
   },
@@ -2815,6 +3009,198 @@ export const STORY_EVENTS = [
         "effects": {
           "fans": 10,
           "hp": 4
+        },
+        "result": "neutral"
+      }
+    }
+  },
+  {
+    "id": "st_broadcast_platform_outage_a",
+    "title": "스트림나래 접속 불가",
+    "category": "broadcast",
+    "group": "news_platform_outage",
+    "description": "방송 플랫폼 서버 장애(ev_m04) 변형 A. 방송 플랫폼 스트림나래에 장애가 난 날, 다른 채널로 임시 방송을 열지 공지만 올리고 쉴지 고른다.",
+    "meta": {
+      "theme": "broadcast_incident",
+      "setting": "platform_server_down",
+      "conflict": "technical_trouble",
+      "resolution": "audience_help",
+      "activity": "outage_response",
+      "tone": "tense"
+    },
+    "conditions": {
+      "activityCategories": [
+        "broadcast"
+      ],
+      "minDay": 5,
+      "cooldown": 9
+    },
+    "weight": 0.75,
+    "stockEffect": {
+      "ticker": "STRM",
+      "percentage": -7
+    },
+    "start": "down",
+    "steps": {
+      "down": {
+        "type": "story",
+        "text": "방송 도중 화면이 멈췄다. 방송 플랫폼 스트림나래에 대규모 장애가 났다는 소식이 이어진다. {member}의 방송도 한동안 끊긴 채다.",
+        "next": "decide"
+      },
+      "decide": {
+        "type": "choice",
+        "text": "복구 시간은 아직 알 수 없다. 어떻게 할까?",
+        "choices": [
+          {
+            "text": "다른 채널로 임시 방송을 연다",
+            "effects": {
+              "hp": -4
+            },
+            "story": "{member}가 다른 채널을 열고 커뮤니티에 임시 방송 주소를 공지했다.",
+            "next": "temp_end"
+          },
+          {
+            "text": "복구될 때까지 공지만 올리고 쉰다",
+            "story": "{member}가 장애 소식과 함께 오늘은 쉬겠다는 공지를 준비했다.",
+            "next": "notice"
+          }
+        ]
+      },
+      "temp_end": {
+        "type": "end",
+        "text": "임시 채널로 옮겨 온 시청자들이 \"여기 있었구나\"라며 반가워했다. 장애 속에서도 방송을 이어 간 모습이 오래 기억됐다.",
+        "effects": {
+          "fans": 100
+        },
+        "result": "success"
+      },
+      "notice": {
+        "type": "choice",
+        "text": "공지에 무엇을 담을까?",
+        "choices": [
+          {
+            "text": "복구되면 바로 알리겠다는 약속을 덧붙인다",
+            "story": "{member}가 공지 끝에 \"복구되면 바로 알릴게요\"라고 적었다.",
+            "next": "notice_promise"
+          },
+          {
+            "text": "짧게 사정만 알리고 쉰다",
+            "story": "{member}가 짧은 공지를 올리고 쉬었다.",
+            "next": "notice_short"
+          }
+        ]
+      },
+      "notice_promise": {
+        "type": "end",
+        "text": "약속 한 줄에 아쉬움이 기다림으로 바뀌었다. 쉬는 동안 체력도 조금 돌아왔다.",
+        "effects": {
+          "hp": 5,
+          "fans": -20
+        },
+        "result": "partial"
+      },
+      "notice_short": {
+        "type": "end",
+        "text": "푹 쉬며 체력을 챙겼다. 다만 갑작스러운 휴식에 아쉬워한 시청자도 있었다.",
+        "effects": {
+          "hp": 6,
+          "fans": -30
+        },
+        "result": "neutral"
+      }
+    }
+  },
+  {
+    "id": "st_broadcast_platform_outage_b",
+    "title": "끊긴 방송, 남은 선택",
+    "category": "broadcast",
+    "group": "news_platform_outage",
+    "description": "방송 플랫폼 서버 장애(ev_m04) 변형 B. 대응 방식을 먼저 정하고, 임시 방송을 열면 남은 체력에 따라 진행이 달라진다.",
+    "meta": {
+      "theme": "broadcast_incident",
+      "setting": "backup_channel_switch",
+      "conflict": "early_disadvantage",
+      "resolution": "comeback_win",
+      "activity": "outage_response",
+      "tone": "hype"
+    },
+    "conditions": {
+      "activityCategories": [
+        "broadcast"
+      ],
+      "minDay": 5,
+      "cooldown": 9
+    },
+    "weight": 0.75,
+    "stockEffect": {
+      "ticker": "STRM",
+      "percentage": -7
+    },
+    "start": "decide",
+    "steps": {
+      "decide": {
+        "type": "choice",
+        "text": "스트림나래 서버 장애로 {member}의 방송이 갑자기 끊겼다. 다른 채널로 옮길 수도 있고, 오늘은 쉬어 갈 수도 있다.",
+        "choices": [
+          {
+            "text": "다른 채널로 임시 방송을 연다",
+            "effects": {
+              "hp": -4
+            },
+            "story": "{member}가 예비 채널을 열고 주소를 공유했다.",
+            "next": "temp_story"
+          },
+          {
+            "text": "복구될 때까지 공지만 올리고 쉰다",
+            "story": "{member}가 복구될 때까지 쉬기로 하고 공지를 올렸다.",
+            "next": "rest_story"
+          }
+        ]
+      },
+      "temp_story": {
+        "type": "story",
+        "text": "예비 채널에는 처음엔 몇 명뿐이었다. 주소가 퍼지면서 시청자가 하나둘 옮겨 오기 시작했다.",
+        "next": "stamina"
+      },
+      "stamina": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "minHp": 50
+            },
+            "next": "temp_full"
+          }
+        ],
+        "next": "temp_tired"
+      },
+      "temp_full": {
+        "type": "end",
+        "text": "예비 채널이 금세 평소만큼 북적였다. \"장애도 막지 못한 방송\"이라는 반응이 이어졌다.",
+        "effects": {
+          "fans": 100
+        },
+        "result": "success"
+      },
+      "temp_tired": {
+        "type": "end",
+        "text": "예비 채널로 옮겨 오긴 했지만 지친 탓에 방송을 오래 끌지는 못했다.",
+        "effects": {
+          "fans": 80
+        },
+        "result": "partial"
+      },
+      "rest_story": {
+        "type": "story",
+        "text": "공지를 올린 뒤 {member}는 장애가 복구되기를 기다리며 오랜만에 쉬었다.",
+        "next": "rest_end"
+      },
+      "rest_end": {
+        "type": "end",
+        "text": "뜻밖의 휴식으로 체력을 챙겼다. 복구 소식이 올라오자 팬들은 다음 방송을 기다리겠다고 했다.",
+        "effects": {
+          "hp": 6,
+          "fans": -30
         },
         "result": "neutral"
       }
@@ -5260,6 +5646,240 @@ export const STORY_EVENTS = [
             "originalSongReleased": true
           }
         }
+      }
+    }
+  },
+  {
+    "id": "st_music_payout_policy_a",
+    "title": "하모니웍스 정산 공지",
+    "category": "music",
+    "group": "news_music_payout",
+    "description": "음원 플랫폼 정산 정책 변경(ev_m02) 변형 A. 하모니웍스의 정산 정책 변경 공지를 본 날, 숏폼 편집과 정식 음원 작업 중 하나를 고른다.",
+    "meta": {
+      "theme": "music_production",
+      "setting": "payout_policy_notice",
+      "conflict": "budget_limit",
+      "resolution": "compromise",
+      "activity": "cover_planning",
+      "tone": "calm"
+    },
+    "conditions": {
+      "activityCategories": [
+        "music"
+      ],
+      "minDay": 4,
+      "cooldown": 8
+    },
+    "weight": 0.75,
+    "stockEffect": [
+      {
+        "ticker": "TUNE",
+        "percentage": -6
+      },
+      {
+        "ticker": "CLIP",
+        "percentage": 2
+      }
+    ],
+    "start": "notice",
+    "steps": {
+      "notice": {
+        "type": "story",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "녹음 준비 중, 음원 유통사 하모니웍스가 정산 정책을 바꾼다는 공지가 올라왔다. 업계 분위기가 어수선하다. {member}도 커버곡 일정을 다시 고민한다."
+          },
+          {
+            "text": "노래 방송을 앞두고, 음원 유통사 하모니웍스가 정산 정책을 바꾼다는 공지가 올라왔다. 업계 분위기가 어수선하다. {member}도 커버곡 일정을 다시 고민한다."
+          }
+        ],
+        "next": "decide"
+      },
+      "decide": {
+        "type": "choice",
+        "text": "커버곡 일정을 어떻게 할까?",
+        "choices": [
+          {
+            "text": "커버곡을 숏폼용으로 편집해 올린다",
+            "story": "{member}가 커버곡의 가장 좋은 구간을 골라 숏폼 플랫폼 클립트리용으로 다시 편집하기 시작했다.",
+            "next": "edit"
+          },
+          {
+            "text": "일정대로 정식 음원 작업을 계속한다",
+            "effects": {
+              "stats": {
+                "Vc": 1
+              },
+              "hp": -3
+            },
+            "story": "{member}가 공지와 상관없이 정해 둔 일정대로 정식 음원 작업을 이어 갔다.",
+            "next": "work_end"
+          }
+        ]
+      },
+      "edit": {
+        "type": "story",
+        "text": "편집할 구간을 고르다 보니 후보가 두 개로 좁혀졌다. 고음이 돋보이는 후렴과, 분위기가 좋은 도입부다.",
+        "next": "pick"
+      },
+      "pick": {
+        "type": "choice",
+        "text": "어느 구간을 쓸까?",
+        "choices": [
+          {
+            "text": "고음이 돋보이는 후렴 구간을 쓴다",
+            "story": "{member}가 후렴 구간을 15초로 다듬었다.",
+            "next": "edit_hit"
+          },
+          {
+            "text": "분위기가 좋은 도입부를 쓴다",
+            "story": "{member}가 도입부를 잔잔하게 잘라 냈다.",
+            "next": "edit_calm"
+          }
+        ]
+      },
+      "edit_hit": {
+        "type": "end",
+        "text": "후렴 숏폼이 빠르게 퍼지며 원곡을 찾아 듣는 사람도 늘었다.",
+        "effects": {
+          "fans": 140
+        },
+        "result": "success"
+      },
+      "edit_calm": {
+        "type": "end",
+        "text": "도입부 숏폼은 잔잔하게 사랑받았다. 크게 퍼지진 않았지만 꾸준히 재생됐다.",
+        "effects": {
+          "fans": 120
+        },
+        "result": "partial"
+      },
+      "work_end": {
+        "type": "end",
+        "text": "공지에 흔들리지 않고 작업을 이어 간 덕에 음원 완성도가 한층 올라갔다.",
+        "result": "neutral"
+      }
+    }
+  },
+  {
+    "id": "st_music_payout_policy_b",
+    "title": "숏폼이냐 정식 음원이냐",
+    "category": "music",
+    "group": "news_music_payout",
+    "description": "음원 플랫폼 정산 정책 변경(ev_m02) 변형 B. 방향을 먼저 정하고, 정식 작업을 고르면 남은 체력에 따라 작업 결과가 달라진다.",
+    "meta": {
+      "theme": "content_production",
+      "setting": "shortform_vs_release",
+      "conflict": "big_opportunity",
+      "resolution": "lesson_learned",
+      "activity": "cover_planning",
+      "tone": "warm"
+    },
+    "conditions": {
+      "activityCategories": [
+        "music"
+      ],
+      "minDay": 4,
+      "cooldown": 8
+    },
+    "weight": 0.75,
+    "stockEffect": [
+      {
+        "ticker": "TUNE",
+        "percentage": -6
+      },
+      {
+        "ticker": "CLIP",
+        "percentage": 2
+      }
+    ],
+    "start": "decide",
+    "steps": {
+      "decide": {
+        "type": "choice",
+        "text": [
+          {
+            "when": {
+              "activity": [
+                "recording"
+              ]
+            },
+            "text": "녹음 날. 하모니웍스의 정산 정책 변경 소식에 업계가 어수선하다. 한편 숏폼 플랫폼 클립트리 쪽은 오히려 기대가 커지는 분위기다. {member}가 오늘 녹음의 방향을 고민한다."
+          },
+          {
+            "text": "노래 방송 날. 하모니웍스의 정산 정책 변경 소식에 업계가 어수선하다. 한편 숏폼 플랫폼 클립트리 쪽은 오히려 기대가 커지는 분위기다. {member}가 커버곡 방향을 고민한다."
+          }
+        ],
+        "choices": [
+          {
+            "text": "커버곡을 숏폼용으로 편집해 올린다",
+            "story": "{member}가 커버곡을 짧은 구간으로 나눠 편집 계획을 세웠다.",
+            "next": "short_story"
+          },
+          {
+            "text": "일정대로 정식 음원 작업을 계속한다",
+            "effects": {
+              "hp": -3
+            },
+            "story": "{member}가 정식 음원 작업 목록을 처음부터 다시 점검했다.",
+            "next": "track_story"
+          }
+        ]
+      },
+      "short_story": {
+        "type": "story",
+        "text": "짧게 잘라 낸 구간들을 이어 붙이자, 원곡과는 또 다른 매력이 생겼다.",
+        "next": "short_end"
+      },
+      "short_end": {
+        "type": "end",
+        "text": "숏폼 편집본이 꾸준히 공유되며 커버곡을 처음 듣는 사람이 늘었다.",
+        "effects": {
+          "fans": 140
+        },
+        "result": "success"
+      },
+      "track_story": {
+        "type": "story",
+        "text": "작업 목록대로 한 구간씩 다시 다듬었다. 집중력이 얼마나 남아 있느냐가 마무리를 가른다.",
+        "next": "stamina"
+      },
+      "stamina": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "minHp": 50
+            },
+            "next": "track_clean"
+          }
+        ],
+        "next": "track_rough"
+      },
+      "track_clean": {
+        "type": "end",
+        "text": "정식 음원 작업이 계획대로 마무리됐다. 정책이 어떻게 바뀌든 결과물의 완성도는 그대로였다.",
+        "effects": {
+          "stats": {
+            "Vc": 1
+          }
+        },
+        "result": "success"
+      },
+      "track_rough": {
+        "type": "end",
+        "text": "작업은 마쳤지만 피곤한 탓에 몇 군데는 다음 작업일에 다시 손보기로 했다.",
+        "effects": {
+          "stats": {
+            "Vc": 1
+          }
+        },
+        "result": "partial"
       }
     }
   },
@@ -9789,6 +10409,204 @@ export const STORY_EVENTS = [
             "Bs": 1
           }
         }
+      }
+    }
+  },
+  {
+    "id": "st_business_gear_review_a",
+    "title": "기어포지 신제품 상자",
+    "category": "business",
+    "group": "news_gear_review",
+    "description": "장비 회사 신제품 리뷰 요청(ev_m03) 변형 A. 기어포지의 새 마이크와 컨트롤러가 도착한 날, 꼼꼼한 리뷰와 짧은 언급 중 하나를 고른다.",
+    "meta": {
+      "theme": "sponsorship",
+      "setting": "gear_unboxing_review",
+      "conflict": "high_expectations",
+      "resolution": "steady_success",
+      "activity": "product_review",
+      "tone": "calm"
+    },
+    "conditions": {
+      "activityCategories": [
+        "broadcast"
+      ],
+      "minDay": 3,
+      "cooldown": 7
+    },
+    "weight": 0.75,
+    "stockEffect": {
+      "fixedChange": 800,
+      "ticker": "GEAR"
+    },
+    "start": "unbox",
+    "steps": {
+      "unbox": {
+        "type": "story",
+        "text": "장비 회사 기어포지에서 새 마이크와 컨트롤러가 도착했다. 상자 안에는 리뷰를 부탁한다는 짧은 편지가 들어 있다.",
+        "next": "decide"
+      },
+      "decide": {
+        "type": "choice",
+        "text": "리뷰를 어떻게 할까?",
+        "choices": [
+          {
+            "text": "꼼꼼한 리뷰 방송을 한다",
+            "effects": {
+              "hp": -3
+            },
+            "story": "{member}가 장비를 하나씩 꺼내 실제로 써 보며 리뷰를 준비했다.",
+            "next": "review"
+          },
+          {
+            "text": "제품만 받고 짧게 언급한다",
+            "story": "{member}가 방송 중간에 새 장비를 짧게 보여 주고 넘어갔다.",
+            "next": "mention_end"
+          }
+        ]
+      },
+      "review": {
+        "type": "story",
+        "text": "써 보니 마이크 소리는 좋은데, 컨트롤러 버튼 하나가 손에 잘 맞지 않았다.",
+        "next": "tone"
+      },
+      "tone": {
+        "type": "choice",
+        "text": "아쉬운 점까지 이야기할까?",
+        "choices": [
+          {
+            "text": "장단점을 모두 솔직하게 말한다",
+            "story": "{member}가 좋은 점과 아쉬운 점을 나란히 정리해 보여 줬다.",
+            "next": "review_honest"
+          },
+          {
+            "text": "좋은 점 위주로 소개한다",
+            "story": "{member}가 마이크 소리 위주로 리뷰를 꾸렸다.",
+            "next": "review_soft"
+          }
+        ]
+      },
+      "review_honest": {
+        "type": "end",
+        "text": "솔직한 리뷰에 \"믿고 보는 리뷰\"라는 반응이 이어졌다. 기어포지도 피드백에 감사 인사를 전해 왔다.",
+        "effects": {
+          "money": 90000,
+          "fans": 60
+        },
+        "result": "success"
+      },
+      "review_soft": {
+        "type": "end",
+        "text": "리뷰 자체는 무난했다. 다만 몇몇 시청자는 \"단점도 궁금했다\"는 채팅을 남겼다.",
+        "effects": {
+          "money": 90000,
+          "fans": 40
+        },
+        "result": "partial"
+      },
+      "mention_end": {
+        "type": "end",
+        "text": "짧은 언급으로 약속한 만큼만 소개했다. 방송 흐름은 끊기지 않았다.",
+        "effects": {
+          "money": 40000
+        },
+        "result": "neutral"
+      }
+    }
+  },
+  {
+    "id": "st_business_gear_review_b",
+    "title": "리뷰 일정과 방송 사이",
+    "category": "business",
+    "group": "news_gear_review",
+    "description": "장비 회사 신제품 리뷰 요청(ev_m03) 변형 B. 리뷰 방식을 먼저 정하고, 꼼꼼한 리뷰를 고르면 남은 체력에 따라 리뷰의 깊이가 달라진다.",
+    "meta": {
+      "theme": "sponsorship",
+      "setting": "review_schedule_desk",
+      "conflict": "time_pressure",
+      "resolution": "quiet_growth",
+      "activity": "product_review",
+      "tone": "warm"
+    },
+    "conditions": {
+      "activityCategories": [
+        "broadcast"
+      ],
+      "minDay": 3,
+      "cooldown": 7
+    },
+    "weight": 0.75,
+    "stockEffect": {
+      "fixedChange": 800,
+      "ticker": "GEAR"
+    },
+    "start": "decide",
+    "steps": {
+      "decide": {
+        "type": "choice",
+        "text": "기어포지가 새 마이크와 컨트롤러 리뷰를 {member}에게 요청했다. 이번 주 방송 일정은 이미 빡빡하다.",
+        "choices": [
+          {
+            "text": "꼼꼼한 리뷰 방송을 한다",
+            "effects": {
+              "hp": -3
+            },
+            "story": "{member}가 방송 시간 일부를 리뷰 코너로 비워 두었다.",
+            "next": "test_story"
+          },
+          {
+            "text": "제품만 받고 짧게 언급한다",
+            "story": "{member}가 다음 방송 오프닝에서 짧게 소개하기로 했다.",
+            "next": "mention_story"
+          }
+        ]
+      },
+      "test_story": {
+        "type": "story",
+        "text": "리뷰 코너가 시작되자, {member}가 새 마이크와 이전 마이크로 같은 문장을 번갈아 읽으며 소리를 비교해 들려줬다.",
+        "next": "stamina"
+      },
+      "stamina": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "minHp": 50
+            },
+            "next": "test_deep"
+          }
+        ],
+        "next": "test_quick"
+      },
+      "test_deep": {
+        "type": "end",
+        "text": "비교 청취까지 넣은 꼼꼼한 리뷰가 장비를 고민하던 시청자들에게 큰 도움이 됐다.",
+        "effects": {
+          "money": 90000,
+          "fans": 60
+        },
+        "result": "success"
+      },
+      "test_quick": {
+        "type": "end",
+        "text": "빡빡한 일정 탓에 비교 청취는 짧게 끝났다. 그래도 핵심은 충분히 전해졌다.",
+        "effects": {
+          "money": 90000,
+          "fans": 45
+        },
+        "result": "partial"
+      },
+      "mention_story": {
+        "type": "story",
+        "text": "오프닝에서 새 장비를 들어 보이자 채팅창에 \"그거 새로 나온 거죠?\"라는 반응이 올라왔다.",
+        "next": "mention_end"
+      },
+      "mention_end": {
+        "type": "end",
+        "text": "짧은 소개였지만 약속은 지켰다. 본 방송도 일정대로 이어졌다.",
+        "effects": {
+          "money": 40000
+        },
+        "result": "neutral"
       }
     }
   },
@@ -18309,6 +19127,204 @@ export const STORY_EVENTS = [
           "hp": 8,
           "fans": 10
         }
+      }
+    }
+  },
+  {
+    "id": "st_fan_clip_revival_a",
+    "title": "몇 주 전 클립의 역주행",
+    "category": "fan",
+    "group": "news_clip_revival",
+    "description": "클립 역주행(ev_c04) 변형 A. 숏폼 플랫폼 클립트리에서 몇 주 전 클립이 역주행한 날, 기념 방송을 열지 관련 클립을 정리해 올릴지 고른다.",
+    "meta": {
+      "theme": "fan_event",
+      "setting": "shortform_clip_revival",
+      "conflict": "big_opportunity",
+      "resolution": "viral_moment",
+      "activity": "clip_celebration",
+      "tone": "hype"
+    },
+    "conditions": {
+      "activityCategories": [
+        "broadcast"
+      ],
+      "minDay": 3,
+      "cooldown": 7
+    },
+    "weight": 1,
+    "stockEffect": {
+      "ticker": "CLIP",
+      "percentage": 4
+    },
+    "start": "trend",
+    "steps": {
+      "trend": {
+        "type": "story",
+        "text": "몇 주 전 {member}의 방송 클립이 숏폼 플랫폼 클립트리에서 갑자기 역주행하기 시작했다. 처음 보는 닉네임들이 클립 아래에 댓글을 달고 있다.",
+        "next": "decide"
+      },
+      "decide": {
+        "type": "choice",
+        "text": "역주행의 기세를 어떻게 이어 갈까?",
+        "choices": [
+          {
+            "text": "역주행 기념 방송을 연다",
+            "effects": {
+              "hp": -5
+            },
+            "story": "{member}가 방송 제목에 \"역주행 기념\"을 달고 방송을 켰다.",
+            "next": "party"
+          },
+          {
+            "text": "관련 클립을 정리해 올린다",
+            "story": "{member}가 비슷한 장면들을 모아 클립 모음을 만들었다.",
+            "next": "curate_end"
+          }
+        ]
+      },
+      "party": {
+        "type": "story",
+        "text": "기념 방송에 처음 온 시청자가 가득하다. 채팅창에 \"그 장면 다시 해 주세요\"라는 요청이 쏟아진다.",
+        "next": "how"
+      },
+      "how": {
+        "type": "choice",
+        "text": "기념 방송을 어떻게 꾸릴까?",
+        "choices": [
+          {
+            "text": "역주행한 장면을 그대로 재현해 본다",
+            "story": "{member}가 그때 그 장면을 다시 해 보이자 채팅창이 폭발했다.",
+            "next": "party_hit"
+          },
+          {
+            "text": "처음 온 시청자들과 이야기를 나눈다",
+            "story": "{member}가 클립을 보고 온 사람들의 사연을 하나씩 읽었다.",
+            "next": "party_talk"
+          }
+        ]
+      },
+      "party_hit": {
+        "type": "end",
+        "text": "재현 장면이 또 하나의 클립이 되어 다시 퍼졌다. 역주행이 새 팬으로 이어졌다.",
+        "effects": {
+          "fans": 240,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "party_talk": {
+        "type": "end",
+        "text": "처음 온 시청자들과의 대화가 따뜻하게 이어졌다. 다만 재현을 기대한 사람들은 조금 아쉬워했다.",
+        "effects": {
+          "fans": 220,
+          "fame": 1
+        },
+        "result": "partial"
+      },
+      "curate_end": {
+        "type": "end",
+        "text": "정리된 클립 모음이 역주행 클립과 함께 꾸준히 재생됐다.",
+        "effects": {
+          "fans": 150
+        },
+        "result": "neutral"
+      }
+    }
+  },
+  {
+    "id": "st_fan_clip_revival_b",
+    "title": "알고리즘이 데려온 사람들",
+    "category": "fan",
+    "group": "news_clip_revival",
+    "description": "클립 역주행(ev_c04) 변형 B. 대응 방식을 먼저 정하고, 기념 방송을 열면 남은 체력에 따라 방송의 길이와 반응이 달라진다.",
+    "meta": {
+      "theme": "fan_event",
+      "setting": "algorithm_newcomers",
+      "conflict": "unexpected_guest",
+      "resolution": "audience_help",
+      "activity": "clip_celebration",
+      "tone": "warm"
+    },
+    "conditions": {
+      "activityCategories": [
+        "broadcast"
+      ],
+      "minDay": 3,
+      "cooldown": 7
+    },
+    "weight": 1,
+    "stockEffect": {
+      "ticker": "CLIP",
+      "percentage": 4
+    },
+    "start": "decide",
+    "steps": {
+      "decide": {
+        "type": "choice",
+        "text": "클립트리 알고리즘이 {member}의 옛 방송 클립을 갑자기 많은 사람에게 보여 주기 시작했다. 클립 아래 댓글이 몇 시간 만에 몇 배로 늘었다.",
+        "choices": [
+          {
+            "text": "역주행 기념 방송을 연다",
+            "effects": {
+              "hp": -5
+            },
+            "story": "{member}가 \"역주행 기념 방송\"을 공지하고 바로 방송을 켰다.",
+            "next": "party_story"
+          },
+          {
+            "text": "관련 클립을 정리해 올린다",
+            "story": "{member}가 그 클립과 이어지는 장면들을 찾아 정리하기 시작했다.",
+            "next": "curate_story"
+          }
+        ]
+      },
+      "party_story": {
+        "type": "story",
+        "text": "알고리즘을 타고 온 시청자들이 기존 팬들과 섞였다. 기존 팬들이 먼저 방송 소개를 해 주기 시작했다.",
+        "next": "stamina"
+      },
+      "stamina": {
+        "type": "branch",
+        "branches": [
+          {
+            "when": {
+              "minHp": 50
+            },
+            "next": "party_long"
+          }
+        ],
+        "next": "party_short"
+      },
+      "party_long": {
+        "type": "end",
+        "text": "기존 팬과 새 시청자가 함께 만든 기념 방송이 길게 이어졌다. 역주행이 새 팬으로 이어졌다.",
+        "effects": {
+          "fans": 240,
+          "fame": 1
+        },
+        "result": "success"
+      },
+      "party_short": {
+        "type": "end",
+        "text": "지친 탓에 기념 방송은 짧게 끝났지만, 새 시청자들에게 인사를 건넨 것만으로도 충분했다.",
+        "effects": {
+          "fans": 210,
+          "fame": 1
+        },
+        "result": "partial"
+      },
+      "curate_story": {
+        "type": "story",
+        "text": "이어지는 장면들을 모아 올리자 클립을 타고 온 사람들이 다음 장면을 찾아 나섰다.",
+        "next": "curate_end"
+      },
+      "curate_end": {
+        "type": "end",
+        "text": "클립 모음이 역주행의 길잡이가 됐다. 꾸준한 재생이 이어졌다.",
+        "effects": {
+          "fans": 150
+        },
+        "result": "neutral"
       }
     }
   },

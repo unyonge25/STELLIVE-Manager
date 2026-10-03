@@ -1,0 +1,101 @@
+{
+  "id": "st_business_gear_review_a",
+  "title": "기어포지 신제품 상자",
+  "category": "business",
+  "group": "news_gear_review",
+  "description": "장비 회사 신제품 리뷰 요청(ev_m03) 변형 A. 기어포지의 새 마이크와 컨트롤러가 도착한 날, 꼼꼼한 리뷰와 짧은 언급 중 하나를 고른다.",
+  "meta": {
+    "theme": "sponsorship",
+    "setting": "gear_unboxing_review",
+    "conflict": "high_expectations",
+    "resolution": "steady_success",
+    "activity": "product_review",
+    "tone": "calm"
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "minDay": 3,
+    "cooldown": 7
+  },
+  "weight": 0.75,
+  "stockEffect": {
+    "fixedChange": 800,
+    "ticker": "GEAR"
+  },
+  "start": "unbox",
+  "steps": {
+    "unbox": {
+      "type": "story",
+      "text": "장비 회사 기어포지에서 새 마이크와 컨트롤러가 도착했다. 상자 안에는 리뷰를 부탁한다는 짧은 편지가 들어 있다.",
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "리뷰를 어떻게 할까?",
+      "choices": [
+        {
+          "text": "꼼꼼한 리뷰 방송을 한다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "{member}가 장비를 하나씩 꺼내 실제로 써 보며 리뷰를 준비했다.",
+          "next": "review"
+        },
+        {
+          "text": "제품만 받고 짧게 언급한다",
+          "story": "{member}가 방송 중간에 새 장비를 짧게 보여 주고 넘어갔다.",
+          "next": "mention_end"
+        }
+      ]
+    },
+    "review": {
+      "type": "story",
+      "text": "써 보니 마이크 소리는 좋은데, 컨트롤러 버튼 하나가 손에 잘 맞지 않았다.",
+      "next": "tone"
+    },
+    "tone": {
+      "type": "choice",
+      "text": "아쉬운 점까지 이야기할까?",
+      "choices": [
+        {
+          "text": "장단점을 모두 솔직하게 말한다",
+          "story": "{member}가 좋은 점과 아쉬운 점을 나란히 정리해 보여 줬다.",
+          "next": "review_honest"
+        },
+        {
+          "text": "좋은 점 위주로 소개한다",
+          "story": "{member}가 마이크 소리 위주로 리뷰를 꾸렸다.",
+          "next": "review_soft"
+        }
+      ]
+    },
+    "review_honest": {
+      "type": "end",
+      "text": "솔직한 리뷰에 \"믿고 보는 리뷰\"라는 반응이 이어졌다. 기어포지도 피드백에 감사 인사를 전해 왔다.",
+      "effects": {
+        "money": 90000,
+        "fans": 60
+      },
+      "result": "success"
+    },
+    "review_soft": {
+      "type": "end",
+      "text": "리뷰 자체는 무난했다. 다만 몇몇 시청자는 \"단점도 궁금했다\"는 채팅을 남겼다.",
+      "effects": {
+        "money": 90000,
+        "fans": 40
+      },
+      "result": "partial"
+    },
+    "mention_end": {
+      "type": "end",
+      "text": "짧은 언급으로 약속한 만큼만 소개했다. 방송 흐름은 끊기지 않았다.",
+      "effects": {
+        "money": 40000
+      },
+      "result": "neutral"
+    }
+  }
+}

@@ -146,6 +146,7 @@ export const EXTRA_EVENTS = [
     title: '클립 역주행',
     description: '몇 주 전 {member}의 방송 클립이 갑자기 숏폼 플랫폼에서 역주행하기 시작했다.',
     conditions: { ...BROADCAST, minDay: 3, cooldown: 7 },
+    weight: 0,
     stockEffect: { ticker: 'CLIP', percentage: 4 },
     choices: [
       { text: '역주행 기념 방송을 연다', effects: { fans: 240, fame: 1, hp: -5 } },
@@ -365,6 +366,7 @@ export const EXTRA_EVENTS = [
     title: '게임 업계 호재 뉴스',
     description: '대형 게임 행사 소식에 업계가 들썩인다. {member}의 게임 방송에도 관련 질문이 쏟아진다.',
     conditions: { activityCategories: ['game'], minDay: 2, cooldown: 7 },
+    weight: 0,
     stockEffect: { ticker: 'PXLG', percentage: 6 },
     choices: [
       { text: '행사 소식을 정리해 방송에서 소개한다', effects: { fans: 120, hp: -2 } },
@@ -376,6 +378,7 @@ export const EXTRA_EVENTS = [
     title: '음원 플랫폼 정산 정책 변경',
     description: '음원 플랫폼이 정산 정책을 바꾼다는 발표에 업계 분위기가 어수선하다. {member}도 커버곡 일정을 고민한다.',
     conditions: { activityCategories: ['music'], minDay: 4, cooldown: 8 },
+    weight: 0,
     stockEffect: [{ ticker: 'TUNE', percentage: -6 }, { ticker: 'CLIP', percentage: 2 }],
     choices: [
       { text: '커버곡을 숏폼용으로 편집해 올린다', effects: { fans: 140 } },
@@ -387,6 +390,7 @@ export const EXTRA_EVENTS = [
     title: '장비 회사 신제품 리뷰 요청',
     description: '장비 회사에서 새 마이크와 컨트롤러 리뷰를 {member}에게 요청했다.',
     conditions: { ...BROADCAST, minDay: 3, cooldown: 7 },
+    weight: 0,
     stockEffect: { fixedChange: 800, ticker: 'GEAR' },
     choices: [
       { text: '꼼꼼한 리뷰 방송을 한다', effects: { money: 90000, fans: 60, hp: -3 } },
@@ -398,6 +402,7 @@ export const EXTRA_EVENTS = [
     title: '방송 플랫폼 서버 장애',
     description: '방송 플랫폼에 대규모 장애가 발생했다. {member}의 방송도 한동안 끊겼다.',
     conditions: { ...BROADCAST, minDay: 5, cooldown: 9 },
+    weight: 0,
     stockEffect: { ticker: 'STRM', percentage: -7 },
     choices: [
       { text: '다른 채널로 임시 방송을 연다', effects: { fans: 100, hp: -4 } },

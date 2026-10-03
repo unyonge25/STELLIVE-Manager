@@ -1,0 +1,117 @@
+{
+  "id": "st_music_payout_policy_b",
+  "title": "숏폼이냐 정식 음원이냐",
+  "category": "music",
+  "group": "news_music_payout",
+  "description": "음원 플랫폼 정산 정책 변경(ev_m02) 변형 B. 방향을 먼저 정하고, 정식 작업을 고르면 남은 체력에 따라 작업 결과가 달라진다.",
+  "meta": {
+    "theme": "content_production",
+    "setting": "shortform_vs_release",
+    "conflict": "big_opportunity",
+    "resolution": "lesson_learned",
+    "activity": "cover_planning",
+    "tone": "warm"
+  },
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "minDay": 4,
+    "cooldown": 8
+  },
+  "weight": 0.75,
+  "stockEffect": [
+    {
+      "ticker": "TUNE",
+      "percentage": -6
+    },
+    {
+      "ticker": "CLIP",
+      "percentage": 2
+    }
+  ],
+  "start": "decide",
+  "steps": {
+    "decide": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "녹음 날. 하모니웍스의 정산 정책 변경 소식에 업계가 어수선하다. 한편 숏폼 플랫폼 클립트리 쪽은 오히려 기대가 커지는 분위기다. {member}가 오늘 녹음의 방향을 고민한다."
+        },
+        {
+          "text": "노래 방송 날. 하모니웍스의 정산 정책 변경 소식에 업계가 어수선하다. 한편 숏폼 플랫폼 클립트리 쪽은 오히려 기대가 커지는 분위기다. {member}가 커버곡 방향을 고민한다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "커버곡을 숏폼용으로 편집해 올린다",
+          "story": "{member}가 커버곡을 짧은 구간으로 나눠 편집 계획을 세웠다.",
+          "next": "short_story"
+        },
+        {
+          "text": "일정대로 정식 음원 작업을 계속한다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "{member}가 정식 음원 작업 목록을 처음부터 다시 점검했다.",
+          "next": "track_story"
+        }
+      ]
+    },
+    "short_story": {
+      "type": "story",
+      "text": "짧게 잘라 낸 구간들을 이어 붙이자, 원곡과는 또 다른 매력이 생겼다.",
+      "next": "short_end"
+    },
+    "short_end": {
+      "type": "end",
+      "text": "숏폼 편집본이 꾸준히 공유되며 커버곡을 처음 듣는 사람이 늘었다.",
+      "effects": {
+        "fans": 140
+      },
+      "result": "success"
+    },
+    "track_story": {
+      "type": "story",
+      "text": "작업 목록대로 한 구간씩 다시 다듬었다. 집중력이 얼마나 남아 있느냐가 마무리를 가른다.",
+      "next": "stamina"
+    },
+    "stamina": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "minHp": 50
+          },
+          "next": "track_clean"
+        }
+      ],
+      "next": "track_rough"
+    },
+    "track_clean": {
+      "type": "end",
+      "text": "정식 음원 작업이 계획대로 마무리됐다. 정책이 어떻게 바뀌든 결과물의 완성도는 그대로였다.",
+      "effects": {
+        "stats": {
+          "Vc": 1
+        }
+      },
+      "result": "success"
+    },
+    "track_rough": {
+      "type": "end",
+      "text": "작업은 마쳤지만 피곤한 탓에 몇 군데는 다음 작업일에 다시 손보기로 했다.",
+      "effects": {
+        "stats": {
+          "Vc": 1
+        }
+      },
+      "result": "partial"
+    }
+  }
+}

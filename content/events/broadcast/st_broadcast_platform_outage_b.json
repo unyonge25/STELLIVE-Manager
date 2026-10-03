@@ -1,0 +1,96 @@
+{
+  "id": "st_broadcast_platform_outage_b",
+  "title": "끊긴 방송, 남은 선택",
+  "category": "broadcast",
+  "group": "news_platform_outage",
+  "description": "방송 플랫폼 서버 장애(ev_m04) 변형 B. 대응 방식을 먼저 정하고, 임시 방송을 열면 남은 체력에 따라 진행이 달라진다.",
+  "meta": {
+    "theme": "broadcast_incident",
+    "setting": "backup_channel_switch",
+    "conflict": "early_disadvantage",
+    "resolution": "comeback_win",
+    "activity": "outage_response",
+    "tone": "hype"
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "minDay": 5,
+    "cooldown": 9
+  },
+  "weight": 0.75,
+  "stockEffect": {
+    "ticker": "STRM",
+    "percentage": -7
+  },
+  "start": "decide",
+  "steps": {
+    "decide": {
+      "type": "choice",
+      "text": "스트림나래 서버 장애로 {member}의 방송이 갑자기 끊겼다. 다른 채널로 옮길 수도 있고, 오늘은 쉬어 갈 수도 있다.",
+      "choices": [
+        {
+          "text": "다른 채널로 임시 방송을 연다",
+          "effects": {
+            "hp": -4
+          },
+          "story": "{member}가 예비 채널을 열고 주소를 공유했다.",
+          "next": "temp_story"
+        },
+        {
+          "text": "복구될 때까지 공지만 올리고 쉰다",
+          "story": "{member}가 복구될 때까지 쉬기로 하고 공지를 올렸다.",
+          "next": "rest_story"
+        }
+      ]
+    },
+    "temp_story": {
+      "type": "story",
+      "text": "예비 채널에는 처음엔 몇 명뿐이었다. 주소가 퍼지면서 시청자가 하나둘 옮겨 오기 시작했다.",
+      "next": "stamina"
+    },
+    "stamina": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "minHp": 50
+          },
+          "next": "temp_full"
+        }
+      ],
+      "next": "temp_tired"
+    },
+    "temp_full": {
+      "type": "end",
+      "text": "예비 채널이 금세 평소만큼 북적였다. \"장애도 막지 못한 방송\"이라는 반응이 이어졌다.",
+      "effects": {
+        "fans": 100
+      },
+      "result": "success"
+    },
+    "temp_tired": {
+      "type": "end",
+      "text": "예비 채널로 옮겨 오긴 했지만 지친 탓에 방송을 오래 끌지는 못했다.",
+      "effects": {
+        "fans": 80
+      },
+      "result": "partial"
+    },
+    "rest_story": {
+      "type": "story",
+      "text": "공지를 올린 뒤 {member}는 장애가 복구되기를 기다리며 오랜만에 쉬었다.",
+      "next": "rest_end"
+    },
+    "rest_end": {
+      "type": "end",
+      "text": "뜻밖의 휴식으로 체력을 챙겼다. 복구 소식이 올라오자 팬들은 다음 방송을 기다리겠다고 했다.",
+      "effects": {
+        "hp": 6,
+        "fans": -30
+      },
+      "result": "neutral"
+    }
+  }
+}

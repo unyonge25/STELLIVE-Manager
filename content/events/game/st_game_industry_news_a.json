@@ -1,0 +1,99 @@
+{
+  "id": "st_game_industry_news_a",
+  "title": "픽셀게이트 행사 발표",
+  "category": "game",
+  "group": "news_game_industry",
+  "description": "게임 업계 호재 뉴스(ev_m01) 변형 A. 픽셀게이트의 대형 행사 발표가 난 날, 행사 소식을 정리해 소개할지 게임에 집중할지 고른다.",
+  "meta": {
+    "theme": "game_content",
+    "setting": "publisher_showcase_news",
+    "conflict": "audience_reaction",
+    "resolution": "steady_success",
+    "activity": "news_recap",
+    "tone": "hype"
+  },
+  "conditions": {
+    "activityCategories": [
+      "game"
+    ],
+    "minDay": 2,
+    "cooldown": 7
+  },
+  "weight": 0.75,
+  "stockEffect": {
+    "ticker": "PXLG",
+    "percentage": 6
+  },
+  "start": "news",
+  "steps": {
+    "news": {
+      "type": "story",
+      "text": "게임 퍼블리셔 픽셀게이트가 대형 게임 행사를 연다고 발표했다. {member}의 게임 방송 채팅창에도 \"행사 봤어요?\"라는 질문이 연달아 올라온다.",
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "질문이 계속 쌓인다. 어떻게 할까?",
+      "choices": [
+        {
+          "text": "행사 소식을 정리해 방송에서 소개한다",
+          "effects": {
+            "hp": -2
+          },
+          "story": "{member}가 게임을 잠시 멈추고 행사 발표 내용을 하나씩 짚기 시작했다.",
+          "next": "recap"
+        },
+        {
+          "text": "평소처럼 게임에 집중한다",
+          "story": "{member}가 \"소식은 나중에 정리해서 올릴게\"라며 게임으로 돌아갔다.",
+          "next": "focus_end"
+        }
+      ]
+    },
+    "recap": {
+      "type": "story",
+      "text": "발표 내용을 정리하던 중, 채팅창에서 기대작 이름이 하나 둘 오르내리기 시작했다.",
+      "next": "present"
+    },
+    "present": {
+      "type": "choice",
+      "text": "정리한 소식을 어떻게 보여 줄까?",
+      "choices": [
+        {
+          "text": "기대작 목록을 표로 만들어 하나씩 소개한다",
+          "story": "{member}가 기대작을 표로 정리해 화면에 띄웠다.",
+          "next": "recap_full"
+        },
+        {
+          "text": "핵심만 세 줄로 요약하고 게임으로 돌아간다",
+          "story": "{member}가 핵심 세 가지만 짚고 다시 게임을 켰다.",
+          "next": "recap_short"
+        }
+      ]
+    },
+    "recap_full": {
+      "type": "end",
+      "text": "정리된 기대작 표가 커뮤니티에 공유되며 \"행사 소식은 여기서 본다\"는 반응이 이어졌다.",
+      "effects": {
+        "fans": 120
+      },
+      "result": "success"
+    },
+    "recap_short": {
+      "type": "end",
+      "text": "깔끔한 요약 덕에 흐름은 끊기지 않았다. 다만 더 자세한 정리를 원하던 시청자들은 조금 아쉬워했다.",
+      "effects": {
+        "fans": 100
+      },
+      "result": "partial"
+    },
+    "focus_end": {
+      "type": "end",
+      "text": "게임에 집중한 방송은 평소처럼 즐겁게 흘러갔다. 행사 이야기는 다음 방송으로 넘어갔다.",
+      "effects": {
+        "fans": 50
+      },
+      "result": "neutral"
+    }
+  }
+}

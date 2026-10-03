@@ -1,0 +1,97 @@
+{
+  "id": "st_business_gear_review_b",
+  "title": "리뷰 일정과 방송 사이",
+  "category": "business",
+  "group": "news_gear_review",
+  "description": "장비 회사 신제품 리뷰 요청(ev_m03) 변형 B. 리뷰 방식을 먼저 정하고, 꼼꼼한 리뷰를 고르면 남은 체력에 따라 리뷰의 깊이가 달라진다.",
+  "meta": {
+    "theme": "sponsorship",
+    "setting": "review_schedule_desk",
+    "conflict": "time_pressure",
+    "resolution": "quiet_growth",
+    "activity": "product_review",
+    "tone": "warm"
+  },
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "minDay": 3,
+    "cooldown": 7
+  },
+  "weight": 0.75,
+  "stockEffect": {
+    "fixedChange": 800,
+    "ticker": "GEAR"
+  },
+  "start": "decide",
+  "steps": {
+    "decide": {
+      "type": "choice",
+      "text": "기어포지가 새 마이크와 컨트롤러 리뷰를 {member}에게 요청했다. 이번 주 방송 일정은 이미 빡빡하다.",
+      "choices": [
+        {
+          "text": "꼼꼼한 리뷰 방송을 한다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "{member}가 방송 시간 일부를 리뷰 코너로 비워 두었다.",
+          "next": "test_story"
+        },
+        {
+          "text": "제품만 받고 짧게 언급한다",
+          "story": "{member}가 다음 방송 오프닝에서 짧게 소개하기로 했다.",
+          "next": "mention_story"
+        }
+      ]
+    },
+    "test_story": {
+      "type": "story",
+      "text": "리뷰 코너가 시작되자, {member}가 새 마이크와 이전 마이크로 같은 문장을 번갈아 읽으며 소리를 비교해 들려줬다.",
+      "next": "stamina"
+    },
+    "stamina": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "minHp": 50
+          },
+          "next": "test_deep"
+        }
+      ],
+      "next": "test_quick"
+    },
+    "test_deep": {
+      "type": "end",
+      "text": "비교 청취까지 넣은 꼼꼼한 리뷰가 장비를 고민하던 시청자들에게 큰 도움이 됐다.",
+      "effects": {
+        "money": 90000,
+        "fans": 60
+      },
+      "result": "success"
+    },
+    "test_quick": {
+      "type": "end",
+      "text": "빡빡한 일정 탓에 비교 청취는 짧게 끝났다. 그래도 핵심은 충분히 전해졌다.",
+      "effects": {
+        "money": 90000,
+        "fans": 45
+      },
+      "result": "partial"
+    },
+    "mention_story": {
+      "type": "story",
+      "text": "오프닝에서 새 장비를 들어 보이자 채팅창에 \"그거 새로 나온 거죠?\"라는 반응이 올라왔다.",
+      "next": "mention_end"
+    },
+    "mention_end": {
+      "type": "end",
+      "text": "짧은 소개였지만 약속은 지켰다. 본 방송도 일정대로 이어졌다.",
+      "effects": {
+        "money": 40000
+      },
+      "result": "neutral"
+    }
+  }
+}

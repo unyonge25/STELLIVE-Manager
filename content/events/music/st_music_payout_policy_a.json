@@ -1,0 +1,117 @@
+{
+  "id": "st_music_payout_policy_a",
+  "title": "하모니웍스 정산 공지",
+  "category": "music",
+  "group": "news_music_payout",
+  "description": "음원 플랫폼 정산 정책 변경(ev_m02) 변형 A. 하모니웍스의 정산 정책 변경 공지를 본 날, 숏폼 편집과 정식 음원 작업 중 하나를 고른다.",
+  "meta": {
+    "theme": "music_production",
+    "setting": "payout_policy_notice",
+    "conflict": "budget_limit",
+    "resolution": "compromise",
+    "activity": "cover_planning",
+    "tone": "calm"
+  },
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "minDay": 4,
+    "cooldown": 8
+  },
+  "weight": 0.75,
+  "stockEffect": [
+    {
+      "ticker": "TUNE",
+      "percentage": -6
+    },
+    {
+      "ticker": "CLIP",
+      "percentage": 2
+    }
+  ],
+  "start": "notice",
+  "steps": {
+    "notice": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "녹음 준비 중, 음원 유통사 하모니웍스가 정산 정책을 바꾼다는 공지가 올라왔다. 업계 분위기가 어수선하다. {member}도 커버곡 일정을 다시 고민한다."
+        },
+        {
+          "text": "노래 방송을 앞두고, 음원 유통사 하모니웍스가 정산 정책을 바꾼다는 공지가 올라왔다. 업계 분위기가 어수선하다. {member}도 커버곡 일정을 다시 고민한다."
+        }
+      ],
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "커버곡 일정을 어떻게 할까?",
+      "choices": [
+        {
+          "text": "커버곡을 숏폼용으로 편집해 올린다",
+          "story": "{member}가 커버곡의 가장 좋은 구간을 골라 숏폼 플랫폼 클립트리용으로 다시 편집하기 시작했다.",
+          "next": "edit"
+        },
+        {
+          "text": "일정대로 정식 음원 작업을 계속한다",
+          "effects": {
+            "stats": {
+              "Vc": 1
+            },
+            "hp": -3
+          },
+          "story": "{member}가 공지와 상관없이 정해 둔 일정대로 정식 음원 작업을 이어 갔다.",
+          "next": "work_end"
+        }
+      ]
+    },
+    "edit": {
+      "type": "story",
+      "text": "편집할 구간을 고르다 보니 후보가 두 개로 좁혀졌다. 고음이 돋보이는 후렴과, 분위기가 좋은 도입부다.",
+      "next": "pick"
+    },
+    "pick": {
+      "type": "choice",
+      "text": "어느 구간을 쓸까?",
+      "choices": [
+        {
+          "text": "고음이 돋보이는 후렴 구간을 쓴다",
+          "story": "{member}가 후렴 구간을 15초로 다듬었다.",
+          "next": "edit_hit"
+        },
+        {
+          "text": "분위기가 좋은 도입부를 쓴다",
+          "story": "{member}가 도입부를 잔잔하게 잘라 냈다.",
+          "next": "edit_calm"
+        }
+      ]
+    },
+    "edit_hit": {
+      "type": "end",
+      "text": "후렴 숏폼이 빠르게 퍼지며 원곡을 찾아 듣는 사람도 늘었다.",
+      "effects": {
+        "fans": 140
+      },
+      "result": "success"
+    },
+    "edit_calm": {
+      "type": "end",
+      "text": "도입부 숏폼은 잔잔하게 사랑받았다. 크게 퍼지진 않았지만 꾸준히 재생됐다.",
+      "effects": {
+        "fans": 120
+      },
+      "result": "partial"
+    },
+    "work_end": {
+      "type": "end",
+      "text": "공지에 흔들리지 않고 작업을 이어 간 덕에 음원 완성도가 한층 올라갔다.",
+      "result": "neutral"
+    }
+  }
+}
