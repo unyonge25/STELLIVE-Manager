@@ -1,0 +1,167 @@
+{
+  "id": "st_member_kanna_1_a",
+  "title": "속삭이는 밤의 코너",
+  "category": "member",
+  "group": "personal_kanna_1",
+  "description": "잔잔한 ASMR 방송(pe_kanna_1) 변형 A. 그날 일정에 맞는 장면으로 ASMR이 시작되고, 장비를 갖출지 있는 장비로 진행할지 고른다.",
+  "meta": {
+    "theme": "broadcast_live",
+    "setting": "quiet_asmr_corner",
+    "conflict": "technical_trouble",
+    "resolution": "steady_success",
+    "activity": "asmr",
+    "tone": "calm"
+  },
+  "memberId": "kanna",
+  "conditions": {
+    "activityCategories": [
+      "talk",
+      "broadcast"
+    ],
+    "cooldown": 5
+  },
+  "weight": 1.5,
+  "start": "quiet",
+  "steps": {
+    "quiet": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activityCategories": [
+              "game"
+            ]
+          },
+          "text": "오늘 게임을 마친 {member}가 방송을 끄지 않고 조명을 낮췄다. 남은 시간은 조용한 ASMR 코너로 꾸며 보고 싶다고 한다."
+        },
+        {
+          "when": {
+            "activity": [
+              "sing"
+            ]
+          },
+          "text": "노래 방송을 마친 {member}가 목을 쉬게 할 겸 조용한 ASMR 코너를 해 보고 싶다고 한다."
+        },
+        {
+          "text": "{member}가 오늘은 조용한 ASMR 방송을 해 보고 싶다고 한다. 평소의 높은 텐션과는 다른 모습에 채팅창이 숨을 죽였다."
+        }
+      ],
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "장비를 어떻게 할까?",
+      "choices": [
+        {
+          "text": "장비를 제대로 갖추고 진행한다",
+          "conditions": {
+            "minMoney": 60000
+          },
+          "effects": {
+            "money": -60000,
+            "hp": 2
+          },
+          "story": "{member}가 전용 마이크를 새로 들이고 소리 테스트를 꼼꼼히 했다.",
+          "next": "asmr_check"
+        },
+        {
+          "text": "있는 장비로 편안하게 진행한다",
+          "story": "{member}가 지금 쓰는 마이크로 조용히 진행하기로 했다.",
+          "next": "simple_choice"
+        }
+      ]
+    },
+    "asmr_check": {
+      "type": "check",
+      "text": "새 마이크가 작은 소리까지 잡아낸다. 그만큼 잡음도 잘 들린다. 차분하게 소리를 다뤄야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "calm": 10
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 잡음까지 소리 연출로 바꿔 버렸다. 채팅창이 \"잠들 뻔했다\"로 가득 찼다.",
+          "effects": {
+            "fans": 110,
+            "fame": 1
+          },
+          "next": "asmr_hit"
+        },
+        "success": {
+          "text": "잡음을 잡아내고 깨끗한 소리로 코너를 이어 갔다.",
+          "next": "asmr_hit"
+        },
+        "partial": {
+          "text": "소리는 좋았지만 중간중간 잡음이 섞였다.",
+          "next": "asmr_mid"
+        },
+        "fail": {
+          "text": "새 장비 설정이 꼬여 소리가 자꾸 끊겼다.",
+          "next": "asmr_glitch"
+        }
+      }
+    },
+    "asmr_hit": {
+      "type": "end",
+      "text": "잔잔한 ASMR이 \"자기 전에 틀어 두는 방송\"으로 저장됐다. 새 장비를 들인 보람이 있었다.",
+      "effects": {
+        "fans": 190,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "asmr_mid": {
+      "type": "end",
+      "text": "잡음이 조금 아쉬웠지만 분위기는 충분히 편안했다. 다음엔 장비 설정을 더 다듬기로 했다.",
+      "effects": {
+        "fans": 130
+      },
+      "result": "partial"
+    },
+    "asmr_glitch": {
+      "type": "end",
+      "text": "끊기는 소리 때문에 코너를 일찍 마쳤다. {member}는 장비 설정을 고쳐 다시 해 보겠다고 했고, 팬들은 다음 ASMR을 기다리겠다고 했다.",
+      "effects": {
+        "fans": 70
+      },
+      "result": "fail"
+    },
+    "simple_choice": {
+      "type": "choice",
+      "text": "있는 장비로 할 수 있는 걸 골라 보자.",
+      "choices": [
+        {
+          "text": "속삭이는 잡담 위주로 진행한다",
+          "story": "{member}가 마이크에 가까이 다가가 오늘 있었던 일을 조용히 이야기했다.",
+          "next": "simple_talk"
+        },
+        {
+          "text": "빗소리를 틀어 두고 조용히 책을 읽는다",
+          "story": "{member}가 빗소리를 낮게 틀고 짧은 글을 천천히 읽어 내려갔다.",
+          "next": "simple_rain"
+        }
+      ]
+    },
+    "simple_talk": {
+      "type": "end",
+      "text": "조용한 잡담이 편안했다는 반응이 이어졌다. 장비 없이도 분위기는 충분했다.",
+      "effects": {
+        "fans": 110,
+        "hp": 3
+      },
+      "result": "success"
+    },
+    "simple_rain": {
+      "type": "end",
+      "text": "빗소리와 낭독이 잔잔했지만, 몇몇 팬은 빗소리가 조금 컸다고 했다. 다음엔 소리 크기를 줄이기로 했다.",
+      "effects": {
+        "fans": 100,
+        "hp": 3
+      },
+      "result": "partial"
+    }
+  }
+}

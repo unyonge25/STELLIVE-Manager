@@ -1,0 +1,123 @@
+{
+  "id": "st_member_riko_2_b",
+  "title": "마지막 곡 고르기",
+  "category": "member",
+  "group": "personal_riko_2",
+  "description": "방송 종료곡 한 곡만 더(pe_riko_2) 변형 B. 마지막 곡 여부를 먼저 정하고, 상황극처럼 곡을 소개한 뒤 고음 무대에 도전한다.",
+  "meta": {
+    "theme": "fan_event",
+    "setting": "last_song_roleplay_intro",
+    "conflict": "nervousness",
+    "resolution": "audience_help",
+    "activity": "ending_song",
+    "tone": "warm"
+  },
+  "memberId": "riko",
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "cooldown": 4
+  },
+  "weight": 1.5,
+  "start": "plan",
+  "steps": {
+    "plan": {
+      "type": "choice",
+      "text": "방송 종료 인사를 하려는데, 채팅창이 \"한 곡만 더\"로 가득 찼다. {member}가 잠깐 고민한다.",
+      "choices": [
+        {
+          "text": "고음 가득한 곡으로 마무리한다",
+          "effects": {
+            "hp": -4
+          },
+          "story": "{member}가 \"그럼 제대로 간다\"며 곡 소개를 상황극처럼 시작했다.",
+          "next": "intro_story"
+        },
+        {
+          "text": "다음 방송을 기약하며 인사한다",
+          "story": "{member}가 다음 방송의 종료곡을 미리 예고하기로 했다.",
+          "next": "bye_story"
+        }
+      ]
+    },
+    "intro_story": {
+      "type": "story",
+      "text": "상황극 같은 곡 소개에 채팅창이 한껏 들떴다. 기대가 커진 만큼 첫 소절 앞에서 {member}가 숨을 한 번 골랐다.",
+      "next": "song_check"
+    },
+    "song_check": {
+      "type": "check",
+      "text": "기대가 잔뜩 커진 채 첫 소절이 시작된다. 고음 가득한 곡을 끝까지 소화해야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 76,
+        "traitBonus": {
+          "highTension": 10,
+          "roleplay": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "곡 소개의 상황극이 노래로 그대로 이어졌다. 마지막 고음까지 완벽했다.",
+          "effects": {
+            "fans": 100,
+            "fame": 1
+          },
+          "next": "song_hit"
+        },
+        "success": {
+          "text": "긴장을 이겨 내고 고음까지 시원하게 불렀다.",
+          "next": "song_hit"
+        },
+        "partial": {
+          "text": "곡은 끝까지 불렀지만 긴장 탓에 첫 소절이 조금 떨렸다.",
+          "next": "song_mid"
+        },
+        "fail": {
+          "text": "기대가 너무 컸던 탓인지 고음 구간에서 박자를 놓쳤다.",
+          "next": "song_miss"
+        }
+      }
+    },
+    "song_hit": {
+      "type": "end",
+      "text": "상황극 소개부터 고음까지 이어진 종료곡이 오늘의 하이라이트가 됐다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "song_mid": {
+      "type": "end",
+      "text": "떨린 첫 소절도 귀여웠다는 반응이 많았다. 다음엔 소개를 조금 짧게 하기로 했다.",
+      "effects": {
+        "fans": 100
+      },
+      "result": "partial"
+    },
+    "song_miss": {
+      "type": "end",
+      "text": "박자를 놓친 장면에 {member}가 먼저 웃음을 터뜨렸다. 팬들은 \"다음 종료곡도 기대한다\"며 인사를 남겼다.",
+      "effects": {
+        "fans": 50
+      },
+      "result": "fail"
+    },
+    "bye_story": {
+      "type": "story",
+      "text": "다음 방송 종료곡 예고가 올라가자 채팅창에 곡 추천이 쏟아졌다.",
+      "next": "bye_end"
+    },
+    "bye_end": {
+      "type": "end",
+      "text": "예고 하나로 다음 방송을 기다리는 사람이 늘었다. 목도 아낀 마무리였다.",
+      "effects": {
+        "fans": 60,
+        "hp": 2
+      },
+      "result": "success"
+    }
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "id": "st_member_riko_2_a",
+  "title": "종료곡 앵콜 요청",
+  "category": "member",
+  "group": "personal_riko_2",
+  "description": "방송 종료곡 한 곡만 더(pe_riko_2) 변형 A. 종료 인사 직전 쏟아진 앵콜 요청에 고음 곡으로 답할지 다음을 기약할지 고른다.",
+  "meta": {
+    "theme": "music_live",
+    "setting": "ending_song_encore",
+    "conflict": "audience_reaction",
+    "resolution": "clutch_moment",
+    "activity": "ending_song",
+    "tone": "hype"
+  },
+  "memberId": "riko",
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "cooldown": 4
+  },
+  "weight": 1.5,
+  "start": "ending",
+  "steps": {
+    "ending": {
+      "type": "story",
+      "text": "{member}의 방송이 끝날 무렵, 종료곡을 한 곡 더 불러 달라는 요청이 쏟아진다. 오늘 방송에서 목을 꽤 썼지만 표정은 아직 밝다.",
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "마지막 곡을 어떻게 할까?",
+      "choices": [
+        {
+          "text": "고음 가득한 곡으로 마무리한다",
+          "effects": {
+            "hp": -4
+          },
+          "story": "{member}가 고음이 가득한 곡을 고르자 채팅창이 환호로 뒤덮였다.",
+          "next": "encore_check"
+        },
+        {
+          "text": "다음 방송을 기약하며 인사한다",
+          "story": "{member}가 \"다음 방송에서 꼭 부를게\"라며 인사를 시작했다.",
+          "next": "bye_end"
+        }
+      ]
+    },
+    "encore_check": {
+      "type": "check",
+      "text": "곡의 마지막 고음 구간이 다가온다. 오늘 쓴 목으로 끝까지 올라갈 수 있을까?",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 76,
+        "traitBonus": {
+          "highTension": 10,
+          "roleplay": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "마지막 고음이 오늘 방송 중 가장 깨끗하게 뻗었다. 채팅창이 멈춘 듯 조용하다가 폭발했다.",
+          "effects": {
+            "fans": 100,
+            "fame": 1
+          },
+          "next": "encore_hit"
+        },
+        "success": {
+          "text": "고음을 끝까지 지켜 냈다. 종료곡다운 마무리였다.",
+          "next": "encore_hit"
+        },
+        "partial": {
+          "text": "고음은 닿았지만 끝이 살짝 흔들렸다. 그래도 분위기는 최고였다.",
+          "next": "encore_mid"
+        },
+        "fail": {
+          "text": "마지막 고음에서 목소리가 갈라졌다. {member}가 웃으며 \"오늘은 여기까지\"라고 했다.",
+          "next": "encore_crack"
+        }
+      }
+    },
+    "encore_hit": {
+      "type": "end",
+      "text": "종료곡 앵콜 장면이 클립으로 남았다. \"이 맛에 끝까지 본다\"는 반응이 이어졌다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "encore_mid": {
+      "type": "end",
+      "text": "흔들린 끝음까지 즐거웠다는 반응이었다. 다만 목을 많이 쓴 날이라 다음 방송은 조금 조심하기로 했다.",
+      "effects": {
+        "fans": 100
+      },
+      "result": "partial"
+    },
+    "encore_crack": {
+      "type": "end",
+      "text": "갈라진 고음은 작은 웃음거리가 됐다. {member}는 다음 방송 종료곡으로 같은 곡을 다시 부르겠다고 약속했다.",
+      "effects": {
+        "fans": 50
+      },
+      "result": "fail"
+    },
+    "bye_end": {
+      "type": "end",
+      "text": "다음을 기약하는 인사에 팬들이 \"다음엔 두 곡\"이라는 채팅으로 답했다. 목도 아끼고 기대도 남겼다.",
+      "effects": {
+        "fans": 60,
+        "hp": 2
+      },
+      "result": "success"
+    }
+  }
+}

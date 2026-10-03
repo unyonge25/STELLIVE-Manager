@@ -1,0 +1,134 @@
+{
+  "id": "st_member_nana_1_b",
+  "title": "해설 투어 가이드",
+  "category": "member",
+  "group": "personal_nana_1",
+  "description": "오픈월드 탐방(pe_nana_1) 변형 B. 방송 방식을 먼저 정하고, 시청자가 고른 경로를 따라 맵 해설 투어를 진행한다.",
+  "meta": {
+    "theme": "fan_event",
+    "setting": "map_guided_tour",
+    "conflict": "audience_reaction",
+    "resolution": "teamwork",
+    "activity": "map_exploration",
+    "tone": "hype"
+  },
+  "memberId": "nana",
+  "conditions": {
+    "activityCategories": [
+      "game"
+    ],
+    "cooldown": 4
+  },
+  "weight": 1.5,
+  "start": "plan",
+  "steps": {
+    "plan": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "openWorld"
+            ]
+          },
+          "text": "오픈월드 방송, {member}가 오늘은 맵 해설 투어를 해 보겠다고 한다. 채팅창에 가 보고 싶은 장소 요청이 쏟아진다."
+        },
+        {
+          "text": "게임 방송 중, {member}가 오늘 게임의 맵을 해설 투어처럼 돌아보겠다고 한다. 채팅창에 가 보고 싶은 장소 요청이 쏟아진다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "숨은 명소를 찾아 해설 방송을 한다",
+          "effects": {
+            "hp": -4
+          },
+          "story": "{member}가 요청 중 세 곳을 골라 투어 경로를 짰다.",
+          "next": "tour_story"
+        },
+        {
+          "text": "편하게 돌아다니며 수다를 떤다",
+          "story": "{member}가 경로 없이 편하게 걸으며 수다를 떨기로 했다.",
+          "next": "chat_story"
+        }
+      ]
+    },
+    "tour_story": {
+      "type": "story",
+      "text": "두 번째 장소로 가는 길, 시청자들이 서로 다른 지름길을 알려 주는 바람에 채팅창이 시끌벅적해졌다.",
+      "next": "tour_check"
+    },
+    "tour_check": {
+      "type": "check",
+      "text": "엇갈리는 지름길 정보를 정리하면서 투어 해설을 이어 가야 한다.",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 74,
+        "traitBonus": {
+          "openWorld": 15,
+          "daytime": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 지름길마다 짧은 해설을 붙여 투어 코스로 만들어 버렸다. 채팅창이 신났다.",
+          "effects": {
+            "fans": 110,
+            "fame": 1
+          },
+          "next": "tour_great"
+        },
+        "success": {
+          "text": "지름길 정보를 하나로 정리해 세 장소를 모두 돌았다.",
+          "next": "tour_great"
+        },
+        "partial": {
+          "text": "두 장소는 돌았지만 마지막 장소는 시간이 모자라 다음으로 미뤘다.",
+          "next": "tour_two"
+        },
+        "fail": {
+          "text": "지름길을 따라가다 길을 잃었다. 투어는 첫 장소에서 멈췄다.",
+          "next": "tour_lost"
+        }
+      }
+    },
+    "tour_great": {
+      "type": "end",
+      "text": "시청자와 함께 만든 해설 투어가 \"다음 투어도 예약\"이라는 반응을 얻었다.",
+      "effects": {
+        "fans": 170,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "tour_two": {
+      "type": "end",
+      "text": "세 번째 장소는 못 갔지만, 두 장소의 해설은 알찼다. 다음 투어의 첫 장소가 정해졌다.",
+      "effects": {
+        "fans": 110
+      },
+      "result": "partial"
+    },
+    "tour_lost": {
+      "type": "end",
+      "text": "길을 잃은 장면이 오히려 웃음을 줬다. 팬들은 다음 투어 때는 지도를 같이 보겠다고 했다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "chat_story": {
+      "type": "story",
+      "text": "경로 없이 걷다 보니 시청자가 알려 준 소소한 장소들을 하나씩 들르게 됐다.",
+      "next": "chat_end"
+    },
+    "chat_end": {
+      "type": "end",
+      "text": "편하게 걸으며 나눈 이야기가 방송을 따뜻하게 채웠다.",
+      "effects": {
+        "fans": 100
+      },
+      "result": "success"
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "id": "st_member_rin_2_b",
+  "title": "메모장 위의 경우의 수",
+  "category": "member",
+  "group": "personal_rin_2",
+  "description": "퍼즐게임 공략 방송(pe_rin_2) 변형 B. 풀이 방식을 먼저 정하고, 메모를 정리하다 발견한 함정 단서를 넘어선다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "puzzle_note_logic",
+    "conflict": "miscommunication",
+    "resolution": "audience_help",
+    "activity": "puzzle_solving",
+    "tone": "warm"
+  },
+  "memberId": "rin",
+  "conditions": {
+    "activityCategories": [
+      "game"
+    ],
+    "cooldown": 5
+  },
+  "weight": 1.5,
+  "start": "plan",
+  "steps": {
+    "plan": {
+      "type": "choice",
+      "text": "게임 방송 중 막히기로 유명한 퍼즐 구간에 도착했다. {member}가 풀이 방식을 먼저 정하겠다고 한다.",
+      "choices": [
+        {
+          "text": "힌트 없이 끝까지 푼다",
+          "effects": {
+            "hp": -5
+          },
+          "story": "{member}가 힌트 기능을 끄고 메모장을 화면 옆에 띄웠다.",
+          "next": "note_story"
+        },
+        {
+          "text": "시청자와 함께 풀이를 토론한다",
+          "story": "{member}가 채팅창에 추리를 모아 함께 풀어 보자고 했다.",
+          "next": "discuss_story"
+        }
+      ]
+    },
+    "note_story": {
+      "type": "story",
+      "text": "메모를 정리하던 중, 처음부터 의심하지 않았던 단서 하나가 함정이라는 걸 깨달았다. 지금까지의 풀이를 다시 봐야 한다.",
+      "next": "logic_check"
+    },
+    "logic_check": {
+      "type": "check",
+      "text": "함정 단서를 빼고 남은 정보만으로 다시 풀어야 한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 76,
+        "traitBonus": {
+          "brain": 15,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "함정을 뺀 순간 모든 단서가 한 줄로 이어졌다. {member}가 한 번에 정답을 입력했다.",
+          "effects": {
+            "fans": 100,
+            "fame": 2
+          },
+          "next": "logic_done"
+        },
+        "success": {
+          "text": "메모를 다시 정리한 끝에 정답을 찾아냈다.",
+          "next": "logic_done"
+        },
+        "partial": {
+          "text": "정답 근처까지 갔지만 마지막 조합은 몇 번 시도해서 맞혔다.",
+          "next": "logic_close"
+        },
+        "fail": {
+          "text": "함정 단서를 빼자 오히려 정보가 모자랐다. 오늘은 여기까지 하기로 했다.",
+          "next": "logic_pause"
+        }
+      }
+    },
+    "logic_done": {
+      "type": "end",
+      "text": "함정을 짚어 낸 장면이 \"논리 공략의 정석\"이라는 말과 함께 공유됐다.",
+      "effects": {
+        "fans": 160,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    },
+    "logic_close": {
+      "type": "end",
+      "text": "깔끔하진 않았지만 정답에 닿았다. 메모장 화면을 캡처해 간 팬들도 있었다.",
+      "effects": {
+        "fans": 110,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "partial"
+    },
+    "logic_pause": {
+      "type": "end",
+      "text": "{member}가 메모를 저장하며 \"다음 방송에 이어서\"라고 했다. 팬들은 각자 추리를 정리해 두겠다고 답했다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "discuss_story": {
+      "type": "story",
+      "text": "채팅 추리가 세 갈래로 나뉘자, {member}가 각 의견을 메모장에 나란히 정리했다.",
+      "next": "discuss_end"
+    },
+    "discuss_end": {
+      "type": "end",
+      "text": "시청자 추리를 하나씩 검증해 정답을 찾았다. 맞힌 시청자의 닉네임이 메모장 맨 위에 적혔다.",
+      "effects": {
+        "fans": 120
+      },
+      "result": "success"
+    }
+  }
+}

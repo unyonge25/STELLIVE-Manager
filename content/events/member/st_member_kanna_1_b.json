@@ -1,0 +1,155 @@
+{
+  "id": "st_member_kanna_1_b",
+  "title": "장비 견적과 마이크 테스트",
+  "category": "member",
+  "group": "personal_kanna_1",
+  "description": "잔잔한 ASMR 방송(pe_kanna_1) 변형 B. 장비 방식을 먼저 정하고, 판정 또는 남은 체력에 따라 ASMR 코너의 마무리가 갈린다.",
+  "meta": {
+    "theme": "content_production",
+    "setting": "asmr_mic_test",
+    "conflict": "budget_limit",
+    "resolution": "compromise",
+    "activity": "asmr",
+    "tone": "warm"
+  },
+  "memberId": "kanna",
+  "conditions": {
+    "activityCategories": [
+      "talk",
+      "broadcast"
+    ],
+    "cooldown": 5
+  },
+  "weight": 1.5,
+  "start": "plan",
+  "steps": {
+    "plan": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "activityCategories": [
+              "game"
+            ]
+          },
+          "text": "게임 방송 후반, {member}가 남은 시간에 조용한 ASMR 코너를 해 보고 싶다고 했다. 장비 견적서를 보니 전용 마이크 가격이 만만치 않다."
+        },
+        {
+          "text": "{member}가 오늘은 조용한 ASMR 방송을 해 보고 싶다고 했다. 장비 견적서를 보니 전용 마이크 가격이 만만치 않다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "장비를 제대로 갖추고 진행한다",
+          "conditions": {
+            "minMoney": 60000
+          },
+          "effects": {
+            "money": -60000,
+            "hp": 2
+          },
+          "story": "{member}가 견적서 맨 위의 마이크를 골랐다. 완벽주의답게 설치 위치까지 몇 번이나 다시 잡았다.",
+          "next": "mic_check"
+        },
+        {
+          "text": "있는 장비로 편안하게 진행한다",
+          "story": "{member}가 지금 있는 마이크의 위치만 바꿔 진행하기로 했다.",
+          "next": "simple_story"
+        }
+      ]
+    },
+    "mic_check": {
+      "type": "check",
+      "text": "첫 소리 테스트. 작은 소리까지 깔끔하게 담길까?",
+      "check": {
+        "stat": "Bs",
+        "difficulty": 72,
+        "traitBonus": {
+          "calm": 10
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "첫 테스트부터 소리가 완벽하게 잡혔다. {member}가 만족스러운 듯 고개를 끄덕였다.",
+          "effects": {
+            "fans": 110,
+            "fame": 1
+          },
+          "next": "mic_hit"
+        },
+        "success": {
+          "text": "몇 번의 조정 끝에 깨끗한 소리를 찾아냈다.",
+          "next": "mic_hit"
+        },
+        "partial": {
+          "text": "소리는 좋아졌지만 미세한 잡음 하나는 끝내 잡지 못했다.",
+          "next": "mic_mid"
+        },
+        "fail": {
+          "text": "설정이 맞지 않아 소리가 계속 갈라졌다.",
+          "next": "mic_fail"
+        }
+      }
+    },
+    "mic_hit": {
+      "type": "end",
+      "text": "정성 들인 소리 테스트의 결과가 그대로 전해졌다. \"장비 바꾼 보람이 들린다\"는 반응이 많았다.",
+      "effects": {
+        "fans": 190,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "mic_mid": {
+      "type": "end",
+      "text": "작은 잡음이 신경 쓰였지만 분위기는 편안했다. {member}는 다음엔 설정을 끝까지 맞춰 오겠다고 했다.",
+      "effects": {
+        "fans": 130
+      },
+      "result": "partial"
+    },
+    "mic_fail": {
+      "type": "end",
+      "text": "소리 문제로 코너를 짧게 마쳤다. 그래도 팬들은 \"다음 ASMR은 완벽할 것\"이라며 응원했다.",
+      "effects": {
+        "fans": 70
+      },
+      "result": "fail"
+    },
+    "simple_story": {
+      "type": "story",
+      "text": "위치만 바꾼 마이크로도 소리가 한결 부드러워졌다. {member}가 조용히 코너를 시작했다.",
+      "next": "stamina"
+    },
+    "stamina": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "minHp": 50
+          },
+          "next": "simple_calm"
+        }
+      ],
+      "next": "simple_sleepy"
+    },
+    "simple_calm": {
+      "type": "end",
+      "text": "있는 장비로 진행한 ASMR이 의외로 편안했다는 반응이었다. {member}도 함께 차분해졌다.",
+      "effects": {
+        "fans": 110,
+        "hp": 3
+      },
+      "result": "success"
+    },
+    "simple_sleepy": {
+      "type": "end",
+      "text": "편안한 분위기 속에 {member}의 목소리가 점점 졸린 듯 느려졌다. 팬들은 \"같이 잠들 뻔했다\"며 웃었다.",
+      "effects": {
+        "fans": 100,
+        "hp": 3
+      },
+      "result": "partial"
+    }
+  }
+}

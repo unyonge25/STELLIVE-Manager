@@ -1,0 +1,172 @@
+{
+  "id": "st_member_riko_1_a",
+  "title": "방송 종료 시간이 미뤄진다",
+  "category": "member",
+  "group": "personal_riko_1",
+  "description": "랭크 게임 과몰입(pe_riko_1) 변형 A. 목표 랭크(랭크가 없는 게임은 목표 기록)에 푹 빠져 종료 시간을 미루는 장면에서, 끝까지 달리게 둘지 정한다.",
+  "meta": {
+    "theme": "game_content",
+    "setting": "ranked_overtime_stream",
+    "conflict": "schedule_clash",
+    "resolution": "risky_gamble",
+    "activity": "ranked_grind",
+    "tone": "tense"
+  },
+  "memberId": "riko",
+  "conditions": {
+    "activityCategories": [
+      "fps",
+      "game"
+    ],
+    "cooldown": 4
+  },
+  "weight": 1.5,
+  "start": "overtime",
+  "steps": {
+    "overtime": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "fps",
+              "fighting",
+              "rhythm"
+            ]
+          },
+          "text": "{member}가 랭크 게임에 푹 빠져 방송 종료 시간을 계속 미루고 있다. 목표 랭크까지 남은 점수가 아주 조금이다."
+        },
+        {
+          "text": "{member}가 오늘 게임의 최고 기록 도전에 푹 빠져 방송 종료 시간을 계속 미루고 있다. 목표 기록까지 아주 조금 남았다."
+        }
+      ],
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "예정된 종료 시간이 이미 30분 지났다.",
+      "choices": [
+        {
+          "text": "목표 랭크까지 달리게 둔다",
+          "conditions": {
+            "activity": [
+              "fps",
+              "fighting",
+              "rhythm"
+            ]
+          },
+          "effects": {
+            "hp": -10
+          },
+          "story": "\"딱 한 판만\"이 다섯 판째로 이어졌다.",
+          "next": "push_check"
+        },
+        {
+          "text": "목표 기록을 깰 때까지 달리게 둔다",
+          "conditions": {
+            "activity": [
+              "horror",
+              "indie",
+              "openWorld"
+            ]
+          },
+          "effects": {
+            "hp": -10
+          },
+          "story": "\"딱 한 번만\"이 다섯 번째 도전으로 이어졌다.",
+          "next": "push_check"
+        },
+        {
+          "text": "약속한 시간에 끝내도록 한다",
+          "story": "매니저 메시지를 본 {member}가 아쉬운 얼굴로 마지막 인사를 시작했다.",
+          "next": "stop_end"
+        }
+      ]
+    },
+    "push_check": {
+      "type": "check",
+      "text": "집중력은 높지만 피로도 쌓였다. 마지막 고비를 넘을 수 있을까?",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 80,
+        "traitBonus": {
+          "fps": 10,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "연승이 이어지며 목표를 단숨에 넘어 그 위까지 올라갔다. 채팅창이 축제가 됐다.",
+          "effects": {
+            "fans": 140,
+            "fame": 2,
+            "stats": {
+              "Ga": 1
+            }
+          },
+          "next": "push_hit"
+        },
+        "success": {
+          "text": "마지막 판에서 목표를 달성했다. {member}가 의자에 기대 크게 웃었다.",
+          "next": "push_hit"
+        },
+        "partial": {
+          "text": "목표 바로 앞에서 멈췄다. 한 판만 더 하면 될 것 같은데 몸이 먼저 지쳤다.",
+          "next": "push_near"
+        },
+        "fail": {
+          "text": "연패가 이어지며 점수가 오히려 깎였다.",
+          "next": "push_down"
+        }
+      }
+    },
+    "push_hit": {
+      "type": "end",
+      "text": "목표 달성 장면이 클립으로 퍼졌다. 대신 {member}는 오늘 밤 회복이 더딜 것이다.",
+      "effects": {
+        "fans": 180,
+        "stats": {
+          "Ga": 1
+        },
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "success"
+    },
+    "push_near": {
+      "type": "end",
+      "text": "목표는 다음으로 미뤘지만 실력이 오른 건 분명했다. 늦어진 종료 시간만큼 피로가 남았다.",
+      "effects": {
+        "fans": 120,
+        "stats": {
+          "Ga": 1
+        },
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "partial"
+    },
+    "push_down": {
+      "type": "end",
+      "text": "깎인 점수를 보며 {member}가 웃음을 터뜨렸다. 다음 방송 목표를 \"잃은 점수 되찾기\"로 정했고, 팬들은 그날을 기다리겠다고 했다.",
+      "effects": {
+        "fans": 70,
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "fail"
+    },
+    "stop_end": {
+      "type": "end",
+      "text": "약속한 시간에 끝내자 다음 날 컨디션이 가벼웠다. \"끊을 때 끊는 것도 실력\"이라는 채팅이 남았다.",
+      "effects": {
+        "fans": 80,
+        "hp": 3
+      },
+      "result": "success"
+    }
+  }
+}

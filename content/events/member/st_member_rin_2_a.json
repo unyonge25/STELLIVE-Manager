@@ -1,0 +1,134 @@
+{
+  "id": "st_member_rin_2_a",
+  "title": "아무도 못 푼 퍼즐 구간",
+  "category": "member",
+  "group": "personal_rin_2",
+  "description": "퍼즐게임 공략 방송(pe_rin_2) 변형 A. 그날 게임 속 어렵기로 유명한 퍼즐 구간 앞에서, 혼자 풀지 시청자와 토론할지 고른다.",
+  "meta": {
+    "theme": "game_content",
+    "setting": "notorious_puzzle_section",
+    "conflict": "creative_block",
+    "resolution": "quiet_growth",
+    "activity": "puzzle_solving",
+    "tone": "calm"
+  },
+  "memberId": "rin",
+  "conditions": {
+    "activityCategories": [
+      "game"
+    ],
+    "cooldown": 5
+  },
+  "weight": 1.5,
+  "start": "wall",
+  "steps": {
+    "wall": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "horror"
+            ]
+          },
+          "text": "공포게임 도중, 문을 열려면 기호 퍼즐을 풀어야 하는 방이 나왔다. 공략 영상이 거의 없을 만큼 어렵기로 유명한 구간이다. {member}가 차분하게 기호를 하나씩 적기 시작했다."
+        },
+        {
+          "text": "오늘 게임 도중, 어렵기로 유명한 퍼즐 구간이 나왔다. 공략을 찾아봐도 설명이 제각각이다. {member}가 논리적으로 풀어 보겠다며 화면을 멈췄다."
+        }
+      ],
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "어떻게 풀어 볼까?",
+      "choices": [
+        {
+          "text": "힌트 없이 끝까지 푼다",
+          "effects": {
+            "hp": -5
+          },
+          "story": "{member}가 메모장을 열고 가능한 경우의 수를 하나씩 지워 나갔다.",
+          "next": "solve_check"
+        },
+        {
+          "text": "시청자와 함께 풀이를 토론한다",
+          "story": "{member}가 채팅창에 각자의 추리를 올려 달라고 부탁했다.",
+          "next": "discuss_end"
+        }
+      ]
+    },
+    "solve_check": {
+      "type": "check",
+      "text": "경우의 수가 두 개로 좁혀졌다. 남은 단서 하나를 어떻게 읽느냐가 정답을 가른다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 76,
+        "traitBonus": {
+          "brain": 15,
+          "calm": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 남은 단서를 거꾸로 읽어 정답을 맞혔다. 공략 영상보다 깔끔한 풀이였다.",
+          "effects": {
+            "fans": 100,
+            "fame": 2
+          },
+          "next": "solve_clean"
+        },
+        "success": {
+          "text": "하나씩 지워 간 끝에 정답이 나왔다. 문이 열리는 소리에 채팅창이 박수를 보냈다.",
+          "next": "solve_clean"
+        },
+        "partial": {
+          "text": "정답은 맞혔지만 마지막 단계는 반쯤 감으로 골랐다.",
+          "next": "solve_lucky"
+        },
+        "fail": {
+          "text": "두 개 중 틀린 쪽을 골라 처음부터 다시 해야 했다.",
+          "next": "solve_retry"
+        }
+      }
+    },
+    "solve_clean": {
+      "type": "end",
+      "text": "논리 풀이 장면이 \"이 구간 공략은 이걸로 본다\"는 반응과 함께 퍼졌다.",
+      "effects": {
+        "fans": 160,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    },
+    "solve_lucky": {
+      "type": "end",
+      "text": "통과는 했지만 {member}가 \"반은 운이었다\"고 솔직하게 말했다. 그 솔직함을 좋아하는 팬이 많았다.",
+      "effects": {
+        "fans": 110,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "partial"
+    },
+    "solve_retry": {
+      "type": "end",
+      "text": "다시 처음부터 풀어야 했지만, 틀린 이유를 차분히 짚는 모습이 오히려 공부가 된다는 반응이었다. 다음 방송에서 이어 풀기로 했다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "fail"
+    },
+    "discuss_end": {
+      "type": "end",
+      "text": "채팅창의 추리가 하나씩 모이며 다 같이 정답을 찾아냈다. \"같이 푸는 재미\"라는 반응이 이어졌다.",
+      "effects": {
+        "fans": 120
+      },
+      "result": "success"
+    }
+  }
+}

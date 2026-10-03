@@ -83,8 +83,8 @@ test('샘플은 서로 다른 유형(게임 대회 / 음악 / 방송 돌발 / �
 });
 
 // 판정(check) 노드 없이 만든 스토리 이벤트 허용 목록.
-// 원본 1-step 이벤트에 판정이 없어(pe_hina_1) 그 성격을 유지한 변형만 넣는다. 결말 2종류 이상 규칙은 그대로 적용된다.
-const NO_CHECK_ALLOWED = ['st_member_hina_1_a', 'st_member_hina_1_b'];
+// 원본 1-step 이벤트에 판정이 없어(pe_hina_1, pe_tabi_1) 그 성격을 유지한 변형만 넣는다. 결말 2종류 이상 규칙은 그대로 적용된다.
+const NO_CHECK_ALLOWED = ['st_member_hina_1_a', 'st_member_hina_1_b', 'st_member_tabi_1_a', 'st_member_tabi_1_b'];
 
 test('판정이 있는 샘플은 부분성공 결과를 가진 판정을 포함하고, 판정 없는 샘플은 허용 목록에만 있으며, 모두 결말이 2종류 이상이다', () => {
   const problems = [];

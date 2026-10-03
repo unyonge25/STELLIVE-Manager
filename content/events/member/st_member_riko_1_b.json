@@ -1,0 +1,189 @@
+{
+  "id": "st_member_riko_1_b",
+  "title": "과몰입 경보",
+  "category": "member",
+  "group": "personal_riko_1",
+  "description": "랭크 게임 과몰입(pe_riko_1) 변형 B. 남은 체력에 따라 첫 장면이 갈리고, 과몰입을 이어 갈지 약속 시간에 끊을지 고른다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "overfocus_warning",
+    "conflict": "fatigue",
+    "resolution": "lesson_learned",
+    "activity": "ranked_grind",
+    "tone": "comedic"
+  },
+  "memberId": "riko",
+  "conditions": {
+    "activityCategories": [
+      "fps",
+      "game"
+    ],
+    "cooldown": 4
+  },
+  "weight": 1.5,
+  "start": "condition",
+  "steps": {
+    "condition": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "maxHp": 50
+          },
+          "next": "tired_intro"
+        }
+      ],
+      "next": "hyped_intro"
+    },
+    "hyped_intro": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "fps",
+              "fighting",
+              "rhythm"
+            ]
+          },
+          "text": "고텐션 그대로 랭크 게임을 달리던 {member}의 방송이 예정보다 길어지고 있다. 채팅창에 \"과몰입 경보\"라는 말이 올라오기 시작했다."
+        },
+        {
+          "text": "고텐션 그대로 기록 도전을 이어 가던 {member}의 방송이 예정보다 길어지고 있다. 채팅창에 \"과몰입 경보\"라는 말이 올라오기 시작했다."
+        }
+      ],
+      "next": "decide"
+    },
+    "tired_intro": {
+      "type": "story",
+      "text": "요즘 일정이 빡빡했던 {member}가 오늘도 게임에 푹 빠져 종료 시간을 넘기고 있다. 집중은 하고 있지만 반응이 조금씩 느려진다.",
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "계속 달리게 둘까?",
+      "choices": [
+        {
+          "text": "목표 랭크까지 달리게 둔다",
+          "conditions": {
+            "activity": [
+              "fps",
+              "fighting",
+              "rhythm"
+            ]
+          },
+          "effects": {
+            "hp": -10
+          },
+          "story": "{member}가 \"목표까지만!\"을 외치자 채팅창이 응원과 걱정으로 반반 갈렸다.",
+          "next": "grind_check"
+        },
+        {
+          "text": "목표 기록을 깰 때까지 달리게 둔다",
+          "conditions": {
+            "activity": [
+              "horror",
+              "indie",
+              "openWorld"
+            ]
+          },
+          "effects": {
+            "hp": -10
+          },
+          "story": "{member}가 \"기록까지만!\"을 외치자 채팅창이 응원과 걱정으로 반반 갈렸다.",
+          "next": "grind_check"
+        },
+        {
+          "text": "약속한 시간에 끝내도록 한다",
+          "story": "{member}가 아쉬움을 꾹 참고 \"오늘은 여기까지\"라고 말했다.",
+          "next": "stop_end"
+        }
+      ]
+    },
+    "grind_check": {
+      "type": "check",
+      "text": "남은 체력으로 집중력을 끝까지 유지할 수 있을까?",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 80,
+        "traitBonus": {
+          "fps": 10,
+          "highTension": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "지친 줄 알았던 {member}가 마지막에 최고의 플레이를 보여 줬다. 목표를 훌쩍 넘었다.",
+          "effects": {
+            "fans": 140,
+            "fame": 2,
+            "stats": {
+              "Ga": 1
+            }
+          },
+          "next": "grind_hit"
+        },
+        "success": {
+          "text": "조금 느려진 반응을 판단력으로 메우며 목표에 닿았다.",
+          "next": "grind_hit"
+        },
+        "partial": {
+          "text": "목표에는 닿지 못했지만 오늘 중 가장 좋은 판이 나왔다.",
+          "next": "grind_near"
+        },
+        "fail": {
+          "text": "반응이 점점 늦어지며 같은 실수를 반복했다.",
+          "next": "grind_down"
+        }
+      }
+    },
+    "grind_hit": {
+      "type": "end",
+      "text": "과몰입 끝에 이룬 목표 달성에 채팅창이 박수를 보냈다. 다만 매니저는 다음엔 종료 시간을 꼭 지키자고 했다.",
+      "effects": {
+        "fans": 180,
+        "stats": {
+          "Ga": 1
+        },
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "success"
+    },
+    "grind_near": {
+      "type": "end",
+      "text": "목표는 다음으로 넘어갔지만, 그 직전까지 간 판의 클립이 꽤 돌았다. 피로는 그대로 남았다.",
+      "effects": {
+        "fans": 120,
+        "stats": {
+          "Ga": 1
+        },
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "partial"
+    },
+    "grind_down": {
+      "type": "end",
+      "text": "{member}가 \"과몰입 경보는 들어야 했다\"며 웃었다. 다음 방송부터는 종료 알람을 켜 두기로 했다.",
+      "effects": {
+        "fans": 70,
+        "memberFlags": {
+          "stayedUpLate": true
+        }
+      },
+      "result": "fail"
+    },
+    "stop_end": {
+      "type": "end",
+      "text": "약속 시간에 끝낸 방송에 \"자기 관리 최고\"라는 채팅이 이어졌다. 덕분에 컨디션도 지켰다.",
+      "effects": {
+        "fans": 80,
+        "hp": 3
+      },
+      "result": "success"
+    }
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "id": "st_member_nana_2_b",
+  "title": "장르 순서 정하기",
+  "category": "member",
+  "group": "personal_nana_2",
+  "description": "장르 넘나드는 노래방(pe_nana_2) 변형 B. 장르 순서를 먼저 정하고, 예상하지 못한 장르 조합을 소화해 낸다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "genre_order_planning",
+    "conflict": "creative_block",
+    "resolution": "lesson_learned",
+    "activity": "genre_singing",
+    "tone": "comedic"
+  },
+  "memberId": "nana",
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "cooldown": 5
+  },
+  "weight": 1.25,
+  "start": "plan",
+  "steps": {
+    "plan": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "녹음 날. 녹음 전 목 풀기로 {member}가 장르를 넘나드는 연습을 하기로 했다. 그런데 장르 순서를 어떻게 짜야 목에 무리가 덜 갈지 고민이다."
+        },
+        {
+          "text": "노래 방송 날. {member}가 장르를 넘나드는 노래방 코너를 열기로 했다. 그런데 장르 순서를 어떻게 짤지 고민이다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "장르 릴레이로 한계에 도전한다",
+          "effects": {
+            "hp": -6
+          },
+          "story": "{member}가 장르를 무작위로 뽑아 순서를 정하기로 했다.",
+          "next": "order_story"
+        },
+        {
+          "text": "자신 있는 장르만 부른다",
+          "effects": {
+            "hp": -2
+          },
+          "story": "{member}가 자신 있는 장르 세 개만 골랐다.",
+          "next": "comfort_story"
+        }
+      ]
+    },
+    "order_story": {
+      "type": "story",
+      "text": "뽑힌 순서는 하필 트로트, 메탈, 동요. 예상하지 못한 조합에 {member}가 웃음을 터뜨렸다.",
+      "next": "order_check"
+    },
+    "order_check": {
+      "type": "check",
+      "text": "엉뚱한 장르 조합을 웃음으로 끝내지 않고 노래로 살려 내야 한다.",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 78,
+        "traitBonus": {
+          "highTension": 10
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "세 장르를 모두 제대로 소화해 냈다. 특히 동요를 메탈 창법으로 이어 부른 장면이 압권이었다.",
+          "effects": {
+            "fans": 140,
+            "fame": 2,
+            "stats": {
+              "Vc": 1
+            }
+          },
+          "next": "order_hit"
+        },
+        "success": {
+          "text": "예상 밖 조합이었지만 장르마다 확실한 맛을 살렸다.",
+          "next": "order_hit"
+        },
+        "partial": {
+          "text": "트로트와 동요는 좋았지만 메탈에서는 웃음이 먼저 나왔다.",
+          "next": "order_mid"
+        },
+        "fail": {
+          "text": "메탈 구간에서 목이 확 잠겼다. 무작위 순서는 여기까지만 하기로 했다.",
+          "next": "order_stop"
+        }
+      }
+    },
+    "order_hit": {
+      "type": "end",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "엉뚱한 연습이 목을 확실히 풀어 줬다. 녹음 스태프가 연습 장면을 따로 남겨 두자고 할 정도였다."
+        },
+        {
+          "text": "엉뚱한 장르 조합이 오늘의 명장면이 됐다. \"다음 무작위 뽑기는 언제냐\"는 채팅이 쏟아졌다."
+        }
+      ],
+      "effects": {
+        "fans": 190,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "order_mid": {
+      "type": "end",
+      "text": "웃음이 터진 구간까지 즐거웠다는 반응이었다. 다만 {member}는 메탈 구간을 따로 연습해 오겠다고 했다.",
+      "effects": {
+        "fans": 130
+      },
+      "result": "partial"
+    },
+    "order_stop": {
+      "type": "end",
+      "text": "{member}가 \"순서는 내가 정하는 게 맞다\"며 웃었다. 다음엔 목에 무리가 덜 가는 순서를 직접 짜 보기로 했다.",
+      "effects": {
+        "fans": 70
+      },
+      "result": "fail"
+    },
+    "comfort_story": {
+      "type": "story",
+      "text": "자신 있는 세 장르를 차례로 부르자 목소리가 점점 편안해졌다.",
+      "next": "comfort_end"
+    },
+    "comfort_end": {
+      "type": "end",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "편안한 장르로 목을 풀고 녹음에 들어갔다. 첫 테이크부터 안정적이었다."
+        },
+        {
+          "text": "안정적인 세 곡이 이어지며 방송이 편안하게 마무리됐다."
+        }
+      ],
+      "effects": {
+        "fans": 110
+      },
+      "result": "success"
+    }
+  }
+}

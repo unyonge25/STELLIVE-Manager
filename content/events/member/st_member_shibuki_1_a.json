@@ -1,0 +1,138 @@
+{
+  "id": "st_member_shibuki_1_a",
+  "title": "오늘은 무조건 1등",
+  "category": "member",
+  "group": "personal_shibuki_1",
+  "description": "배틀로얄 치킨 도전(pe_shibuki_1) 변형 A. FPS 날에는 바로, 다른 게임 날에는 그날 게임을 마친 뒤 배틀로얄을 켜고 1등에 도전한다.",
+  "meta": {
+    "theme": "game_content",
+    "setting": "battle_royale_win_attempt",
+    "conflict": "early_disadvantage",
+    "resolution": "clutch_moment",
+    "activity": "battle_royale",
+    "tone": "hype"
+  },
+  "memberId": "shibuki",
+  "conditions": {
+    "activityCategories": [
+      "fps",
+      "game"
+    ],
+    "cooldown": 4
+  },
+  "weight": 1.5,
+  "start": "start",
+  "steps": {
+    "start": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "fps"
+            ]
+          },
+          "text": "{member}가 오늘은 무조건 1등을 하겠다며 배틀로얄을 켰다. 실력은 충분한데, 늘 마지막에 운이 따라 주지 않았다."
+        },
+        {
+          "text": "오늘 하던 게임을 마친 {member}가 \"남은 시간은 배틀로얄\"이라며 게임을 바꿔 켰다. 오늘은 무조건 1등을 하겠다고 한다. 실력은 충분한데, 늘 마지막에 운이 따라 주지 않았다."
+        }
+      ],
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "첫 판부터 낙하 지점이 꼬였다. 어떻게 할까?",
+      "choices": [
+        {
+          "text": "1등 할 때까지 계속한다",
+          "effects": {
+            "hp": -8
+          },
+          "story": "{member}가 물 한 모금을 마시고 다음 판 대기열에 들어갔다.",
+          "next": "win_check"
+        },
+        {
+          "text": "세 판만 하고 다른 게임으로 넘어간다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "{member}가 딱 세 판만 하겠다고 선언했다.",
+          "next": "three_end"
+        }
+      ]
+    },
+    "win_check": {
+      "type": "check",
+      "text": "일곱 번째 판, 마지막 두 팀이 남았다. 자기장이 좁혀지는 순간 운까지 따라 줄까?",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 78,
+        "traitBonus": {
+          "fps": 10,
+          "competitive": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "마지막 교전에서 혼자 두 명을 연달아 잡아냈다. 1등 화면이 뜨자 채팅창이 폭발했다.",
+          "effects": {
+            "fans": 140,
+            "fame": 2
+          },
+          "next": "win_end"
+        },
+        "success": {
+          "text": "자기장 끝자락에서 침착하게 위치를 잡았다. 마지막 한 발로 1등을 확정했다.",
+          "next": "win_end"
+        },
+        "partial": {
+          "text": "2등. 마지막 한 명을 남기고 아깝게 졌다. 그래도 오늘 판 중 가장 좋은 기록이었다.",
+          "next": "second_end"
+        },
+        "fail": {
+          "text": "마지막 순간 예상치 못한 위치에서 공격을 받았다. 오늘도 운이 마지막에 등을 돌렸다.",
+          "next": "unlucky_end"
+        }
+      }
+    },
+    "win_end": {
+      "type": "end",
+      "text": "끈질긴 도전 끝의 1등 장면이 클립으로 퍼졌다. \"드디어 운이 따라왔다\"는 반응이 쏟아졌다.",
+      "effects": {
+        "fans": 180,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    },
+    "second_end": {
+      "type": "end",
+      "text": "1등은 놓쳤지만 마지막 교전은 오늘의 명장면이 됐다. 다음엔 꼭 하자는 응원이 이어졌다.",
+      "effects": {
+        "fans": 130,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "partial"
+    },
+    "unlucky_end": {
+      "type": "end",
+      "text": "운 없는 마지막 장면마저 웃음 포인트가 됐다. {member}는 \"다음 방송에서 다시 1등 도전\"을 예고했다.",
+      "effects": {
+        "fans": 90
+      },
+      "result": "fail"
+    },
+    "three_end": {
+      "type": "end",
+      "text": "세 판 동안 아깝게 놓친 장면이 많았지만, 깔끔하게 끊고 다른 게임으로 넘어가 방송 흐름이 좋았다.",
+      "effects": {
+        "fans": 90
+      },
+      "result": "success"
+    }
+  }
+}

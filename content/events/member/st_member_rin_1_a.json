@@ -1,0 +1,137 @@
+{
+  "id": "st_member_rin_1_a",
+  "title": "일주일 연속 커버 일정표",
+  "category": "member",
+  "group": "personal_rin_1",
+  "description": "커버곡 연속 공개 제안(pe_rin_1) 변형 A. 작업 속도가 빠른 덕에 나온 제안을 두고 일정을 정하고, 마감 압박 속에서 곡을 완성한다.",
+  "meta": {
+    "theme": "music_production",
+    "setting": "weekly_cover_schedule",
+    "conflict": "time_pressure",
+    "resolution": "steady_success",
+    "activity": "cover_release",
+    "tone": "calm"
+  },
+  "memberId": "rin",
+  "conditions": {
+    "activityCategories": [
+      "music"
+    ],
+    "cooldown": 5
+  },
+  "weight": 1.25,
+  "start": "proposal",
+  "steps": {
+    "proposal": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "recording"
+            ]
+          },
+          "text": "녹음을 마친 {member}에게 작업 속도가 빠르니 커버곡을 일주일 연속으로 공개해 보자는 의견이 나왔다. 녹음실 일정표에는 빈칸이 아직 몇 개 남아 있다."
+        },
+        {
+          "text": "노래 방송을 마친 {member}에게 작업 속도가 빠르니 커버곡을 일주일 연속으로 공개해 보자는 의견이 나왔다. 방송 중에도 다음 곡을 묻는 채팅이 많았다."
+        }
+      ],
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "공개 일정을 어떻게 잡을까?",
+      "choices": [
+        {
+          "text": "일주일 연속 공개에 도전한다",
+          "effects": {
+            "hp": -9
+          },
+          "story": "{member}가 일곱 곡의 목록과 작업 순서를 꼼꼼히 적었다.",
+          "next": "week_check"
+        },
+        {
+          "text": "한 곡씩 여유 있게 올린다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "{member}가 한 곡씩 완성도를 챙기며 올리기로 했다.",
+          "next": "slow_end"
+        }
+      ]
+    },
+    "week_check": {
+      "type": "check",
+      "text": "닷새째, 남은 두 곡의 마감이 하루 안에 겹쳤다. 꼼꼼함을 지키면서 속도를 낼 수 있을까?",
+      "check": {
+        "stat": "Vc",
+        "difficulty": 78,
+        "traitBonus": {
+          "cover": 15,
+          "diligent": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "남은 두 곡까지 계획보다 일찍 끝났다. 일곱 곡이 하루도 빠짐없이 공개됐다.",
+          "effects": {
+            "fans": 150,
+            "fame": 1,
+            "stockEffect": {
+              "ticker": "TUNE",
+              "percentage": 2
+            }
+          },
+          "next": "week_done"
+        },
+        "success": {
+          "text": "밤늦게까지 작업한 끝에 마지막 곡까지 제때 공개했다.",
+          "next": "week_done"
+        },
+        "partial": {
+          "text": "여섯 곡은 제때 올렸지만 마지막 곡은 하루 늦어졌다.",
+          "next": "week_late"
+        },
+        "fail": {
+          "text": "마감이 겹치며 두 곡의 공개를 다음 주로 미뤄야 했다.",
+          "next": "week_short"
+        }
+      }
+    },
+    "week_done": {
+      "type": "end",
+      "text": "일주일 동안 매일 올라온 커버곡에 \"출석 체크하는 재미\"라는 반응이 이어졌다. 꾸준함이 화제가 됐다.",
+      "effects": {
+        "fans": 230,
+        "fame": 2
+      },
+      "result": "success"
+    },
+    "week_late": {
+      "type": "end",
+      "text": "하루 늦은 마지막 곡도 완성도는 좋았다. 다만 연속 공개 기록은 아쉽게 끊겼다.",
+      "effects": {
+        "fans": 160,
+        "fame": 1
+      },
+      "result": "partial"
+    },
+    "week_short": {
+      "type": "end",
+      "text": "연속 공개는 다섯 곡에서 멈췄다. {member}는 남은 두 곡을 다음 주에 \"보너스 공개\"로 올리겠다고 했고, 팬들은 그 공지를 기다렸다.",
+      "effects": {
+        "fans": 80
+      },
+      "result": "fail"
+    },
+    "slow_end": {
+      "type": "end",
+      "text": "한 곡씩 여유 있게 올린 커버는 하나하나 꼼꼼했다. \"기다린 만큼 좋다\"는 감상이 많았다.",
+      "effects": {
+        "fans": 120
+      },
+      "result": "success"
+    }
+  }
+}

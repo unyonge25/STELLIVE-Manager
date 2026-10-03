@@ -1,0 +1,143 @@
+{
+  "id": "st_member_shibuki_1_b",
+  "title": "운을 이기는 작전 회의",
+  "category": "member",
+  "group": "personal_shibuki_1",
+  "description": "배틀로얄 치킨 도전(pe_shibuki_1) 변형 B. 도전 방식을 먼저 정하고, 운에 덜 기대는 작전으로 마지막 원에 들어선다.",
+  "meta": {
+    "theme": "game_content",
+    "setting": "battle_royale_strategy",
+    "conflict": "high_expectations",
+    "resolution": "teamwork",
+    "activity": "battle_royale",
+    "tone": "comedic"
+  },
+  "memberId": "shibuki",
+  "conditions": {
+    "activityCategories": [
+      "fps",
+      "game"
+    ],
+    "cooldown": 4
+  },
+  "weight": 1.5,
+  "start": "plan",
+  "steps": {
+    "plan": {
+      "type": "choice",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "fps"
+            ]
+          },
+          "text": "FPS 방송 중, {member}가 오늘의 목표를 \"배틀로얄 1등\"으로 정했다. 채팅창이 \"오늘은 운 좀 따라 줘라\"로 가득 찼다."
+        },
+        {
+          "text": "게임 방송 후반, {member}가 남은 시간에 배틀로얄 1등에 도전하겠다며 게임을 바꿨다. 채팅창이 \"오늘은 운 좀 따라 줘라\"로 가득 찼다."
+        }
+      ],
+      "choices": [
+        {
+          "text": "1등 할 때까지 계속한다",
+          "effects": {
+            "hp": -8
+          },
+          "story": "{member}가 매 판 낙하 지점과 이동 경로를 채팅에 투표로 묻기로 했다.",
+          "next": "strategy"
+        },
+        {
+          "text": "세 판만 하고 다른 게임으로 넘어간다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "{member}가 세 판만 하고 넘어가겠다고 미리 정했다.",
+          "next": "three_story"
+        }
+      ]
+    },
+    "strategy": {
+      "type": "story",
+      "text": "채팅이 고른 경로는 안전했지만, 마지막 원이 하필 반대편에 잡혔다. 긴 거리를 달려 들어가야 한다.",
+      "next": "final_check"
+    },
+    "final_check": {
+      "type": "check",
+      "text": "마지막 원까지 남은 거리가 멀다. 운 대신 판단으로 들어가야 한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 78,
+        "traitBonus": {
+          "fps": 10,
+          "competitive": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "{member}가 차량을 찾아 단숨에 원 안으로 들어가 유리한 고지를 먼저 잡았다. 그대로 1등을 차지했다.",
+          "effects": {
+            "fans": 140,
+            "fame": 2
+          },
+          "next": "final_win"
+        },
+        "success": {
+          "text": "엄폐물을 따라 차근차근 들어가 마지막 교전을 이겨 냈다.",
+          "next": "final_win"
+        },
+        "partial": {
+          "text": "원 안에는 들어갔지만 늦게 도착한 탓에 마지막 교전에서 2등에 머물렀다.",
+          "next": "final_second"
+        },
+        "fail": {
+          "text": "원을 향해 달리던 중 다른 팀과 마주쳐 탈락했다. 채팅창에 \"경로 투표 누가 했냐\"는 농담이 올라왔다.",
+          "next": "final_out"
+        }
+      }
+    },
+    "final_win": {
+      "type": "end",
+      "text": "시청자와 함께 짠 작전으로 따낸 1등이라 기쁨이 두 배였다. \"다음 판도 투표로 가자\"는 채팅이 이어졌다.",
+      "effects": {
+        "fans": 180,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "success"
+    },
+    "final_second": {
+      "type": "end",
+      "text": "아쉬운 2등이었지만 작전 회의 자체가 재밌었다는 반응이 많았다.",
+      "effects": {
+        "fans": 130,
+        "stats": {
+          "Ga": 1
+        }
+      },
+      "result": "partial"
+    },
+    "final_out": {
+      "type": "end",
+      "text": "작전은 실패했지만 시청자와 서로 탓하는 장면이 웃음을 줬다. 다음 도전 때 다시 투표하자는 약속으로 마무리했다.",
+      "effects": {
+        "fans": 90
+      },
+      "result": "fail"
+    },
+    "three_story": {
+      "type": "story",
+      "text": "세 판 모두 아깝게 끝났다. 그래도 {member}가 약속대로 깔끔하게 게임을 바꿨다.",
+      "next": "three_end"
+    },
+    "three_end": {
+      "type": "end",
+      "text": "짧게 끊은 덕에 방송 흐름이 늘어지지 않았다. 다음 도전을 기대하는 채팅이 남았다.",
+      "effects": {
+        "fans": 90
+      },
+      "result": "success"
+    }
+  }
+}

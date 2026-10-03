@@ -1,0 +1,93 @@
+{
+  "id": "st_member_tabi_1_b",
+  "title": "후기를 기다리는 팬들",
+  "category": "member",
+  "group": "personal_tabi_1",
+  "description": "방송 후기 장문 공지(pe_tabi_1) 변형 B. 판정 없이, 먼저 후기 분량을 정하고 장문을 고르면 남은 체력에 따라 마무리가 갈린다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "fan_review_requests",
+    "conflict": "fatigue",
+    "resolution": "quiet_growth",
+    "activity": "stream_review",
+    "tone": "calm"
+  },
+  "memberId": "tabi",
+  "conditions": {
+    "activityCategories": [
+      "broadcast"
+    ],
+    "cooldown": 4
+  },
+  "weight": 1.5,
+  "start": "request",
+  "steps": {
+    "request": {
+      "type": "choice",
+      "text": "방송이 끝나자 \"오늘도 후기 올라와요?\"라는 댓글이 달리기 시작했다. {member}가 후기를 얼마나 길게 쓸지 정해야 한다.",
+      "choices": [
+        {
+          "text": "정성 들여 장문 후기를 쓴다",
+          "effects": {
+            "hp": -3
+          },
+          "story": "{member}가 노트에 적어 둔 방송 메모를 펼쳤다.",
+          "next": "long_story"
+        },
+        {
+          "text": "짧은 감사 인사만 남긴다",
+          "story": "{member}가 오늘은 짧게 인사만 남기기로 했다.",
+          "next": "short_story"
+        }
+      ]
+    },
+    "long_story": {
+      "type": "story",
+      "text": "메모를 따라가며 장면을 하나씩 풀어 썼다. 장난스러웠던 순간과 진지했던 순간이 번갈아 적혔다.",
+      "next": "stamina"
+    },
+    "stamina": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "minHp": 50
+          },
+          "next": "long_fresh"
+        }
+      ],
+      "next": "long_tired"
+    },
+    "long_fresh": {
+      "type": "end",
+      "text": "정성 들인 장문 후기가 올라오자 팬들이 각자 좋았던 장면을 덧붙이며 댓글이 길게 이어졌다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1
+      },
+      "result": "success"
+    },
+    "long_tired": {
+      "type": "end",
+      "text": "피곤한 탓에 후반부는 조금 짧아졌지만, 장문 후기는 충분히 반가웠다. 팬들은 \"얼른 자\"라는 댓글을 함께 남겼다.",
+      "effects": {
+        "fans": 140,
+        "fame": 1
+      },
+      "result": "partial"
+    },
+    "short_story": {
+      "type": "story",
+      "text": "짧은 인사 아래로 팬들이 오늘 방송의 감상을 하나씩 달았다.",
+      "next": "short_end"
+    },
+    "short_end": {
+      "type": "end",
+      "text": "짧은 인사로도 방송의 여운이 이어졌다. 길게 쓰지 않은 만큼 {member}는 일찍 쉴 수 있었다.",
+      "effects": {
+        "fans": 60
+      },
+      "result": "neutral"
+    }
+  }
+}

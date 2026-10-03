@@ -1,0 +1,154 @@
+{
+  "id": "st_member_tabi_2_b",
+  "title": "연습량으로 메운 차이",
+  "category": "member",
+  "group": "personal_tabi_2",
+  "description": "격투게임 대회 출전(pe_tabi_2) 변형 B. 컨디션에 따라 첫 장면이 갈리고, 연습 기록을 무기로 대회에 나선다.",
+  "meta": {
+    "theme": "member_growth",
+    "setting": "practice_log_review",
+    "conflict": "early_disadvantage",
+    "resolution": "lesson_learned",
+    "activity": "fighting_tournament",
+    "tone": "tense"
+  },
+  "memberId": "tabi",
+  "conditions": {
+    "activityCategories": [
+      "fighting",
+      "game"
+    ],
+    "cooldown": 6
+  },
+  "weight": 1.5,
+  "start": "condition",
+  "steps": {
+    "condition": {
+      "type": "branch",
+      "branches": [
+        {
+          "when": {
+            "maxHp": 50
+          },
+          "next": "tired_intro"
+        }
+      ],
+      "next": "ready_intro"
+    },
+    "ready_intro": {
+      "type": "story",
+      "text": [
+        {
+          "when": {
+            "activity": [
+              "fighting"
+            ]
+          },
+          "text": "격투게임 방송을 켠 {member}가 연습 기록표를 화면에 띄웠다. 한 달 동안 쌓인 콤보 연습 시간이 빼곡하다. 다음 주 커뮤니티 대회에 나가 보고 싶다고 한다."
+        },
+        {
+          "text": "게임 방송 중 쉬는 시간, {member}가 격투게임 연습 기록표를 보여 주며 다음 주 커뮤니티 대회에 나가 보고 싶다고 했다. 한 달 동안 쌓인 연습 시간이 빼곡하다."
+        }
+      ],
+      "next": "decide"
+    },
+    "tired_intro": {
+      "type": "story",
+      "text": "{member}가 격투게임 커뮤니티 대회에 나가 보고 싶다고 한다. 다만 요즘 일정이 빡빡해, 연습 기록표를 넘기는 손이 조금 느리다.",
+      "next": "decide"
+    },
+    "decide": {
+      "type": "choice",
+      "text": "대회를 어떻게 준비할까?",
+      "choices": [
+        {
+          "text": "대회 준비에 집중한다",
+          "effects": {
+            "hp": -8,
+            "money": -30000
+          },
+          "story": "{member}가 참가비를 내고 연습 시간을 두 배로 늘렸다.",
+          "next": "cup_check"
+        },
+        {
+          "text": "재미로 출전하고 과정을 방송한다",
+          "effects": {
+            "hp": -4
+          },
+          "story": "{member}가 연습 과정까지 방송으로 보여 주며 즐기기로 했다.",
+          "next": "fun_end"
+        }
+      ]
+    },
+    "cup_check": {
+      "type": "check",
+      "text": "첫 경기, 상대의 반응 속도가 확실히 빠르다. 연습해 온 판단력으로 그 차이를 메워야 한다.",
+      "check": {
+        "stat": "Ga",
+        "difficulty": 82,
+        "traitBonus": {
+          "fighting": 10,
+          "diligent": 10,
+          "brain": 5
+        }
+      },
+      "outcomes": {
+        "great": {
+          "text": "상대의 빠른 반응을 역이용한 수읽기가 연달아 맞아떨어졌다. 그대로 대회 우승까지 이어졌다.",
+          "effects": {
+            "fans": 180,
+            "fame": 2,
+            "money": 150000
+          },
+          "next": "cup_top"
+        },
+        "success": {
+          "text": "초반엔 밀렸지만 연습한 대응이 하나씩 통하며 경기를 가져왔다. 상위권으로 대회를 마쳤다.",
+          "next": "cup_top"
+        },
+        "partial": {
+          "text": "한 경기는 이겼지만 다음 경기에서 반응 속도 차이를 넘지 못했다.",
+          "next": "cup_half"
+        },
+        "fail": {
+          "text": "연습한 대응을 꺼내기도 전에 경기가 끝났다.",
+          "next": "cup_short"
+        }
+      }
+    },
+    "cup_top": {
+      "type": "end",
+      "text": "\"연습량이 피지컬을 이긴다\"는 말을 증명한 대회였다. 연습 기록표 사진이 대회 영상과 함께 퍼졌다.",
+      "effects": {
+        "fans": 220,
+        "fame": 2
+      },
+      "result": "success"
+    },
+    "cup_half": {
+      "type": "end",
+      "text": "한 경기를 이긴 것만으로도 연습의 성과는 분명했다. 다음 대회까지 무엇을 채워야 할지도 보였다.",
+      "effects": {
+        "fans": 150,
+        "fame": 1
+      },
+      "result": "partial"
+    },
+    "cup_short": {
+      "type": "end",
+      "text": "{member}가 연습 기록표 맨 아래에 \"반응 연습 추가\"라고 적었다. 팬들은 다음 기록표가 채워지는 걸 지켜보겠다고 했다.",
+      "effects": {
+        "fans": 80
+      },
+      "result": "fail"
+    },
+    "fun_end": {
+      "type": "end",
+      "text": "연습 과정부터 출전까지 보여 준 방송에 \"같이 대회 나간 기분\"이라는 반응이 이어졌다.",
+      "effects": {
+        "fans": 130
+      },
+      "result": "success"
+    }
+  }
+}

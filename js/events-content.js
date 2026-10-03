@@ -794,7 +794,7 @@ export const EXTRA_EVENTS = [
     description: '방송을 마친 {member}가 오늘 방송 후기를 길게 적어 올릴지 고민하고 있다.',
     memberId: 'tabi',
     conditions: { ...BROADCAST, cooldown: 4 },
-    weight: 2,
+    weight: 0,
     choices: [
       { text: '정성 들여 장문 후기를 쓴다', effects: { fans: 150, fame: 1, hp: -3 } },
       { text: '짧은 감사 인사만 남긴다', effects: { fans: 60 } },
@@ -806,7 +806,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 격투게임 커뮤니티 대회에 출전하고 싶다고 한다. 연습량으로 부족한 피지컬을 메워 왔다.',
     memberId: 'tabi',
     conditions: { activityCategories: ['fighting', 'game'], cooldown: 6 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '대회 준비에 집중한다',
@@ -825,7 +825,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 오늘은 무조건 1등을 하겠다며 배틀로얄을 켰다. 실력은 충분한데 운이 문제다.',
     memberId: 'shibuki',
     conditions: { activityCategories: ['fps', 'game'], cooldown: 4 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '1등 할 때까지 계속한다',
@@ -867,7 +867,7 @@ export const EXTRA_EVENTS = [
     description: '작업 속도가 빠른 {member}에게 커버곡을 연속으로 공개해 보자는 의견이 나왔다.',
     memberId: 'rin',
     conditions: { activityCategories: ['music'], cooldown: 5 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '일주일 연속 공개에 도전한다',
@@ -884,7 +884,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 어렵기로 유명한 퍼즐게임을 논리적으로 풀어 보겠다고 나섰다.',
     memberId: 'rin',
     conditions: { activityCategories: ['game'], cooldown: 5 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '힌트 없이 끝까지 푼다',
@@ -903,7 +903,7 @@ export const EXTRA_EVENTS = [
     description: '다른 멤버들이 잠든 낮 시간, {member}가 넓은 오픈월드를 설명하며 탐험한다.',
     memberId: 'nana',
     conditions: { activityCategories: ['game'], cooldown: 4 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '숨은 명소를 찾아 해설 방송을 한다',
@@ -920,7 +920,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 오늘은 힙합부터 시티팝까지 장르를 가리지 않고 불러 보겠다고 한다.',
     memberId: 'nana',
     conditions: { activityCategories: ['music'], cooldown: 5 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '장르 릴레이로 한계에 도전한다',
@@ -939,7 +939,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 랭크 게임에 푹 빠져 방송 종료 시간을 계속 미루고 있다.',
     memberId: 'riko',
     conditions: { activityCategories: ['fps', 'game'], cooldown: 4 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '목표 랭크까지 달리게 둔다',
@@ -956,7 +956,7 @@ export const EXTRA_EVENTS = [
     description: '{member}의 방송이 끝날 무렵, 종료곡을 한 곡 더 불러 달라는 요청이 쏟아진다.',
     memberId: 'riko',
     conditions: { ...BROADCAST, cooldown: 4 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '고음 가득한 곡으로 마무리한다',
@@ -975,7 +975,7 @@ export const EXTRA_EVENTS = [
     description: '{member}가 오늘은 조용한 ASMR 방송을 해 보고 싶다고 한다.',
     memberId: 'kanna',
     conditions: { activityCategories: ['talk', 'broadcast'], cooldown: 5 },
-    weight: 2,
+    weight: 0,
     choices: [
       {
         text: '장비를 제대로 갖추고 진행한다',
