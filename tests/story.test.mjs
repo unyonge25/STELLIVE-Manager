@@ -1,5 +1,5 @@
 // story.test.mjs — 스토리(멀티스텝) 이벤트 시스템 테스트
-// 실행: node tests/story.test.mjs [시뮬레이션 횟수]
+// 실행: node tests/story.test.mjs [시뮬레이션 횟수] [연장 최대 횟수]
 
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -10,6 +10,8 @@ const SAVE = await import(new URL('../js/save.js', import.meta.url));
 
 const { test, section, finish } = createRunner();
 const RUNS = Number(process.argv[2] || 200);
+// 기본 시뮬레이션에서 한 번도 안 나온 스토리가 있으면, 그 스토리만 기다리며 이만큼까지 더 돌린다.
+const EXTRA_RUNS = Number(process.argv[3] || 600);
 
 /* ---------- 준비 ---------- */
 
@@ -547,8 +549,90 @@ test('모든 이벤트 문장에서 받침 있는 이름에 잘못된 조사가 
   assert(bad.length === 0, bad.slice(0, 3).join(' | '));
 });
 
-/* ===================== 9. 28일 시뮬레이션 ===================== */
-section(`[9] 28일 시뮬레이션 × ${RUNS}회 (스토리 포함)`);
+/* ===================== 9. 도달 가능성 (결정적) ===================== */
+section('[9] 모든 스토리 이벤트의 도달 가능성 (조건을 만족하는 상태에서 엔진이 후보로 올린다)');
+
+// 일정은 엔진의 planDay 가 실제로 배정하는 것만 쓴다. (일정 배정 규칙을 테스트에서 따로 구현하지 않는다)
+// 테스트 안에서만 Math.random 을 고정값으로 바꿔 가며 planDay 를 돌려, HP 별로 멤버마다 배정될 수 있는 일정을 모은다.
+const assignableByHp = new Map();
+function assignableActivities(hp) {
+  if (assignableByHp.has(hp)) return assignableByHp.get(hp);
+  const state = S.createInitialState(MEMBERS);
+  state.members.forEach((member) => { member.hp = hp; });
+  const byMember = new Map(state.members.map((member) => [member.id, new Set()]));
+  const original = Math.random;
+  try {
+    const STEPS = 400;
+    for (let i = 0; i < STEPS; i += 1) {
+      const value = (i + 0.5) / STEPS;
+      Math.random = () => value;
+      E.planDay(state).forEach((entry) => byMember.get(entry.memberId).add(entry.activityId));
+    }
+  } finally {
+    Math.random = original;
+  }
+  assignableByHp.set(hp, byMember);
+  return byMember;
+}
+
+// 이벤트 조건을 만족하도록 게임 상태를 만든다. (조건 종류별 규칙만 있고, 이벤트별 설정은 없다)
+// HP / 날짜는 조건에 나온 값과 기본값을 후보로 두고, 나머지 조건은 상태에 그대로 채운다.
+function reachabilityStates(event) {
+  const c = event.conditions || {};
+  const hps = [...new Set([80, c.maxHp, c.minHp].filter((value) => value !== undefined))];
+  const needsDaySearch = ['day', 'minDay', 'maxDay', 'dayOfWeek', 'afterEventId'].some((key) => key in c);
+  const days = needsDaySearch ? Array.from({ length: 28 }, (_, i) => i + 1) : [10];
+  const states = [];
+  hps.forEach((hp) => days.forEach((day) => {
+    const state = S.createInitialState(MEMBERS);
+    state.currentDay = day;
+    state.members.forEach((member) => {
+      member.hp = hp;
+      (c.memberFlags || []).forEach((flag) => { member.flags[flag] = true; });
+    });
+    (c.requiredFlags || []).forEach((flag) => { state.flags[flag] = true; });
+    if (c.minFans !== undefined) state.fans = Math.max(state.fans, c.minFans);
+    if (c.minFame !== undefined) state.fame = Math.max(state.fame, c.minFame);
+    if (c.minMoney !== undefined) state.money = Math.max(state.money, c.minMoney);
+    if (c.afterEventId !== undefined) state.eventHistory[typeof c.afterEventId === 'string' ? c.afterEventId : c.afterEventId.id] = 1;
+    if (c.minRelationship !== undefined) {
+      state.members.forEach((a, i) => state.members.slice(i + 1).forEach((b) => S.setRelationship(a.id, b.id, c.minRelationship)));
+    }
+    states.push({ state, hp, day });
+  }));
+  return states;
+}
+
+// 엔진의 collectCandidates 로 후보에 오르는지 확인한다. 실패하면 가장 적게 막힌 조합의 막힌 조건을 돌려준다.
+function checkReachable(event) {
+  let best = null;
+  for (const { state, hp, day } of reachabilityStates(event)) {
+    const members = state.members.filter((member) => !event.memberId || member.id === event.memberId);
+    for (const member of members) {
+      for (const activityId of assignableActivities(hp).get(member.id)) {
+        const activity = E.getActivityById(activityId);
+        if (E.collectCandidates(member, state, { activity, collab: Boolean(event.collab) }).includes(event)) return null;
+        const ctx = { state, member, members: [member], activity, event };
+        const blocked = Object.entries(event.conditions || {}).filter(([key, value]) => !E.meetsConditions({ [key]: value }, ctx)).map(([key]) => key);
+        if (!best || blocked.length < best.blocked.length) best = { blocked, where: `${member.id}@${activityId} HP ${hp} Day ${day}` };
+      }
+    }
+  }
+  if (!best) return 'memberId 에 해당하는 멤버가 없다';
+  const reasons = best.blocked.length ? `막힌 조건 ${best.blocked.join(', ')}` : `조건은 모두 맞지만 후보가 아니다 (weight ${event.weight ?? 1})`;
+  return `${reasons} — 가장 가까운 조합 ${best.where}`;
+}
+
+test('모든 스토리 이벤트는 조건을 만족하는 상태에서 엔진이 후보로 올린다 (실제 일정 배정 기준)', () => {
+  const problems = storyEvents.map((event) => {
+    const reason = checkReachable(event);
+    return reason ? `${event.id}: ${reason}` : null;
+  }).filter(Boolean);
+  assert(problems.length === 0, problems.join(' | '));
+});
+
+/* ===================== 10. 28일 시뮬레이션 ===================== */
+section(`[10] 28일 시뮬레이션 × ${RUNS}회 (스토리 포함)`);
 
 const sim = { errors: [], stories: 0, results: {}, appeared: new Map(), maxPerDay: 0, unfinished: 0, perGame: [] };
 for (let run = 0; run < RUNS; run += 1) {
@@ -573,8 +657,30 @@ for (let run = 0; run < RUNS; run += 1) {
   }
 }
 
-test(`${RUNS}회 모두 스토리를 포함해 Day 28 까지 오류 없이 진행된다`, () => {
-  assert(sim.errors.length === 0, sim.errors.slice(0, 3).join('\n      '));
+// 연장: 기본 시뮬레이션에서 한 번도 안 나온 스토리만 기다리며 같은 방식의 게임을 EXTRA_RUNS 판까지 더 돌린다.
+// 모두 나오면 바로 멈춘다. (등장 여부만 보고, 결말 분포 / 하루 최대 등 다른 검사는 기본 시뮬레이션 결과를 그대로 쓴다)
+const extension = { waited: [], runs: 0, foundAt: new Map(), errors: [] };
+const pending = new Set(storyEvents.filter((event) => !sim.appeared.has(event.id)).map((event) => event.id));
+extension.waited = [...pending];
+for (let run = 0; run < EXTRA_RUNS && pending.size > 0; run += 1) {
+  extension.runs += 1;
+  try {
+    const state = playGame({});
+    Object.keys(state.storyResults).forEach((id) => {
+      if (pending.delete(id)) extension.foundAt.set(id, RUNS + run + 1);
+    });
+  } catch (error) {
+    extension.errors.push(`extra run ${run}: ${error.message}`);
+  }
+}
+if (extension.waited.length > 0) {
+  console.log(`\n  연장: ${RUNS}판에서 안 나온 스토리 ${extension.waited.length}개 (${extension.waited.join(', ')}) 를 기다리며 ${extension.runs}판 더 진행`);
+  extension.waited.forEach((id) => console.log(`    ${id}: ${extension.foundAt.has(id) ? `${extension.foundAt.get(id)}번째 판에서 등장` : `${RUNS + extension.runs}판까지 등장하지 않음`}`));
+}
+
+test(`${RUNS}회 (연장 판 포함) 모두 스토리를 포함해 Day 28 까지 오류 없이 진행된다`, () => {
+  const errors = [...sim.errors, ...extension.errors];
+  assert(errors.length === 0, errors.slice(0, 3).join('\n      '));
 });
 
 test('모든 스토리는 하루 안에 결말까지 가고, 하루에 1개를 넘지 않는다', () => {
@@ -583,8 +689,9 @@ test('모든 스토리는 하루 안에 결말까지 가고, 하루에 1개를 �
 });
 
 test('스토리 이벤트가 무작위로 고르게 등장한다 (샘플 전부 등장, 게임마다 구성이 다르다)', () => {
-  const missing = storyEvents.filter((event) => !sim.appeared.has(event.id)).map((event) => event.id);
-  assert(missing.length === 0, `한 번도 안 나온 스토리: ${missing.join(', ')}`);
+  // 등장 여부는 기본 시뮬레이션 + 연장(최대 RUNS + EXTRA_RUNS 판)을 합쳐 본다.
+  const missing = storyEvents.filter((event) => !sim.appeared.has(event.id) && !extension.foundAt.has(event.id)).map((event) => event.id);
+  assert(missing.length === 0, `${RUNS + extension.runs}판 동안 한 번도 안 나온 스토리: ${missing.join(', ')}`);
   const distinctCounts = new Set(sim.perGame).size;
   assert(distinctCounts >= 3, `게임당 스토리 수가 거의 같다 (${[...new Set(sim.perGame)].join(',')})`);
 });
