@@ -4659,6 +4659,7 @@ export const STORY_EVENTS = [
       "maxHp": 59,
       "cooldown": 6
     },
+    "weight": 2.5,
     "traitWeights": {
       "lowStamina": 1.5,
       "nightOwl": 1.3,
